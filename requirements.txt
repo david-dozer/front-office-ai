@@ -1,0 +1,6 @@
+pandas
+beautifulsoup4
+requests
+nfl_data_py
+matplotlib
+pro-football-reference-web-scraper
