@@ -66,7 +66,8 @@ def main():
     
     # Calculate weekly stats
     team_weekly_data = pbp_offense.groupby(["posteam", "week"]).apply(process_team_data).reset_index()
-    
+    team_weekly_data = team_weekly_data.drop(columns=["week"])
+
     # Calculate seasonal stats
     team_seasonal_data = pbp_offense.groupby("posteam").apply(process_team_data).reset_index()
     

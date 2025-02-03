@@ -29,8 +29,8 @@ def load_and_prepare_data():
         seasonal_stats = pd.read_csv("processed_data/team_seasonal_stats.csv")
         
         # Verify columns match
-        # if set(weekly_stats.columns) != set(seasonal_stats.columns):
-        #     raise ValueError("Column mismatch between weekly and seasonal stats")
+        if set(weekly_stats.columns) != set(seasonal_stats.columns):
+            raise ValueError("Column mismatch between weekly and seasonal stats")
         
         team_schemes = {
             "MIN": "McVay System", "LA": "McVay System",

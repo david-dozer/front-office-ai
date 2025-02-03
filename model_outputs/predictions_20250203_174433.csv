@@ -1,0 +1,163 @@
+,Team,True_Scheme,Predicted_Scheme,Confidence
+187,187,West Coast,West Coast,0.4651166727920301
+188,188,West Coast,West Coast,0.5190324393662041
+189,189,West Coast,West Coast,0.6317154363925903
+190,190,West Coast,West Coast,0.44768406868996585
+191,191,West Coast,West Coast,0.512000376745686
+192,192,West Coast,West Coast,0.4588066630258006
+193,193,West Coast,West Coast,0.3331195414691441
+194,194,West Coast,West Coast,0.6625123787147287
+195,195,West Coast,West Coast,0.36903264238213174
+196,196,West Coast,West Coast,0.6499600555444981
+197,197,West Coast,West Coast,0.6220811943278014
+198,198,West Coast,West Coast,0.4008595422538098
+199,199,West Coast,West Coast,0.43513027873035093
+200,200,West Coast,West Coast,0.5494690480658618
+201,201,West Coast,West Coast,0.45424933926310374
+202,202,West Coast,West Coast,0.37610547789451493
+203,203,West Coast,West Coast,0.4879344782252923
+272,272,McVay System,McVay System,0.2818880214119628
+273,273,McVay System,McVay System,0.2564494940196825
+274,274,McVay System,McVay System,0.457531720318626
+275,275,McVay System,McVay System,0.45461232985958383
+276,276,McVay System,McVay System,0.43520753478905766
+277,277,McVay System,McVay System,0.24046223311973808
+278,278,McVay System,McVay System,0.4531305247617696
+279,279,McVay System,McVay System,0.546202535144894
+280,280,McVay System,Pistol Power Spread,0.2647613308123697
+281,281,McVay System,McVay System,0.35644257286652525
+282,282,McVay System,McVay System,0.4043957917430117
+283,283,McVay System,McVay System,0.3676733859456838
+284,284,McVay System,McVay System,0.3731594020299454
+285,285,McVay System,McVay System,0.31906786425955946
+286,286,McVay System,McVay System,0.36462172194759673
+287,287,McVay System,McVay System,0.3541693866904582
+288,288,McVay System,McVay System,0.46574106369957385
+289,289,Coryell Vertical,Pistol Power Spread,0.28186252120112654
+290,290,Coryell Vertical,Coryell Vertical,0.3950934146277463
+291,291,Coryell Vertical,Coryell Vertical,0.5157058105297161
+292,292,Coryell Vertical,Coryell Vertical,0.4760451939904082
+293,293,Coryell Vertical,Coryell Vertical,0.3838435231012736
+294,294,Coryell Vertical,Coryell Vertical,0.3099712776428729
+295,295,Coryell Vertical,Coryell Vertical,0.4464426667035823
+296,296,Coryell Vertical,Coryell Vertical,0.5359046117881167
+297,297,Coryell Vertical,Coryell Vertical,0.4155678741878678
+298,298,Coryell Vertical,Coryell Vertical,0.3978820420526328
+299,299,Coryell Vertical,Coryell Vertical,0.3854051071447202
+300,300,Coryell Vertical,Coryell Vertical,0.37604028099562514
+301,301,Coryell Vertical,Coryell Vertical,0.48765043557769533
+302,302,Coryell Vertical,Coryell Vertical,0.37752522364343677
+303,303,Coryell Vertical,Coryell Vertical,0.314376475357145
+304,304,Coryell Vertical,Coryell Vertical,0.45249813140796974
+305,305,Coryell Vertical,Coryell Vertical,0.4011671521764583
+340,340,McVay System,McVay System,0.39006881242901054
+341,341,McVay System,McVay System,0.4188187293892369
+342,342,McVay System,McVay System,0.4562963008088818
+343,343,McVay System,McVay System,0.39012479559855867
+344,344,McVay System,McVay System,0.3928257551940543
+345,345,McVay System,McVay System,0.3827164896145311
+346,346,McVay System,McVay System,0.4379926309506335
+347,347,McVay System,McVay System,0.5156186546908748
+348,348,McVay System,McVay System,0.3428463098207619
+349,349,McVay System,McVay System,0.46802540257754394
+350,350,McVay System,McVay System,0.4839954615246689
+351,351,McVay System,McVay System,0.42409868749964263
+352,352,McVay System,McVay System,0.3676851868020636
+353,353,McVay System,McVay System,0.4324342172260732
+354,354,McVay System,McVay System,0.4088877142045321
+355,355,McVay System,McVay System,0.44843218154152126
+356,356,McVay System,McVay System,0.33660245610578654
+391,391,Pistol Power Spread,Pistol Power Spread,0.6610284219384951
+392,392,Pistol Power Spread,McVay System,0.29793997749802853
+393,393,Pistol Power Spread,Pistol Power Spread,0.39132666396925375
+394,394,Pistol Power Spread,Pistol Power Spread,0.26842828517712947
+395,395,Pistol Power Spread,Pistol Power Spread,0.3764706541589192
+396,396,Pistol Power Spread,Pistol Power Spread,0.4255663018171095
+397,397,Pistol Power Spread,Pistol Power Spread,0.5308658397902691
+398,398,Pistol Power Spread,Pistol Power Spread,0.3066894103415021
+399,399,Pistol Power Spread,Pistol Power Spread,0.4300340548572658
+400,400,Pistol Power Spread,Pistol Power Spread,0.4143119677821726
+401,401,Pistol Power Spread,Pistol Power Spread,0.5137342931265259
+402,402,Pistol Power Spread,Pistol Power Spread,0.5242574160668998
+403,403,Pistol Power Spread,Pistol Power Spread,0.48783003781990303
+404,404,Pistol Power Spread,Pistol Power Spread,0.4036086906990515
+405,405,Pistol Power Spread,Pistol Power Spread,0.4318095476402772
+406,406,Pistol Power Spread,Pistol Power Spread,0.37562795731898757
+407,407,Pistol Power Spread,Pistol Power Spread,0.5193298049770877
+425,425,Spread Option,Spread Option,0.578907202648579
+426,426,Spread Option,Spread Option,0.6685715785686941
+427,427,Spread Option,Spread Option,0.44103769010395233
+428,428,Spread Option,Spread Option,0.4831999225653422
+429,429,Spread Option,Spread Option,0.6333230921654909
+430,430,Spread Option,Spread Option,0.8310472770261929
+431,431,Spread Option,Spread Option,0.5592120104220294
+432,432,Spread Option,Spread Option,0.5939297219992186
+433,433,Spread Option,Spread Option,0.6676512749957688
+434,434,Spread Option,Spread Option,0.7556223703388728
+435,435,Spread Option,Spread Option,0.8262978302818168
+436,436,Spread Option,Spread Option,0.7612532341796567
+437,437,Spread Option,Spread Option,0.8284488514946883
+438,438,Spread Option,Spread Option,0.6707891363926725
+439,439,Spread Option,Spread Option,0.7114340459478359
+440,440,Spread Option,Spread Option,0.739943676762797
+441,441,Spread Option,Spread Option,0.2446659167794225
+442,442,Run Power,Run Power,0.6055974185982892
+443,443,Run Power,Run Power,0.6564004268872656
+444,444,Run Power,Pistol Power Spread,0.3088019668733268
+445,445,Run Power,Run Power,0.48863534543202725
+446,446,Run Power,Run Power,0.33226018429980847
+447,447,Run Power,Run Power,0.5864409542370703
+448,448,Run Power,Run Power,0.6173683663756089
+449,449,Run Power,Run Power,0.48032828196201477
+450,450,Run Power,Run Power,0.707445689898888
+451,451,Run Power,Run Power,0.6122548248557466
+452,452,Run Power,Run Power,0.37369960161853766
+453,453,Run Power,Run Power,0.3657892298183086
+454,454,Run Power,Run Power,0.6939919626892872
+455,455,Run Power,Run Power,0.36871924744257073
+456,456,Run Power,Run Power,0.40890203306868605
+457,457,Run Power,Run Power,0.4693195458109683
+458,458,Run Power,Run Power,0.5821892999353872
+476,476,Shanahan Wide Zone,Shanahan Wide Zone,0.3585004767638321
+477,477,Shanahan Wide Zone,Shanahan Wide Zone,0.36952058233639334
+478,478,Shanahan Wide Zone,Shanahan Wide Zone,0.5197818061658858
+479,479,Shanahan Wide Zone,Shanahan Wide Zone,0.5992178808443295
+480,480,Shanahan Wide Zone,Shanahan Wide Zone,0.4762631843377054
+481,481,Shanahan Wide Zone,Shanahan Wide Zone,0.5023672832673592
+482,482,Shanahan Wide Zone,Shanahan Wide Zone,0.3780284125116802
+483,483,Shanahan Wide Zone,Shanahan Wide Zone,0.5293048479286142
+484,484,Shanahan Wide Zone,Shanahan Wide Zone,0.6129971330143238
+485,485,Shanahan Wide Zone,Shanahan Wide Zone,0.4435678905294915
+486,486,Shanahan Wide Zone,Shanahan Wide Zone,0.4980580752038094
+487,487,Shanahan Wide Zone,Shanahan Wide Zone,0.504734712653408
+488,488,Shanahan Wide Zone,Shanahan Wide Zone,0.5412239661318821
+489,489,Shanahan Wide Zone,Shanahan Wide Zone,0.36254603321300316
+490,490,Shanahan Wide Zone,Shanahan Wide Zone,0.538428943886413
+491,491,Shanahan Wide Zone,Shanahan Wide Zone,0.2467160271092166
+492,492,Shanahan Wide Zone,Shanahan Wide Zone,0.2824546238242185
+527,527,Air Raid,Air Raid,0.8356925878043525
+528,528,Air Raid,Air Raid,0.9209855919942127
+529,529,Air Raid,Air Raid,0.705618702574585
+530,530,Air Raid,Air Raid,0.7700857442512615
+531,531,Air Raid,Air Raid,0.858134693084693
+532,532,Air Raid,Air Raid,0.7187887185281018
+533,533,Air Raid,Air Raid,0.7432616174674999
+534,534,Air Raid,Air Raid,0.7452661079661081
+535,535,Air Raid,Air Raid,0.7115668896657253
+536,536,Air Raid,Air Raid,0.7548170473715811
+537,537,Air Raid,Air Raid,0.7305276616838096
+538,538,Air Raid,Air Raid,0.7909009265712053
+539,539,Air Raid,Air Raid,0.8442547354606179
+540,540,Air Raid,Air Raid,0.825791183461569
+541,541,Air Raid,Air Raid,0.7903301026537446
+542,542,Air Raid,Air Raid,0.8997022586608794
+543,543,Air Raid,Air Raid,0.7293014293340039
+11,11,West Coast,West Coast,0.5554688185152027
+16,16,McVay System,McVay System,0.5420209280197785
+17,17,Coryell Vertical,Coryell Vertical,0.5307456087673736
+20,20,McVay System,McVay System,0.49186638975212044
+23,23,Pistol Power Spread,Pistol Power Spread,0.5040798150148366
+25,25,Spread Option,Spread Option,0.8061284526912219
+26,26,Run Power,Run Power,0.5677278273970319
+28,28,Shanahan Wide Zone,Shanahan Wide Zone,0.47505405539354995
+31,31,Air Raid,Air Raid,0.9406703746029085
