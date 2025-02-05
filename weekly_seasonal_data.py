@@ -38,13 +38,13 @@ def process_team_data(df):
         
         # Run location metrics
         "inside_run_pct": df[(df["play_type"] == "run") & 
-                            (df["run_gap"] == "guard") & 
-                            (df["run_location"] == "middle")].shape[0] / 
-                         df[df["play_type"] == "run"].shape[0],
+                              (df["run_gap"].isin(["tackle", "guard"])) | 
+                              (df["run_location"] == "middle")].shape[0] / \
+                           df[df["play_type"] == "run"].shape[0] if df[df["play_type"] == "run"].shape[0] > 0 else 0,
+        
         "outside_run_pct": df[(df["play_type"] == "run") & 
-                             (df["run_gap"].isin(["tackle", "end"])) & 
-                             (df["run_location"] != "middle")].shape[0] / 
-                         df[df["play_type"] == "run"].shape[0],
+                               (df["run_gap"] == "end")].shape[0] / \
+                           df[df["play_type"] == "run"].shape[0] if df[df["play_type"] == "run"].shape[0] > 0 else 0,
         
         # Down-based stats
         "yards_gained_1": df[df["down"] == 1]["yards_gained"].mean(),
@@ -70,7 +70,14 @@ def main():
 
     # Calculate seasonal stats
     team_seasonal_data = pbp_offense.groupby("posteam").apply(process_team_data).reset_index()
+
+    # Calculate league averages
+    league_average = team_seasonal_data.mean(numeric_only=True)  # Calculate mean for numeric columns
+    league_average['posteam'] = 'LGAVG'  # Set the posteam to 'LGAVG'
     
+    # Append league average to the seasonal data
+    team_seasonal_data = team_seasonal_data.append(league_average, ignore_index=True)
+
     # Create processed_data directory if it doesn't exist
     os.makedirs("processed_data", exist_ok=True)
     
