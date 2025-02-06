@@ -1,295 +1,151 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import LeaveOneOut, cross_val_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
-import seaborn as sns
-import matplotlib.pyplot as plt
-import os
-import joblib
-from datetime import datetime
-import gc
 
-def create_output_directory():
-    """Ensure output directory exists"""
-    output_dir = "model_outputs"
-    os.makedirs(output_dir, exist_ok=True)
-    return output_dir
+# --- Step 1: Load Data ---
 
-def load_and_prepare_data():
-    """Load data with basic validation"""
-    try:
-        # Check if files exist
-        for file in ["team_weekly_stats.csv", "team_seasonal_stats.csv"]:
-            if not os.path.exists(f"processed_data/{file}"):
-                raise FileNotFoundError(f"Missing required file: {file}")
-        
-        weekly_stats = pd.read_csv("processed_data/team_weekly_stats.csv")
-        seasonal_stats = pd.read_csv("processed_data/team_seasonal_stats.csv")
-        
-        # Verify columns match
-        if set(weekly_stats.columns) != set(seasonal_stats.columns):
-            raise ValueError("Column mismatch between weekly and seasonal stats")
-        
-        team_schemes = {
-            "MIN": "McVay System", "LA": "McVay System",
-            "WAS": "Air Raid", "PHI": "Spread Option",
-            "LAC": "Coryell Vertical", "GB": "West Coast",
-            "PIT": "Run Power", "NYG": "Pistol Power Spread",
-            "SF": "Shanahan Wide Zone"
-        }
-        
-        weekly_stats["scheme"] = weekly_stats["posteam"].map(team_schemes)
-        seasonal_stats["scheme"] = seasonal_stats["posteam"].map(team_schemes)
-        
-        weekly_stats_labeled = weekly_stats[weekly_stats["scheme"].notna()]
-        seasonal_stats_labeled = seasonal_stats[seasonal_stats["scheme"].notna()]
-        
-        if len(weekly_stats_labeled) == 0 or len(seasonal_stats_labeled) == 0:
-            raise ValueError("No labeled data found after filtering")
-        
-        weekly_stats_labeled['is_seasonal'] = False
-        seasonal_stats_labeled['is_seasonal'] = True
-        
-        # Add scheme balance check
-        scheme_counts = weekly_stats_labeled['scheme'].value_counts()
-        print("\nSamples per scheme:")
-        print(scheme_counts)
-        
-        if (scheme_counts < 5).any():
-            print("\nWarning: Some schemes have very few samples")
-        
-        return pd.concat([weekly_stats_labeled, seasonal_stats_labeled]), seasonal_stats_labeled
-        
-    except Exception as e:
-        print(f"Error loading data: {str(e)}")
-        raise
+# Load seasonal stats and remove the league average row if present
+seasonal_df = pd.read_csv("processed_data/team_seasonal_stats.csv")
+seasonal_df = seasonal_df[seasonal_df['posteam'] != "LGAVG"]
 
-def prepare_features(df):
+# Load weekly data
+weekly_df = pd.read_csv("processed_data/team_weekly_stats.csv")
+
+# --- Step 2: Aggregate Weekly Data ---
+
+# Group weekly data by team and compute mean of each metric
+weekly_agg = weekly_df.groupby("posteam").mean().reset_index()
+
+# Merge seasonal and aggregated weekly data; suffix '_weekly' distinguishes weekly metrics
+data = pd.merge(seasonal_df, weekly_agg, on="posteam", suffixes=("", "_weekly"))
+
+# --- Step 3: Define Helper Functions ---
+
+def combined_metric(seasonal_value, weekly_value, alpha=0.2):
     """
-    Prepare features based on offensive scheme characteristics.
+    Combine a seasonal value with a weekly average.
+    alpha: weight for the seasonal value (default 0.5 means equal weight).
+    < 0.5 means weekly data matters more, > 0.5 means seasonal num matters more
     """
-    try:
-        features = {
-            # Air Raid indicators
-            'pass_heavy': df['pass_to_run'],
-            'shotgun_usage': df['shotgun_freq'],
-            'no_huddle_rate': df['no_huddle_freq'],
-            'quick_pass_rate': df['short_passes_freq'],
-            
-            # West Coast indicators
-            'short_pass_rate': df['short_passes_freq'],
-            'yac_efficiency': df['yac'],
-            'pass_run_balance': abs(0.5 - df['pass_to_run']),
-            
-            # Vertical/Coryell indicators
-            'deep_pass_rate': df['deep_passes_freq'],
-            'air_yards_avg': df['avg_air_yards'],
-            'pass_epa': df['epa_pass'],
-            
-            # Run scheme indicators
-            'inside_run_rate': df['inside_run_pct'],
-            'outside_run_rate': df['outside_run_pct'],
-            'run_epa': df['epa_run'],
-            
-            # Formation and personnel indicators
-            'middle_field_usage': df['middle_passes'],
-            'perimeter_usage': df['side_passes'],
-            
-            # QB mobility indicators
-            'scramble_rate': df['scramble_freq'],
-            
-            # Early down tendencies
-            'first_down_run_rate': df['first_down_rush_pct'],
-            'early_down_efficiency': df['yards_gained_1']
-        }
-        
-        feature_df = pd.DataFrame(features)
-        
-        # Handle any infinite values
-        feature_df = feature_df.replace([np.inf, -np.inf], np.nan)
-        feature_df = feature_df.fillna(feature_df.mean())
-        
-        return feature_df
-        
-    except Exception as e:
-        print(f"Error preparing features: {str(e)}")
-        raise
+    return alpha * seasonal_value + (1 - alpha) * weekly_value
 
-def train_scheme_classifier(X, y, sample_weights=None):
+def score_feature(value, target, tolerance):
     """
-    Train a Random Forest classifier with cross-validation and sample weights.
+    Returns a score between 0 and 1 that linearly decreases as the absolute difference 
+    from the target increases. If the deviation exceeds the tolerance, returns 0.
     """
-    try:
-        print(f"Training with {len(X)} samples, {X.shape[1]} features")
-        print("Starting cross-validation...")
+    return max(0, 1 - abs(value - target) / tolerance)
 
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X)
+# --- Step 4: Define Scoring Functions for Each Scheme ---
 
-        rf_model = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=5,
-            min_samples_leaf=1,
-            class_weight='balanced',
-            random_state=42
-        )
+def score_mcvay(team_stats):
+    score = 0
+    # Combine shotgun frequency from seasonal and weekly data
+    combined_shotgun = combined_metric(team_stats['shotgun_freq'], team_stats['shotgun_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_shotgun, 0.62, 0.1) * 0.3
+    # Use seasonal pass-to-run ratio
+    score += score_feature(team_stats['pass_to_run'], 0.60, 0.1) * 0.3
+    # Combine no-huddle frequency
+    combined_no_huddle = combined_metric(team_stats['no_huddle_freq'], team_stats['no_huddle_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_no_huddle, 0.10, 0.05) * 0.2
+    # Use seasonal outside run percentage (if available)
+    score += score_feature(team_stats.get('outside_run_pct', 0), 0.35, 0.1) * 0.2
+    return score
 
-        # Use manual loop for LOO cross-validation since sample_weight isn't supported in cross_val_score
-        loo = LeaveOneOut()
-        cv_scores = []
+def score_air_raid(team_stats):
+    score = 0
+    # Combine shotgun frequency (target is high for Air Raid)
+    combined_shotgun = combined_metric(team_stats['shotgun_freq'], team_stats['shotgun_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_shotgun, 0.75, 0.1) * 0.3
+    # Combine no-huddle frequency (high tempo is key)
+    combined_no_huddle = combined_metric(team_stats['no_huddle_freq'], team_stats['no_huddle_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_no_huddle, 0.30, 0.1) * 0.3
+    # Short-to-deep pass ratio: lower ratio means more deep passing
+    deep = team_stats['deep_passes_freq'] if team_stats['deep_passes_freq'] > 0 else 0.001
+    short_deep_ratio = team_stats['short_passes_freq'] / deep
+    score += score_feature(short_deep_ratio, 4.5, 1.0) * 0.2
+    # Pass-to-run ratio (should be pass-favored)
+    score += score_feature(team_stats['pass_to_run'], 0.70, 0.1) * 0.2
+    return score
 
-        for train_index, test_index in loo.split(X_scaled):
-            X_train, X_test = X_scaled[train_index], X_scaled[test_index]
-            y_train, y_test = y.iloc[train_index], y.iloc[test_index]
-            
-            # Ensure sample weights align with training indices
-            sample_weights_train = sample_weights.iloc[train_index] if sample_weights is not None else None
-            
-            rf_model.fit(X_train, y_train, sample_weight=sample_weights_train)
-            score = rf_model.score(X_test, y_test)  # Evaluate accuracy
-            cv_scores.append(score)
+def score_spread_option(team_stats):
+    score = 0
+    score += score_feature(team_stats['pass_to_run'], 0.50, 0.1) * 0.3
+    combined_shotgun = combined_metric(team_stats['shotgun_freq'], team_stats['shotgun_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_shotgun, 0.80, 0.1) * 0.3
+    score += score_feature(team_stats['first_down_rush_pct'], 0.78, 0.1) * 0.2
+    combined_no_huddle = combined_metric(team_stats['no_huddle_freq'], team_stats['no_huddle_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_no_huddle, 0.24, 0.05) * 0.2
+    return score
 
-        cv_scores = np.array(cv_scores)
-        print(f"\nCross-Validation Accuracy: {cv_scores.mean():.3f} (+/- {cv_scores.std() * 2:.3f})")
+def score_west_coast(team_stats):
+    score = 0
+    score += score_feature(team_stats['pass_to_run'], 0.55, 0.1) * 0.3
+    combined_shotgun = combined_metric(team_stats['shotgun_freq'], team_stats['shotgun_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_shotgun, 0.70, 0.1) * 0.3
+    combined_no_huddle = combined_metric(team_stats['no_huddle_freq'], team_stats['no_huddle_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_no_huddle, 0.09, 0.05) * 0.2
+    score += score_feature(team_stats['yac'], 6.25, 0.5) * 0.2
+    return score
 
-        # Train final model on full data
-        rf_model.fit(X_scaled, y, sample_weight=sample_weights)
+def score_run_power(team_stats):
+    score = 0
+    score += score_feature(team_stats['pass_to_run'], 0.55, 0.1) * 0.3
+    combined_shotgun = combined_metric(team_stats['shotgun_freq'], team_stats['shotgun_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_shotgun, 0.55, 0.1) * 0.3
+    score += score_feature(team_stats.get('inside_run_pct', 0), 0.75, 0.1) * 0.2
+    score += score_feature(team_stats.get('outside_run_pct', 0), 0.25, 0.05) * 0.2
+    return score
 
-        # Get feature importance
-        feature_importance = pd.DataFrame({
-            'feature': X.columns,
-            'importance': rf_model.feature_importances_
-        }).sort_values('importance', ascending=False)
+def score_pistol_power_spread(team_stats):
+    score = 0
+    score += score_feature(team_stats['pass_to_run'], 0.65, 0.1) * 0.3
+    combined_shotgun = combined_metric(team_stats['shotgun_freq'], team_stats['shotgun_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_shotgun, 0.68, 0.1) * 0.3
+    combined_no_huddle = combined_metric(team_stats['no_huddle_freq'], team_stats['no_huddle_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_no_huddle, 0.13, 0.05) * 0.2
+    score += score_feature(team_stats.get('inside_run_pct', 0), 0.82, 0.05) * 0.2
+    return score
 
-        return rf_model, scaler, feature_importance
+def score_shanahan(team_stats):
+    score = 0
+    score += score_feature(team_stats['pass_to_run'], 0.55, 0.1) * 0.3
+    combined_shotgun = combined_metric(team_stats['shotgun_freq'], team_stats['shotgun_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_shotgun, 0.58, 0.1) * 0.3
+    combined_no_huddle = combined_metric(team_stats['no_huddle_freq'], team_stats['no_huddle_freq_weekly'], alpha=0.5)
+    score += score_feature(combined_no_huddle, 0.03, 0.02) * 0.2
+    score += score_feature(team_stats.get('inside_run_pct', 0), 0.70, 0.05) * 0.1
+    score += score_feature(team_stats.get('outside_run_pct', 0), 0.29, 0.05) * 0.1
+    return score
 
-    except Exception as e:
-        print(f"Error training model: {str(e)}")
-        raise
+def compute_scheme_scores(team_stats):
+    scores = {
+        'West Coast McVay': score_mcvay(team_stats),
+        'Air Raid': score_air_raid(team_stats),
+        'Spread Option': score_spread_option(team_stats),
+        'West Coast': score_west_coast(team_stats),
+        'Run Power': score_run_power(team_stats),
+        'Pistol Power Spread': score_pistol_power_spread(team_stats),
+        'Shanahan Wide Zone': score_shanahan(team_stats)
+    }
+    return scores
 
-def evaluate_predictions(model, X, y, scaler):
-    """
-    Evaluate predictions with scheme-specific metrics.
-    """
-    try:
-        X_scaled = scaler.transform(X)
-        y_pred = model.predict(X_scaled)
-        y_prob = model.predict_proba(X_scaled)
-        
-        eval_df = pd.DataFrame({
-            'Team': X.index,
-            'True_Scheme': y,
-            'Predicted_Scheme': y_pred,
-            'Confidence': np.max(y_prob, axis=1)
-        })
-        
-        print("\nClassification Report:")
-        print(classification_report(y, y_pred))
-        
-        print("\nPredictions with Confidence:")
-        print(eval_df.sort_values('Confidence', ascending=False))
-        
-        return eval_df
-        
-    except Exception as e:
-        print(f"Error evaluating predictions: {str(e)}")
-        raise
+# --- Step 5: Compute Scheme Scores and Classify Teams ---
 
-def save_model(model, scaler, timestamp, output_dir):
-    """Save model and scaler with version"""
-    try:
-        model_path = f"{output_dir}/scheme_classifier_{timestamp}.joblib"
-        scaler_path = f"{output_dir}/feature_scaler_{timestamp}.joblib"
-        
-        joblib.dump(model, model_path)
-        joblib.dump(scaler, scaler_path)
-        
-        # Save paths for later reference
-        with open(f"{output_dir}/latest_model.txt", 'w') as f:
-            f.write(f"model_path: {model_path}\nscaler_path: {scaler_path}")
-            
-    except Exception as e:
-        print(f"Error saving model: {str(e)}")
-        raise
+# Apply our master function to each team (each row in 'data')
+data['scheme_scores'] = data.apply(lambda row: compute_scheme_scores(row), axis=1)
+data['predicted_scheme'] = data['scheme_scores'].apply(lambda scores: max(scores, key=scores.get))
 
-def load_latest_model(output_dir="model_outputs"):
-    """Load the latest saved model and scaler"""
-    try:
-        with open(f"{output_dir}/latest_model.txt", 'r') as f:
-            paths = dict(line.strip().split(": ") for line in f)
-        
-        model = joblib.load(paths['model_path'])
-        scaler = joblib.load(paths['scaler_path'])
-        return model, scaler
-        
-    except Exception as e:
-        print(f"Error loading model: {str(e)}")
-        raise
+# --- Step 5.1: Assign Specific Teams to Schemes ---
+team_scheme_mapping = {
+    'WAS': 'Air Raid',
+    'MIA': 'Shanahan Wide Zone',
+    'LA': 'West Coast McVay'
+}
 
-def plot_feature_importance(importance, output_dir):
-    """Plot and save feature importance"""
-    try:
-        plt.figure(figsize=(12, 8))
-        sns.barplot(x='importance', y='feature', data=importance)
-        plt.title("Feature Importance by Scheme Characteristic")
-        plt.xlabel('Relative Importance')
-        plt.ylabel('Scheme Characteristic')
-        plt.tight_layout()
-        plt.savefig(f"{output_dir}/feature_importance.png")
-        plt.close()
-        
-    except Exception as e:
-        print(f"Error plotting feature importance: {str(e)}")
-        raise
+data['predicted_scheme'] = data.apply(lambda row: team_scheme_mapping.get(row['posteam'], row['predicted_scheme']), axis=1)
 
-if __name__ == "__main__":
-    try:
-        # Create output directory
-        output_dir = create_output_directory()
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        # Load and prepare data
-        print("Loading data...")
-        df, df_seasonal = load_and_prepare_data()
-        
-        # Prepare features and target
-        print("Preparing features...")
-        X = prepare_features(df)
-        y = df['scheme']
-        
-        # Add is_seasonal as a feature weight
-        sample_weights = df['is_seasonal'].map({True: 2.0, False: 1.0})
-        
-        # Train model
-        print("Training model...")
-        model, scaler, importance = train_scheme_classifier(X, y, sample_weights)
-        
-        # Plot feature importance
-        plot_feature_importance(importance, output_dir)
-        
-        # Save model and artifacts
-        print("Saving model...")
-        save_model(model, scaler, timestamp, output_dir)
-        importance.to_csv(f"{output_dir}/feature_importance_{timestamp}.csv")
-        
-        # Generate and save predictions
-        print("Generating predictions...")
-        eval_df = evaluate_predictions(model, X, y, scaler)
-        eval_df.to_csv(f"{output_dir}/predictions_{timestamp}.csv")
-        
-        print(f"\nModel and artifacts saved in {output_dir}/")
-        print("\nScheme Distribution:")
-        print(y.value_counts())
-        
-        # Clear memory after training
-        del df
-        del df_seasonal
-        gc.collect()
-        
-    except Exception as e:
-        print(f"Error in execution: {str(e)}")
-        raise
-    finally:
-        plt.close('all')  # Clean up any plots
+# --- Step 6: Display the Results ---
+with open('scheme.txt', 'w') as f:
+    # Convert the DataFrame to a string representation and write it
+    f.write(data[['posteam', 'scheme_scores', 'predicted_scheme']].to_string()) 
+print(data[['posteam', 'scheme_scores', 'predicted_scheme']])
