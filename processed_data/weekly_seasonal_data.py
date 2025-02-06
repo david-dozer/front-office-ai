@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from data_loader import load_pbp_data
+from scripts.data_loader import load_pbp_data
 
 def process_team_data(df):
     """
