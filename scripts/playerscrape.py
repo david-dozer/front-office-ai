@@ -2,9 +2,11 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
-def scrape_free_agents():
+off_url = "https://www.spotrac.com/nfl/free-agents/_/year/2025/position/off/sort/contract_value"
+def_url = "https://www.spotrac.com/nfl/free-agents/_/year/2025/position/def/sort/contract_value"
+
+def scrape_free_agents(url):
     # URL for free agents
-    url = "https://www.spotrac.com/nfl/free-agents/_/year/2025/"
 
     # Headers to mimic browser request
     headers = {
@@ -70,7 +72,7 @@ def scrape_free_agents():
 
 if __name__ == "__main__":
     # Scrape data and create DataFrame
-    df = scrape_free_agents()
+    df = scrape_free_agents(off_url)
     
     print("\nFirst few rows:")
     print(df.head())
@@ -87,3 +89,8 @@ if __name__ == "__main__":
     # Calculate statistics excluding NaN values
     print("\nAAV Statistics (excluding missing values):")
     print(df['AAV'].describe())
+
+    print(df[df['Position'].isin(['QB', 'RB', 'WR'])].head(30))
+
+    # ddf = scrape_free_agents(def_url)
+    # print(ddf.head(30))
