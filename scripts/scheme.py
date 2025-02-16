@@ -131,9 +131,22 @@ def compute_scheme_scores(team_stats):
 
 # --- Step 5: Compute Scheme Scores and Classify Teams ---
 
+
+
 # Apply our master function to each team (each row in 'data')
 data['scheme_scores'] = data.apply(lambda row: compute_scheme_scores(row), axis=1)
 data['predicted_scheme'] = data['scheme_scores'].apply(lambda scores: max(scores, key=scores.get))
+# Load team seasonal stats
+team_stats_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
+
+# Create a mapping of team to scheme based on our predictions
+team_scheme_dict = data[['posteam', 'predicted_scheme']].set_index('posteam')['predicted_scheme'].to_dict()
+
+# Add scheme column to team stats
+team_stats_df['scheme'] = team_stats_df['posteam'].map(team_scheme_dict)
+
+# Save updated team stats with scheme assignments
+team_stats_df.to_csv('processed_data/team_seasonal_stats.csv', index=False)
 
 # --- Step 5.1: Assign Specific Teams to Schemes ---
 team_scheme_mapping = {
