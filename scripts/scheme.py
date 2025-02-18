@@ -131,11 +131,16 @@ def compute_scheme_scores(team_stats):
 
 # --- Step 5: Compute Scheme Scores and Classify Teams ---
 
-
-
 # Apply our master function to each team (each row in 'data')
 data['scheme_scores'] = data.apply(lambda row: compute_scheme_scores(row), axis=1)
+
+# Break out scheme scores into separate columns
+for scheme in ['West Coast McVay', 'Air Raid', 'Spread Option', 'West Coast', 
+               'Run Power', 'Pistol Power Spread', 'Shanahan Wide Zone']:
+    data[f'score_{scheme.lower().replace(" ", "_")}'] = data['scheme_scores'].apply(lambda x: x[scheme])
+
 data['predicted_scheme'] = data['scheme_scores'].apply(lambda scores: max(scores, key=scores.get))
+
 # Load team seasonal stats
 team_stats_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
 
@@ -145,7 +150,57 @@ team_scheme_dict = data[['posteam', 'predicted_scheme']].set_index('posteam')['p
 # Add scheme column to team stats
 team_stats_df['scheme'] = team_stats_df['posteam'].map(team_scheme_dict)
 
-# Save updated team stats with scheme assignments
+# Add the individual scheme scores to team_stats_df
+score_columns = [col for col in data.columns if col.startswith('score_')]
+for col in score_columns:
+    team_stats_df[col] = data[col]
+
+# Add a dictionary mapping team codes to full names
+TEAM_NAMES = {
+    'ARI': 'Arizona Cardinals',
+    'ATL': 'Atlanta Falcons',
+    'BAL': 'Baltimore Ravens',
+    'BUF': 'Buffalo Bills',
+    'CAR': 'Carolina Panthers',
+    'CHI': 'Chicago Bears',
+    'CIN': 'Cincinnati Bengals',
+    'CLE': 'Cleveland Browns',
+    'DAL': 'Dallas Cowboys',
+    'DEN': 'Denver Broncos',
+    'DET': 'Detroit Lions',
+    'GB': 'Green Bay Packers',
+    'HOU': 'Houston Texans',
+    'IND': 'Indianapolis Colts',
+    'JAX': 'Jacksonville Jaguars',
+    'KC': 'Kansas City Chiefs',
+    'LA': 'Los Angeles Rams',
+    'LAC': 'Los Angeles Chargers',
+    'LV': 'Las Vegas Raiders',
+    'MIA': 'Miami Dolphins',
+    'MIN': 'Minnesota Vikings',
+    'NE': 'New England Patriots',
+    'NO': 'New Orleans Saints',
+    'NYG': 'New York Giants',
+    'NYJ': 'New York Jets',
+    'PHI': 'Philadelphia Eagles',
+    'PIT': 'Pittsburgh Steelers',
+    'SEA': 'Seattle Seahawks',
+    'SF': 'San Francisco 49ers',
+    'TB': 'Tampa Bay Buccaneers',
+    'TEN': 'Tennessee Titans',
+    'WAS': 'Washington Commanders'
+}
+
+# Add team names to team_stats_df
+team_stats_df['team_name'] = team_stats_df['posteam'].map(TEAM_NAMES)
+
+# Reorder columns to put team_name right after posteam
+cols = team_stats_df.columns.tolist()
+posteam_idx = cols.index('posteam')
+cols.insert(posteam_idx + 1, cols.pop(cols.index('team_name')))
+team_stats_df = team_stats_df[cols]
+
+# Save updated team stats with scheme assignments and scores
 team_stats_df.to_csv('processed_data/team_seasonal_stats.csv', index=False)
 
 # --- Step 5.1: Assign Specific Teams to Schemes ---

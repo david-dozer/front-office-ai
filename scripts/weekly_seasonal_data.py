@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from scripts.data_loader import load_pbp_data
+from data_loader import load_pbp_data
 
 def process_team_data(df):
     """
@@ -18,8 +18,8 @@ def process_team_data(df):
         # Binary categories need == 1
         "shotgun_freq": (df["shotgun"] == 1).sum() / num_plays,
         "no_huddle_freq": (df["no_huddle"] == 1).sum() / num_plays,
-        "short_passes_freq": (df["pass_length"] == "short").sum() / num_plays,
-        "deep_passes_freq": (df["pass_length"] == "deep").sum() / num_plays,
+        "short_passes_freq": (df["pass_length"] == "short").sum() / (df["pass_attempt"] == 1).sum(),
+        "deep_passes_freq": (df["pass_length"] == "deep").sum() / (df["pass_attempt"] == 1).sum(),
         "middle_passes": (df["pass_location"] == "middle").sum() / (df["pass_attempt"] == 1).sum(),
         "side_passes": (df["pass_location"].isin(["left", "right"])).sum() / (df["pass_attempt"] == 1).sum(),
         
