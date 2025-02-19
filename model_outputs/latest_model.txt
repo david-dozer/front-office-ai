@@ -1,2 +1,0 @@
-model_path: model_outputs/scheme_classifier_20250204_154323.joblib
-scaler_path: model_outputs/feature_scaler_20250204_154323.joblib
