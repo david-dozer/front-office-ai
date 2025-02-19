@@ -225,8 +225,13 @@ for _, team_row in team_df.iterrows():
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
 
         # Bonus for high-volume rushers (workhorses)
-        if rb_row['carries'] >= 250:
+        if rb_row['carries'] >= 150:
+            # print('bonus added')
             final_fit += 0.05  # Slight boost to workhorse backs
+
+        # Bonus for players with high raw yards per carry (ypc > 4.2)
+        if rb_row['yards_per_carry'] > 4.2:
+            final_fit += 0.05  # Additional bonus for efficient rushers
 
         records_rb.append({
             'team_name': team_name,
