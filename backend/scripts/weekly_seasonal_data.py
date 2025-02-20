@@ -82,8 +82,8 @@ def main():
     os.makedirs("processed_data", exist_ok=True)
     
     # Save processed data
-    team_weekly_data.to_csv("processed_data/team_weekly_stats.csv", index=False)
-    team_seasonal_data.to_csv("processed_data/team_seasonal_stats.csv", index=False)
+    team_weekly_data.to_csv("backend/processed_data/team_weekly_stats.csv", index=False)
+    team_seasonal_data.to_csv("backend/processed_data/team_seasonal_stats.csv", index=False)
     
     print("\nData saved to CSVs:")
     print("1. Weekly team statistics: processed_data/team_weekly_stats.csv")

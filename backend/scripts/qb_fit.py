@@ -8,8 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
-team_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
-qb_df = pd.read_csv('qb_data.csv')
+team_df = pd.read_csv('backend/processed_data/team_seasonal_stats.csv')
+qb_df = pd.read_csv('backend/qb_data.csv')  # Go up one level to backend directory
 
 # Only take the first 15 QBs from the QB CSV.
 # qb_df = qb_df.head(15)
@@ -130,7 +130,7 @@ raw_fit_functions = {
     'pistol_power_spread': compute_raw_fit_pistol
 }
 
-# === 4. Compute Team’s Top 3 Scheme Weights ===
+# === 4. Compute Team's Top 3 Scheme Weights ===
 def get_top3_scheme_weights_for_model(team_row):
     # Map internal scheme names to the corresponding team_df score columns.
     schemes = {
