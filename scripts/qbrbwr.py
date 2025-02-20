@@ -8,7 +8,7 @@ import numpy as np
 
 # Common roster columns that we want to keep
 COMMON_ROSTER_COLUMNS = [
-    'player_name', 'first_name', 'last_name', 'football_name', 'age', 'years_exp', 'height', 'weight'
+    'player_name', 'first_name', 'last_name', 'football_name', 'age', 'years_exp', 'height', 'weight', 'headshot_url'
 ]
 
 # Seasonal stats columns for each position
@@ -108,9 +108,9 @@ def adjust_roster_columns(df):
     if 'player_name' in cols:
         cols.remove('player_name')
         cols.insert(0, 'player_name')
-    # if 'player_id' in cols:
-    #     cols.remove('player_id')
-    #     cols.insert(1, 'player_id')  # Insert player_id as the second column
+    if 'headshot_url' in cols:
+        cols.remove('headshot_url')
+        cols.append('headshot_url')
     df = df[cols]
     
     return df
