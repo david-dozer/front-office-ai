@@ -8,8 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
-team_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
-wr_df = pd.read_csv('wr_data.csv')  # Your WR dataset
+team_df = pd.read_csv('backend/processed_data/team_seasonal_stats.csv')
+wr_df = pd.read_csv('backend/processed_data/wr_data.csv')  # Your WR dataset
 
 # === 2. Preprocess WR Data: Imputation and Scaling ===
 

@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
 team_df = pd.read_csv('backend/processed_data/team_seasonal_stats.csv')
-qb_df = pd.read_csv('backend/qb_data.csv')  # Go up one level to backend directory
+qb_df = pd.read_csv('backend/processed_data/qb_data.csv')  # Go up one level to backend directory
 
 # Only take the first 15 QBs from the QB CSV.
 # qb_df = qb_df.head(15)
