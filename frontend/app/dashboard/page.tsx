@@ -5,9 +5,9 @@ export default function DashboardPage() {
   return (
     <div>
       {/* Topbar (Header) */}
-      <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+      <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
-      </nav>
+      </div>
 
       {/* Main Content */}
       <div className="container-fluid">

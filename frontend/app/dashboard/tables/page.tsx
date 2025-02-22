@@ -5,15 +5,15 @@ export default function TablesPage() {
   return (
     <div>
       {/* Topbar */}
-      <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+      <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">Free Agents</h1>
-      </nav>
+      </div>
 
       {/* Page Content */}
       <div className="container-fluid">
         <div className="card shadow mb-4">
           <div className="card-header py-3">
-            <h6 className="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            <h6 className="m-0 font-weight-bold text-primary">Available Free Agents</h6>
           </div>
           <div className="card-body">
             <div className="table-responsive">
@@ -22,20 +22,18 @@ export default function TablesPage() {
                   <tr>
                     <th>Name</th>
                     <th>Position</th>
-                    <th>Office</th>
+                    <th>Projected Salary</th>
                     <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th>Fit</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>$320,800</td>
+                    <td>QB</td>
+                    <td>$20,000,000</td>
+                    <td>30</td>
+                    <td>0.85</td>
                   </tr>
                   {/* Add the remaining rows */}
                 </tbody>

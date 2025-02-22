@@ -1,8 +1,7 @@
 // app/layout.tsx
 import './globals.css'
 import '../styles/sb-admin-2.css'
-import Sidebar from './components/Sidebar'  // Adjusted path
-import Header from './components/Header'      // Added import for Header
+import LayoutWrapper from './components/LayoutWrapper';
 
 export const metadata = {
   title: 'NFL Free Agency AI',
@@ -23,15 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head />
-      
-      {/* <Header /> */}
       <body>
-        <div id="wrapper">
-          <Sidebar />
-          <div id="content-wrapper" className="d-flex flex-column">
-            <div id="content">{children}</div>
-          </div>
-        </div></body>
+        <LayoutWrapper>{children}</LayoutWrapper> {/* Wrap everything in the LayoutWrapper */}
+      </body>
     </html>
-  )
+  );
 }

@@ -15,7 +15,7 @@ const Header: React.FC = () => {
         <li className="nav-item dropdown no-arrow">
           <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button">
             <span className="mr-2 d-none d-lg-inline text-gray-600 small">Username</span>
-            <img className="img-profile rounded-circle" src="/img/profile.svg" alt="Profile" />
+            <img className="img-profile rounded-circle" src="/next.svg" alt="Profile" />
           </a>
         </li>
       </ul>
