@@ -80,7 +80,7 @@ def main():
     team_seasonal_data = pd.concat([team_seasonal_data, league_average_df], ignore_index=True)
 
      # Import team description data and select the required columns
-    team_desc = nfl.import_team_desc()[['team_abbr', 'team_name', 'team_logo_espn', 'team_color']]
+    team_desc = nfl.import_team_desc()[['team_abbr', 'team_conf', 'team_division', 'team_name', 'team_logo_espn', 'team_color']]
     
     # Merge the team description columns into both the weekly and seasonal data
     # team_weekly_data = team_weekly_data.merge(team_desc, left_on='posteam', right_on='team_abbr', how='left')
