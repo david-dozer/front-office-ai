@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from data_loader import load_pbp_data
+from data_loader import load_pbp_data, nfl
 
 def process_team_data(df):
     """
@@ -76,7 +76,21 @@ def main():
     league_average['posteam'] = 'LGAVG'  # Set the posteam to 'LGAVG'
     
     # Append league average to the seasonal data
-    team_seasonal_data = team_seasonal_data.append(league_average, ignore_index=True)
+    league_average_df = pd.DataFrame([league_average])
+    team_seasonal_data = pd.concat([team_seasonal_data, league_average_df], ignore_index=True)
+
+     # Import team description data and select the required columns
+    team_desc = nfl.import_team_desc()[['team_abbr', 'team_name', 'team_logo_espn', 'team_color']]
+    
+    # Merge the team description columns into both the weekly and seasonal data
+    # team_weekly_data = team_weekly_data.merge(team_desc, left_on='posteam', right_on='team_abbr', how='left')
+    team_seasonal_data = team_seasonal_data.merge(team_desc, left_on='posteam', right_on='team_abbr', how='left')
+    
+    # Optionally, drop the redundant 'team_abbr' column after the merge
+    # team_weekly_data = team_weekly_data.drop(columns=["team_abbr"])
+    team_seasonal_data = team_seasonal_data.drop(columns=["team_abbr"])
+    # Move 'team_name' column to the right of 'posteam'
+    team_seasonal_data = team_seasonal_data[['posteam', 'team_name'] + [col for col in team_seasonal_data.columns if col not in ['posteam', 'team_name']]]
 
     # Create processed_data directory if it doesn't exist
     os.makedirs("processed_data", exist_ok=True)
