@@ -29,7 +29,7 @@ This tool is designed to evaluate free-agent fits for NFL teams based on **stand
 - **Bootstrap** (UI styling)
 
 ### **Backend**
-- **Python & Flask** (API)
+- **Python & FastAPI** (API)
 - **Machine Learning** (Stat analysis & player fit model)
 
 ### **Database**
@@ -43,7 +43,7 @@ cd nfl-free-agency-scheme-fitter
 ```
 
 ### **2. Install Dependencies**
-#### **Backend (Flask & ML)**
+#### **Backend (FastAPI & ML)**
 ```sh
 cd backend
 pip install -r requirements.txt
