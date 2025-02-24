@@ -29,7 +29,7 @@ TEAM_ABBR_TO_NAME = {
     "KC": "Kansas City Chiefs",
     "LV": "Las Vegas Raiders",
     "LAC": "Los Angeles Chargers",
-    "LAR": "Los Angeles Rams",
+    "LA": "Los Angeles Rams",
     "MIA": "Miami Dolphins",
     "MIN": "Minnesota Vikings",
     "NE": "New England Patriots",
