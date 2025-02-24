@@ -9,6 +9,22 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const pathname = usePathname();
   const isLandingPage = pathname.startsWith('/landing');
 
+  // implement some loading thing to account for footer issues?
+  // if (isLoading) {
+  //   return (
+  //     <div style={{
+  //       display: 'flex',
+  //       flexDirection: 'column',
+  //       alignItems: 'center',
+  //       justifyContent: 'center',
+  //       height: '100vh',
+  //     }}>
+  //       <ClipLoader color="green" loading={isLoading} size={125} speedMultiplier={0.5} />
+  //       <p>Loading...</p>
+  //     </div>
+  //   );
+  // }
+
   return (
     <>
       {/* Load required scripts */}

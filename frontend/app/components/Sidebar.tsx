@@ -6,6 +6,7 @@ import { useParams, usePathname } from 'next/navigation';
 type Team = {
   posteam: string;
   team_color?: string; // expects a hex code, e.g., "#4e73df"
+  team_name?: string;
   // ...other properties
 };
 
@@ -67,7 +68,9 @@ const Sidebar: React.FC = () => {
         <div className="sidebar-brand-icon">
           <i className="fas fa-laugh-wink"></i>
         </div>
-        <div className="sidebar-brand-text mx-3">Select A Team</div>
+        <div className="sidebar-brand-text mx-3">
+        {team ? team.team_name : "Select A Team"}
+        </div>
       </a>
 
       <hr className="sidebar-divider my-0" />

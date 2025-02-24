@@ -14,10 +14,11 @@
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 body {
@@ -44,3 +45,35 @@ a {
     color-scheme: dark;
   }
 }
+
+.container-landing {
+  padding-left: 0rem;
+  padding-right: 0rem;
+}
+
+.full-width-banner {
+  width: 100%;
+  max-width: 100vw; /* Ensures it spans the viewport width */
+  
+  /* Create a gradient that fades to white on the sides */
+  background: linear-gradient(to right, 
+    rgba(255, 255, 255, 1) 0%,    /* White on the far left */
+    rgba(90, 92, 105, 1) 45%,     /* Dark gray in the center */
+    rgba(90, 92, 105, 1) 55%,     /* Keep dark in center */
+    rgba(255, 255, 255, 1) 100%   /* White on the far right */
+  );
+
+  color: #ffffff; /* White text */
+  text-align: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.full-width-banner h2 {
+  margin: 0;
+}
+
+
+

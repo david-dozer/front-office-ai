@@ -41,11 +41,12 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="bg-dark text-white text-center py-3 mb-4">
-        <h2 className="m-0">Select Your Team (click on a logo)</h2>
+      {/* Full-width banner */}
+      <div className="full-width-banner">
+        <h2>Select Your Team (click on a logo)</h2>
       </div>
 
-      <div className="container">
+      <div className="container-landing">
         <div className="row">
           {/* Left Column: AFC */}
           <div className="col-6 text-center">
