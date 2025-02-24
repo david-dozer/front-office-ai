@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.impute import SimpleImputer
@@ -8,8 +9,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
-team_df = pd.read_csv('backend/processed_data/team_seasonal_stats.csv')
-qb_df = pd.read_csv('backend/processed_data/qb_data.csv')  # Go up one level to backend directory
+team_df = pd.read_csv("../backend/processed_data/team_seasonal_stats.csv")
+qb_df   = pd.read_csv("../backend/processed_data/qb_data.csv")
 
 # Only take the first 15 QBs from the QB CSV.
 # qb_df = qb_df.head(15)

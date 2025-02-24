@@ -2,6 +2,49 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import csv
 import os
+import uvicorn
+
+# Import the existing get_fits functions
+from scripts.qb_fit_app import get_qb_fits_for_team
+from scripts.rb_fit_app import get_rb_fits_for_team
+from scripts.wr_fit_app import get_wr_fits_for_team
+
+# team dict
+TEAM_ABBR_TO_NAME = {
+    "ARI": "Arizona Cardinals",
+    "ATL": "Atlanta Falcons",
+    "BAL": "Baltimore Ravens",
+    "BUF": "Buffalo Bills",
+    "CAR": "Carolina Panthers",
+    "CHI": "Chicago Bears",
+    "CIN": "Cincinnati Bengals",
+    "CLE": "Cleveland Browns",
+    "DAL": "Dallas Cowboys",
+    "DEN": "Denver Broncos",
+    "DET": "Detroit Lions",
+    "GB": "Green Bay Packers",
+    "HOU": "Houston Texans",
+    "IND": "Indianapolis Colts",
+    "JAX": "Jacksonville Jaguars",
+    "KC": "Kansas City Chiefs",
+    "LV": "Las Vegas Raiders",
+    "LAC": "Los Angeles Chargers",
+    "LAR": "Los Angeles Rams",
+    "MIA": "Miami Dolphins",
+    "MIN": "Minnesota Vikings",
+    "NE": "New England Patriots",
+    "NO": "New Orleans Saints",
+    "NYG": "New York Giants",
+    "NYJ": "New York Jets",
+    "PHI": "Philadelphia Eagles",
+    "PIT": "Pittsburgh Steelers",
+    "SF": "San Francisco 49ers",
+    "SEA": "Seattle Seahawks",
+    "TB": "Tampa Bay Buccaneers",
+    "TEN": "Tennessee Titans",
+    "WAS": "Washington Commanders"
+}
+
 
 app = FastAPI()
 
@@ -29,6 +72,57 @@ def get_teams():
         raise HTTPException(status_code=404, detail="CSV file not found")
     return data
 
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5000, reload=True)
+@app.get("/teams/{team_abbr}/qbfits")
+def qb_fits_for_team_endpoint(team_abbr: str):
+    """
+    Return QB fit data for the given team abbreviation.
+    """
+    # Convert the abbreviation to the full team name
+    team_name = TEAM_ABBR_TO_NAME.get(team_abbr.upper(), None)
+    if not team_name:
+        raise HTTPException(status_code=404, detail=f"Unknown team abbreviation: {team_abbr}")
+
+    # Now pass the full team name to your existing function
+    fits_df = get_qb_fits_for_team(team_name)
+    if fits_df is None or fits_df.empty:
+        raise HTTPException(status_code=404, detail=f"No QB fits found for team: {team_abbr}")
+
+    # Return JSON
+    return fits_df.to_dict(orient="records")
+
+@app.get("/teams/{team_abbr}/rbfits")
+def rb_fits_for_team_endpoint(team_abbr: str):
+    """
+    Return QB fit data for the given team abbreviation.
+    """
+    # Convert the abbreviation to the full team name
+    team_name = TEAM_ABBR_TO_NAME.get(team_abbr.upper(), None)
+    if not team_name:
+        raise HTTPException(status_code=404, detail=f"Unknown team abbreviation: {team_abbr}")
+
+    # Now pass the full team name to your existing function
+    fits_df = get_rb_fits_for_team(team_name)
+    if fits_df is None or fits_df.empty:
+        raise HTTPException(status_code=404, detail=f"No QB fits found for team: {team_abbr}")
+
+    # Return JSON
+    return fits_df.to_dict(orient="records")
+
+@app.get("/teams/{team_abbr}/wrfits")
+def wr_fits_for_team_endpoint(team_abbr: str):
+    """
+    Return QB fit data for the given team abbreviation.
+    """
+    # Convert the abbreviation to the full team name
+    team_name = TEAM_ABBR_TO_NAME.get(team_abbr.upper(), None)
+    if not team_name:
+        raise HTTPException(status_code=404, detail=f"Unknown team abbreviation: {team_abbr}")
+
+    # Now pass the full team name to your existing function
+    fits_df = get_wr_fits_for_team(team_name)
+    if fits_df is None or fits_df.empty:
+        raise HTTPException(status_code=404, detail=f"No QB fits found for team: {team_abbr}")
+
+    # Return JSON
+    return fits_df.to_dict(orient="records")
+

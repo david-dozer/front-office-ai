@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from wr_fit import team_df, wr_imputed_scaled, get_top3_scheme_weights_wr, raw_fit_functions_wr, compute_volume_bonus
+from scripts.wr_fit import team_df, wr_imputed_scaled, get_top3_scheme_weights_wr, raw_fit_functions_wr, compute_volume_bonus
 
 def get_wr_fits_for_team(team_name):
     """

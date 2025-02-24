@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from qb_fit import team_df, qb_imputed_scaled, pipeline, get_top3_scheme_weights_for_model, raw_fit_functions
+from scripts.qb_fit import team_df, qb_imputed_scaled, pipeline, get_top3_scheme_weights_for_model, raw_fit_functions
 
 def get_qb_fits_for_team(team_name):
     """

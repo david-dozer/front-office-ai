@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from rb_fit import team_df, rb_imputed_scaled, get_top3_scheme_weights_rb, raw_fit_functions_rb
+from scripts.rb_fit import team_df, rb_imputed_scaled, get_top3_scheme_weights_rb, raw_fit_functions_rb
 
 def get_rb_fits_for_team(team_name):
     """
