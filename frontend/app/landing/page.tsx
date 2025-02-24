@@ -1,6 +1,7 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
 
 type Team = {
   posteam: string;
@@ -10,24 +11,19 @@ type Team = {
   team_name: string;
 };
 
-export default function LandingPage() {
-  const [teams, setTeams] = useState<Team[]>([]);
-  const router = useRouter();
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-  useEffect(() => {
-    async function fetchTeams() {
-      const res = await fetch('http://127.0.0.1:5000/teams', { cache: 'no-store' });
-      const data = await res.json();
-      setTeams(data);
-    }
-    fetchTeams();
-  }, []);
+export default function LandingPage() {
+  const router = useRouter();
+  const { data: teams = [], error, isLoading } = useSWR('http://127.0.0.1:5000/teams', fetcher, {
+    revalidateOnFocus: false, // Avoid refetching on tab switch
+    dedupingInterval: 30000, // Cache results for 60 seconds
+  });
 
   function handleLogoClick(posteam: string) {
     router.push(`/dashboard/${posteam}`);
   }
 
-  // Helper to group teams by conference/division remains the same
   function getDivisionsByConference(teamsArray: Team[], conf: "AFC" | "NFC") {
     const divisions = [`${conf} East`, `${conf} North`, `${conf} South`, `${conf} West`];
     const confTeams = teamsArray.filter((t) => t.team_conf === conf);
@@ -39,23 +35,20 @@ export default function LandingPage() {
   const afcDivisions = getDivisionsByConference(teams, "AFC");
   const nfcDivisions = getDivisionsByConference(teams, "NFC");
 
+  if (error) return <p>Error loading teams.</p>;
+  if (isLoading) return <p>Loading...</p>; // Show loading indicator
+
   return (
     <>
-      {/* Full-width banner */}
       <div className="full-width-banner">
         <h2>Select Your Team (click on a logo)</h2>
       </div>
 
       <div className="container-landing">
         <div className="row">
-          {/* Left Column: AFC */}
+          {/* AFC Column */}
           <div className="col-6 text-center">
-            <img
-              src="/afc.png"
-              alt="AFC Logo"
-              style={{ maxHeight: "70px" }}
-              className="mb-4"
-            />
+            <img src="/afc.png" alt="AFC Logo" style={{ maxHeight: "70px" }} className="mb-4" />
 
             {afcDivisions.map((divisionTeams, idx) => (
               <div className="row mb-4" key={`afc-division-${idx}`}>
@@ -74,14 +67,9 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Right Column: NFC */}
+          {/* NFC Column */}
           <div className="col-6 text-center">
-            <img
-              src="/nfc.png"
-              alt="NFC Logo"
-              style={{ maxHeight: "70px" }}
-              className="mb-4"
-            />
+            <img src="/nfc.png" alt="NFC Logo" style={{ maxHeight: "70px" }} className="mb-4" />
 
             {nfcDivisions.map((divisionTeams, idx) => (
               <div className="row mb-4" key={`nfc-division-${idx}`}>

@@ -1,5 +1,6 @@
 .venv/
 backend/scripts/__pycache__
+backend/__pycache__
 team_offense_pbp/
 pfr.py
 scheme.txt

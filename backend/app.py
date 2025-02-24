@@ -1,15 +1,23 @@
-from flask import Flask, jsonify
-from flask_cors import CORS
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import csv
 import os
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+app = FastAPI()
+
+# Enable CORS for all routes
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Path to CSV within the data folder
 CSV_FILE = os.path.join(os.path.dirname(__file__), 'processed_data', 'team_seasonal_stats.csv')
 
-@app.route('/teams', methods=['GET'])
+@app.get("/teams")
 def get_teams():
     data = []
     try:
@@ -18,10 +26,9 @@ def get_teams():
             for row in reader:
                 data.append(row)
     except FileNotFoundError:
-        return jsonify({"error": "CSV file not found"}), 404
-
-    return jsonify(data), 200
+        raise HTTPException(status_code=404, detail="CSV file not found")
+    return data
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
-
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5000, reload=True)
