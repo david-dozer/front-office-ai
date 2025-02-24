@@ -36,7 +36,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
           </div>
 
           {/* Footer */}
-          <footer className="sticky-footer bg-white">
+          <footer className="sticky-footer bg-gray-200">
             <div className="container my-auto">
               <div className="copyright text-center my-auto">
                 <span>Copyright © David Mendoza 2025</span>

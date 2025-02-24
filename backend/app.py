@@ -1,8 +1,10 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import csv
 import os
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # Path to CSV within the data folder
 CSV_FILE = os.path.join(os.path.dirname(__file__), 'processed_data', 'team_seasonal_stats.csv')
