@@ -160,6 +160,9 @@ for _, team_row in team_df.iterrows():
     # Loop over each QB in our (first 15) qb data.
     for _, qb_row in qb_imputed_scaled.iterrows():
         qb_name = qb_row['player_name']
+        aav = qb_row['AAV']
+        prev_team = qb_row['Prev Team']
+        age = qb_row['Age']
         # Compute raw fit for each scheme in the team's top 3.
         fit_components = {}
         for scheme, weight in scheme_weights.items():
@@ -173,6 +176,9 @@ for _, team_row in team_df.iterrows():
         records.append({
             'team_name': team_name,
             'qb_name': qb_name,
+            'aav': aav,
+            'prev_team': prev_team,
+            'age': age, 
             'final_fit': final_fit,
             'production_score': compute_production_score(qb_row),
             'air_raid_fit': fit_components.get('air_raid', np.nan),

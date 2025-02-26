@@ -28,6 +28,9 @@ def get_wr_fits_for_team(team_name):
     # Iterate through each WR in the preprocessed WR DataFrame
     for _, wr_row in wr_imputed_scaled.iterrows():
         wr_name = wr_row['player_name']
+        aav = wr_row['AAV']
+        prev_team = wr_row['Prev Team']
+        age = wr_row['Age']
         fit_components = {}
 
         # Compute raw fit for each of the team's top 3 schemes
@@ -50,6 +53,9 @@ def get_wr_fits_for_team(team_name):
 
         records.append({
             'wr_name': wr_name,
+            'aav': aav,
+            'prev_team': prev_team,
+            'age': age, 
             'final_fit': final_fit
         })
 

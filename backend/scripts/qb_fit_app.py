@@ -28,6 +28,9 @@ def get_qb_fits_for_team(team_name):
     records = []
     for _, qb_row in qb_imputed_scaled.iterrows():
         qb_name = qb_row['player_name']
+        aav = qb_row['AAV']
+        prev_team = qb_row['Prev Team']
+        age = qb_row['Age']
         fit_components = {}
 
         # Compute raw fit for each of the team's top 3 schemes
@@ -44,6 +47,9 @@ def get_qb_fits_for_team(team_name):
         # Store results
         records.append({
             'qb_name': qb_name,
+            'aav': aav,
+            'prev_team': prev_team,
+            'age': age, 
             'final_fit': final_fit
         })
 

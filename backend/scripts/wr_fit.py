@@ -195,6 +195,9 @@ for _, team_row in team_df.iterrows():
     scheme_weights = get_top3_scheme_weights_wr(team_row)
     for _, wr_row in wr_imputed_scaled.iterrows():
         wr_name = wr_row['player_name']
+        aav = wr_row['AAV']
+        prev_team = wr_row['Prev Team']
+        age = wr_row['Age']
         fit_components = {}
         for scheme, weight in scheme_weights.items():
             if scheme in raw_fit_functions_wr:
@@ -208,6 +211,9 @@ for _, team_row in team_df.iterrows():
         records_wr.append({
             'team_name': team_name,
             'wr_name': wr_name,
+            'aav': aav,
+            'prev_team': prev_team,
+            'age': age, 
             'final_fit': final_fit,
             'production_score': compute_production_score_wr(wr_row),
             'air_raid_fit': fit_components.get('air_raid', np.nan),

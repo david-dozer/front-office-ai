@@ -28,6 +28,9 @@ def get_rb_fits_for_team(team_name):
     # Iterate through each RB in the preprocessed RB DataFrame
     for _, rb_row in rb_imputed_scaled.iterrows():
         rb_name = rb_row['player_name']
+        aav = rb_row['AAV']
+        prev_team = rb_row['Prev Team']
+        age = rb_row['Age']
         fit_components = {}
 
         # Compute raw fit for each of the team's top 3 schemes
@@ -47,6 +50,9 @@ def get_rb_fits_for_team(team_name):
 
         records.append({
             'rb_name': rb_name,
+            'aav': aav,
+            'prev_team': prev_team,
+            'age': age, 
             'final_fit': final_fit
         })
 

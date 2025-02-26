@@ -6,10 +6,25 @@ import Script from 'next/script';
 
 interface Player {
   name: string;
+  projectedSalary?: number; // Not in API, kept for future use
+  prev_team: string;
   position: string;
-  projectedSalary?: string; // Not in API, kept for future use
-  age?: number; // Not in API, kept for future use
+  age: number; // Not in API, kept for future use
   fit: number;
+}
+
+function formatAAV(aav: number): string {
+  if (typeof aav !== 'number') {
+    return "Invalid AAV"; // Or handle non-number input as needed
+  }
+
+  const formattedAAV = aav.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0, // Remove decimal places if they are zero
+  });
+
+  return formattedAAV;
 }
 
 export default function TablesPage() {
@@ -32,6 +47,9 @@ export default function TablesPage() {
           const formattedPlayers = data.map((player: any) => ({
             name: player[`${pos}_name`] || "Unknown",
             position: pos.toUpperCase(), // Convert 'qb' -> 'QB'
+            age: Math.ceil(player.age),
+            projectedSalary: formatAAV(player.aav),
+            prev_team: player.prev_team,
             fit: player.final_fit,
           }));
 
@@ -70,6 +88,8 @@ export default function TablesPage() {
         <h1 className="h3 mb-0 text-gray-800">Free Agents for {posteam}</h1>
       </div>
 
+      {/* down here before table, put the 1st best fit, the 5th best fit, and the 10th best fit */}
+
       <div className="container-fluid">
         <div className="card shadow mb-4">
           <div className="card-header py-3">
@@ -87,6 +107,9 @@ export default function TablesPage() {
                   <tr>
                     <th>Name</th>
                     <th>Position</th>
+                    <th>Age</th>
+                    <th>AAV</th>
+                    <th>Previous Team</th>
                     <th>Fit</th>
                   </tr>
                 </thead>
@@ -95,7 +118,10 @@ export default function TablesPage() {
                     <tr key={idx}>
                       <td>{player.name}</td>
                       <td>{player.position}</td>
-                      <td>{player.fit.toFixed(2)}</td>
+                      <td>{player.age}</td>
+                      <td>{player.projectedSalary}</td>
+                      <td>{player.prev_team}</td>
+                      <td>{(player.fit*100).toFixed(3)}</td>
                     </tr>
                   ))}
                 </tbody>
