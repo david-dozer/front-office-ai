@@ -101,7 +101,7 @@ def adjust_roster_columns(df):
     Drop unnecessary columns and reorder so that 'player_name' is first.
     """
     df = df.copy()
-    cols_to_drop = [col for col in ['first_name', 'player_id', 'last_name', 'football_name'] if col in df.columns]
+    cols_to_drop = [col for col in ['first_name', 'last_name', 'football_name'] if col in df.columns]
     df.drop(columns=cols_to_drop, inplace=True)
     
     cols = df.columns.tolist()
@@ -129,7 +129,7 @@ def get_next_gen_stats(player_name, position):
     try:
         # Define position-specific metrics and file paths
         if position == 'QB':
-            file_path = 'processed_data/qb_ngs.csv'
+            file_path = '../processed_data/qb_ngs.csv'
             key_metrics = [
                 'avg_time_to_throw',
                 'avg_completed_air_yards',
@@ -143,7 +143,7 @@ def get_next_gen_stats(player_name, position):
                 'completion_percentage_above_expectation'
             ]
         elif position == 'RB':
-            file_path = 'processed_data/rb_ngs.csv'
+            file_path = '../processed_data/rb_ngs.csv'
             key_metrics = [
                 'efficiency',
                 'percent_attempts_gte_eight_defenders',
@@ -155,7 +155,7 @@ def get_next_gen_stats(player_name, position):
                 'rush_pct_over_expected'
             ]
         elif position == 'WR':
-            file_path = 'processed_data/wr_ngs.csv'
+            file_path = '../processed_data/wr_ngs.csv'
             key_metrics = [
                 'avg_cushion',
                 'avg_separation',
@@ -248,9 +248,9 @@ def main():
     wr_df = wr_df.sort_values('receiving_yards', ascending=False)
 
     # Save these DataFrames to CSV files
-    qb_df.to_csv('qb_data.csv', index=False)
-    rb_df.to_csv('rb_data.csv', index=False)
-    wr_df.to_csv('wr_data.csv', index=False)
+    qb_df.to_csv('../processed_data/qb_data.csv', index=False)
+    rb_df.to_csv('../processed_data/rb_data.csv', index=False)
+    wr_df.to_csv('../processed_data/wr_data.csv', index=False)
 
 if __name__ == "__main__":
     main()
