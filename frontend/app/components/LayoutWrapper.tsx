@@ -66,7 +66,20 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       {/* End of Page Wrapper */}
 
       {/* Scroll to Top Button */}
-      <a className="scroll-to-top rounded" href="#">
+      <a
+        className="scroll-to-top rounded"
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 1000,
+        }}
+      >
         <i className="fas fa-angle-up"></i>
       </a>
     </>
