@@ -218,6 +218,7 @@ for _, team_row in team_df.iterrows():
         aav = rb_row['AAV']
         prev_team = rb_row['Prev Team']
         age = rb_row['Age']
+        headshot = rb_row['headshot_url']
         fit_components = {}
         for scheme, weight in scheme_weights.items():
             if scheme in raw_fit_functions_rb:
@@ -241,7 +242,8 @@ for _, team_row in team_df.iterrows():
             'rb_name': rb_name,
             'aav': aav,
             'prev_team': prev_team,
-            'age': age, 
+            'age': age,
+            'headshot': headshot, 
             'final_fit': final_fit,
             'production_score': compute_production_score_rb(rb_row),
             'air_raid_fit': fit_components.get('air_raid', np.nan),

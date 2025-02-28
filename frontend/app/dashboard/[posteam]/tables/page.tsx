@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Script from 'next/script';
+import CircularProgressBar from '@/app/components/CircularProgressBar';
 
 interface Player {
   id: string; // Assumes the API provides a unique id for each player
@@ -13,6 +14,7 @@ interface Player {
   position: string;
   age: number;
   fit: number;
+  headshot_url?: string;
 }
 
 function formatAAV(aav: number): string {
@@ -54,6 +56,7 @@ export default function TablesPage() {
             projectedSalary: formatAAV(player.aav),
             prev_team: player.prev_team,
             fit: player.final_fit,
+            headshot_url: player.headshot, // Ensure this field exists in API response
           }));
 
           allPlayers = [...allPlayers, ...formattedPlayers];
@@ -98,6 +101,8 @@ export default function TablesPage() {
     }
 }, [players]);
 
+const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);
+
   return (
     <>
       <Script src="https://code.jquery.com/jquery-3.6.0.min.js" strategy="beforeInteractive" />
@@ -106,6 +111,25 @@ export default function TablesPage() {
 
       <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">Free Agent Fits</h1>
+      </div>
+
+      <div className="container">
+        <div className="row justify-content-center">
+          {topFits.map((player, idx) => (
+            <div key={idx} className="col-md-4 mb-4 d-flex flex-column align-items-center">
+              <CircularProgressBar 
+                progress={(player.fit || 0) * 100} 
+                size={250} 
+                strokeWidth={15} 
+                duration={1500}
+                headshotUrl={player.headshot_url} 
+              />
+              <small className="text-muted mt-3">
+                <strong>{player.name} - Fit: {(player.fit * 100).toFixed(1)}%</strong>
+              </small>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="container-fluid">

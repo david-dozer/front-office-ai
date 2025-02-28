@@ -31,6 +31,7 @@ def get_qb_fits_for_team(team_name):
         aav = qb_row['AAV']
         prev_team = qb_row['Prev Team']
         age = qb_row['Age']
+        headshot = qb_row['headshot_url']
         fit_components = {}
 
         # Compute raw fit for each of the team's top 3 schemes
@@ -49,7 +50,8 @@ def get_qb_fits_for_team(team_name):
             'qb_name': qb_name,
             'aav': aav,
             'prev_team': prev_team,
-            'age': age, 
+            'age': age,
+            'headshot': headshot, 
             'final_fit': final_fit
         })
 

@@ -31,6 +31,7 @@ def get_rb_fits_for_team(team_name):
         aav = rb_row['AAV']
         prev_team = rb_row['Prev Team']
         age = rb_row['Age']
+        headshot = rb_row['headshot_url']
         fit_components = {}
 
         # Compute raw fit for each of the team's top 3 schemes
@@ -52,7 +53,8 @@ def get_rb_fits_for_team(team_name):
             'rb_name': rb_name,
             'aav': aav,
             'prev_team': prev_team,
-            'age': age, 
+            'age': age,
+            'headshot': headshot, 
             'final_fit': final_fit
         })
 
