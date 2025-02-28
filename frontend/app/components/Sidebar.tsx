@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
 
   // SWR fetches and caches the teams data.
   const { data: teams, error } = useSWR<Team[]>(
-    'http://127.0.0.1:5000/teams',
+    'http://localhost:5000/teams',
     fetcher,
     {
       revalidateOnFocus: false,    // Avoid re-fetching when the window refocuses

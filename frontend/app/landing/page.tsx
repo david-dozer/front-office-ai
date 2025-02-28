@@ -15,7 +15,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function LandingPage() {
   const router = useRouter();
-  const { data: teams = [], error, isLoading } = useSWR('http://127.0.0.1:5000/teams', fetcher, {
+  const { data: teams = [], error, isLoading } = useSWR('http://localhost:5000/teams', fetcher, {
     revalidateOnFocus: false, // Avoid refetching on tab switch
     dedupingInterval: 30000, // Cache results for 60 seconds
   });

@@ -42,7 +42,7 @@ export default function TablesPage() {
         let allPlayers: Player[] = [];
 
         for (const pos of positions) {
-          const res = await fetch(`http://127.0.0.1:5000/teams/${posteam}/${pos}fits`);
+          const res = await fetch(`http://localhost:5000/teams/${posteam}/${pos}fits`);
           const data = await res.json();
 
           // Include an id from the API and map the rest of the fields.
@@ -72,26 +72,31 @@ export default function TablesPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && players.length > 0) {
-      const checkDataTables = setInterval(() => {
-        if (window.jQuery && window.jQuery.fn.DataTable) {
-          clearInterval(checkDataTables);
-          if (!window.jQuery.fn.DataTable.isDataTable('#dataTable')) {
-            const dt = window.jQuery('#dataTable').DataTable({
-              "columnDefs": [
-                { "orderable": false, "targets": [0, 1, 4] },
-                { "orderable": true, "targets": [2, 3, 5] }
-              ],
-              "order": [[5, "desc"]]
-            });
-  
-            $('#dataTable thead th:eq(5)').on('click', function() {
-              dt.order([5, "desc"]).draw();
-            });
-          }
-        }
-      }, 100);
+        const checkDataTables = setInterval(() => {
+            try {
+                if (window.jQuery && window.jQuery.fn.DataTable) {
+                    clearInterval(checkDataTables);
+                    if (!window.jQuery.fn.DataTable.isDataTable('#dataTable')) {
+                        const dt = window.jQuery('#dataTable').DataTable({
+                            "columnDefs": [
+                                { "orderable": false, "targets": [0, 1, 4] },
+                                { "orderable": true, "targets": [2, 3, 5] }
+                            ],
+                            "order": [[5, "desc"]]
+                        });
+
+                        $('#dataTable thead th:eq(5)').on('click', function() {
+                            dt.order([5, "desc"]).draw();
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Error initializing DataTable:", error);
+                // Optionally, you can set a state to show a user-friendly message
+            }
+        }, 100);
     }
-  }, [players]);
+}, [players]);
 
   return (
     <>
@@ -132,7 +137,7 @@ export default function TablesPage() {
                     <tr key={idx}>
                       <td>
                         <Link 
-                          href={`/dashboard/${posteam}/tables/${player.id}`} 
+                          href={`/dashboard/${posteam}/tables/${player.name}`} 
                           className="m-0 font-weight-bold text-primary"
                           style={{ textDecoration: "none" }}
                         >
