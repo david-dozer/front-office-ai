@@ -242,10 +242,9 @@ def main():
     rb_df = adjust_roster_columns(rb_df)
     wr_df = adjust_roster_columns(wr_df)
 
-    # Sort dataframes by respective yardage stats (descending order)
-    qb_df = qb_df.sort_values('passing_yards', ascending=False)
-    rb_df = rb_df.sort_values('rushing_yards', ascending=False)
-    wr_df = wr_df.sort_values('receiving_yards', ascending=False)
+    qb_df = qb_df.sort_values('player_name', ascending=True)
+    rb_df = rb_df.sort_values('player_name', ascending=True)
+    wr_df = wr_df.sort_values('player_name', ascending=True)
 
     # Save these DataFrames to CSV files
     qb_df.to_csv('../processed_data/qb_data.csv', index=False)
