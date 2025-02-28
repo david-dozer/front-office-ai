@@ -6,6 +6,7 @@ interface CircularProgressBarProps {
   strokeWidth?: number; // Stroke thickness (default: 10)
   duration?: number; // Animation duration in ms (default: 1500)
   animateOnLoad?: boolean; // Whether to animate on mount (default: true)
+  headshotUrl?: string; // NEW
 }
 
 // Define smooth color transitions
@@ -39,11 +40,12 @@ const getSmoothColor = (progress: number) => {
 };
 
 const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
-  progress,
-  size = 200,
-  strokeWidth = 10,
-  duration = 1500,
-  animateOnLoad = true,
+    progress,
+    size = 200,
+    strokeWidth = 10,
+    duration = 1500,
+    animateOnLoad = true,
+    headshotUrl,
 }) => {
   const [animatedProgress, setAnimatedProgress] = useState(animateOnLoad ? 0 : progress);
 
@@ -78,7 +80,27 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
   return (
     <div style={{ textAlign: 'center' }}>
       <svg width={size} height={size}>
-        {/* Background circle */}
+        {/* Define the clip path */}
+        <defs>
+          <clipPath id="circleClip">
+            <circle cx={center} cy={center} r={radius} />
+          </clipPath>
+        </defs>
+  
+        {/* Player headshot image, clipped to the circle */}
+        {headshotUrl && (
+          <image
+            href={headshotUrl}
+            x={0}
+            y={0}
+            width={size}
+            height={size}
+            clipPath="url(#circleClip)"
+            preserveAspectRatio="xMidYMid slice"
+          />
+        )}
+  
+        {/* Background circle (optional, behind the stroke) */}
         <circle
           cx={center}
           cy={center}
@@ -87,7 +109,8 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
           strokeWidth={strokeWidth}
           fill="none"
         />
-        {/* Progress circle (rotated so it starts at the top) */}
+  
+        {/* Progress circle */}
         <circle
           cx={center}
           cy={center}
@@ -100,14 +123,11 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
           strokeLinecap="round"
           transform={`rotate(-90 ${center} ${center})`}
           style={{
-            transition: 'stroke-dashoffset 1s cubic-bezier(0.25, 1, 0.5, 1), stroke 1s linear',
+            transition:
+              'stroke-dashoffset 1s cubic-bezier(0.25, 1, 0.5, 1), stroke 1s linear',
           }}
         />
       </svg>
-      {/* Display progress percentage under the wheel */}
-      {/* <div style={{ marginTop: '10px', fontSize: size * 0.2, color: '#333' }}>
-        {`${Math.round(animatedProgress)}%`}
-      </div> */}
     </div>
   );
 };

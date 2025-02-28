@@ -17,7 +17,7 @@ export default function LandingPage() {
   const router = useRouter();
   const { data: teams = [], error, isLoading } = useSWR('http://localhost:5000/teams', fetcher, {
     revalidateOnFocus: false, // Avoid refetching on tab switch
-    dedupingInterval: 30000, // Cache results for 60 seconds
+    dedupingInterval: 30000, // Cache results for 30 seconds
   });
 
   function handleLogoClick(posteam: string) {

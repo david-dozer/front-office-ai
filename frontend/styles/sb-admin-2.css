@@ -7813,6 +7813,10 @@ button.bg-dark:focus {
   padding-left: 0 !important;
 }
 
+.p-01 {
+  padding: 0.1rem !important;
+}
+
 .p-1 {
   padding: 0.25rem !important;
 }

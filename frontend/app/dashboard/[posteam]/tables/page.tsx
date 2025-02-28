@@ -105,7 +105,7 @@ export default function TablesPage() {
       <Script src="/vendor/datatables/dataTables.bootstrap4.min.js" strategy="afterInteractive" />
 
       <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 className="h3 mb-0 text-gray-800">Free Agents for {posteam}</h1>
+        <h1 className="h3 mb-0 text-gray-800">Free Agent Fits</h1>
       </div>
 
       <div className="container-fluid">
