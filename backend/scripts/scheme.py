@@ -155,9 +155,6 @@ score_columns = [col for col in data.columns if col.startswith('score_')]
 for col in score_columns:
     team_stats_df[col] = data[col]
 
-# Save updated team stats with scheme assignments and scores
-team_stats_df.to_csv('backend/processed_data/team_seasonal_stats.csv', index=False)
-
 # --- Step 5.1: Assign Specific Teams to Schemes ---
 team_scheme_mapping = {
     'WAS': 'Air Raid',
@@ -165,7 +162,14 @@ team_scheme_mapping = {
     'LA': 'West Coast McVay'
 }
 
+for k, v in team_scheme_mapping.items():
+    team_stats_df.loc[team_stats_df['posteam'] == k, 'scheme'] = v
+
+# Save updated team stats with scheme assignments and scores
+team_stats_df.to_csv('backend/processed_data/team_seasonal_stats.csv', index=False)
+
 data['predicted_scheme'] = data.apply(lambda row: team_scheme_mapping.get(row['posteam'], row['predicted_scheme']), axis=1)
+
 
 # --- Step 6: Display the Results ---
 with open('scheme.txt', 'w') as f:

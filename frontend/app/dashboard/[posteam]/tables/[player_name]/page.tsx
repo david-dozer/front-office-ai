@@ -3,10 +3,26 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import CircularProgressBar from '@/app/components/CircularProgressBar';
+import { renderQBAdvancedStats, renderQBNextGenStats } from '@/app/utils/QBDisplayStats';
+import { renderRBAdvancedStats, renderRBNextGenStats, renderRBStandardReceivingStats } from '@/app/utils/RBDisplayStats';
+import { renderWRAdvancedStats, renderWRNextGenStats } from '@/app/utils/WRDisplayStats';
+
+const advancedStatsRenderers: Record<string, (playerData: any, teamScheme: string) => React.ReactElement> = {
+  QB: renderQBAdvancedStats,
+  RB: renderRBAdvancedStats,
+  WR: renderWRAdvancedStats,
+};
+
+const nextGenStatsRenderers: Record<string, (playerData: any, teamScheme: string) => React.ReactElement> = {
+  QB: renderQBNextGenStats,
+  RB: renderRBNextGenStats,
+  WR: renderWRNextGenStats,
+};
 
 export default function PlayerPage() {
   const params = useParams();
   const [playerData, setPlayerData] = useState<any>(null);
+  const [teamScheme, setTeamScheme] = useState<string>('');
 
   // Fetch the player data
   useEffect(() => {
@@ -31,6 +47,24 @@ export default function PlayerPage() {
     }
     fetchPlayer();
   }, [params]);
+
+  // Fetch the current team's scheme
+  useEffect(() => {
+    if (!params?.posteam) return;
+
+    fetch('http://localhost:5000/teams')
+      .then(response => response.json())
+      .then(data => {
+        const teamData = data.find((t: any) => t.posteam === params.posteam);
+        if (teamData) {
+          // set the team scheme
+          if (teamData.scheme) {
+            setTeamScheme(teamData.scheme);
+          }
+        }
+      })
+      .catch(error => console.error('Error fetching team data:', error));
+  }, [params?.posteam]);
 
   function convertHeightToFeetInches(heightInInches: number) {
     const feet = Math.floor(heightInInches / 12);
@@ -67,7 +101,7 @@ export default function PlayerPage() {
                 </div>
   
                 {/* Right column: Circular Progress Bar */}
-                <div className="col-md-4 d-flex flex-column align-items-center justify-content-center ml-n4">
+                <div className="col-md-4 d-flex flex-column align-items-center justify-content-center ml-n5">
                   <CircularProgressBar 
                     progress={(playerData.final_fit || 0) * 100} 
                     size={250} 
@@ -118,6 +152,42 @@ export default function PlayerPage() {
                   <p><strong>Games:</strong> {playerData.games}</p>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* position-specific Advanced and Next Gen Stats */}
+      {/* {playerData.Position === 'QB' && ( */}
+      <div className="row mb-4">
+        <div className="col-md-6">
+          <div className="card shadow mb-4">
+            <div className="card-header py-3">
+              <h6 className="m-0 font-weight-bold text-primary">Advanced Stats</h6>
+            </div>
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-8">
+                  {advancedStatsRenderers[playerData.Position]
+                    ? advancedStatsRenderers[playerData.Position](playerData, teamScheme)
+                    : null}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="card shadow mb-4">
+            <div className="card-header py-3">
+              <h6 className="m-0 font-weight-bold text-primary">Next Gen Stats</h6>
+            </div>
+            <div className="card-body">
+              <div className="row">
+                <div className="col-md-8">
+                  {nextGenStatsRenderers[playerData.Position]
+                    ? nextGenStatsRenderers[playerData.Position](playerData, teamScheme)
+                    : null}
+                </div>
+              </div>
             </div>
           </div>
         </div>
