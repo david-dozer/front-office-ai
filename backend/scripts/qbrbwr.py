@@ -61,7 +61,7 @@ def merge_seasonal_and_roster(seasonal_df, roster_df):
     """Merge seasonal stats with 2024 roster info using player_id."""
     return pd.merge(seasonal_df, roster_df, on='player_id', how='left')
 
-# --- QB Selection Logic ---
+# --- Active Selection Logic ---
 def select_pos_active_season(group, position):
     """
     For a given player's seasonal data (grouped by player_id) and position, select the row corresponding
@@ -87,12 +87,24 @@ def select_pos_active_season(group, position):
         threshold = 100
 
     # Check seasons in order: 2024, then 2023, then 2022
+    # Check seasons in order: 2024, then 2023, then 2022
     for season in [2024, 2023, 2022]:
         candidate = group[(group['season'] == season) & (group[metric] >= threshold)]
         if not candidate.empty:
-            return candidate.iloc[0]
-    # If none meet the threshold, pick the season with the highest value in the metric
-    return group.loc[group[metric].idxmax()]
+            selected_row = candidate.iloc[0]
+            break
+    else:
+        # If no season meets the threshold, pick the season with the highest value in the metric
+        selected_row = group.loc[group[metric].idxmax()]
+    
+    # Normalize per-game stats before returning the row
+    if position in ['RB', 'WR'] and 'target_share' in selected_row:
+        if selected_row['games'] > 0:
+            selected_row['target_share'] /= selected_row['games']
+        else:
+            selected_row['target_share'] = np.nan  # Avoid division by zero
+    
+    return selected_row
 
 # --- Roster Column Adjustments ---
 def adjust_roster_columns(df):

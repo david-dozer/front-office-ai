@@ -12,6 +12,9 @@ season = nfl.import_seasonal_data([2022, 2023, 2024])
 print("Seasonal columns: ", season.columns.tolist())
 print(len(season.columns.tolist()))
 
+# Print the target share for player_id '00-0033921' in 2024
+target_share = season[(season['player_id'] == '00-0033921') & (season['season'] == 2024)]['target_share']
+print("Target share for player_id '00-0033921' in 2024: ", target_share)
 
 rosters = nfl.import_seasonal_rosters([2024])
 
