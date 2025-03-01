@@ -66,7 +66,7 @@ def scrape_free_agents(url):
     df['AAV'] = df['AAV'].str.replace('$', '').str.replace(',', '').astype(float, errors='ignore')
 
     # Save to CSV
-    df.to_csv('../processed_data/free_agents.csv', index=False)
+    # df.to_csv('../processed_data/free_agents.csv', index=False)
 
     return df
 

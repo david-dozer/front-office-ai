@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
 team_df = pd.read_csv('../backend/processed_data/team_seasonal_stats.csv')
-rb_df = pd.read_csv('../backend/processed_data/rb_data.csv')  # Your RB data file
+rb_df = pd.read_csv('../backend/processed_data/fa_rbs.csv')  # Your RB data file
 
 # === 2. Preprocess RB Data: Imputation, Derived Metrics, and Scaling ===
 # Compute derived yards per carry safely.

@@ -61,9 +61,9 @@ FITS_FUNCTIONS = {
 
 # --- Position → CSV filename ---
 POSITION_DATA_FILES = {
-    "QB": "qb_data.csv",
-    "RB": "rb_data.csv",
-    "WR": "wr_data.csv",
+    "QB": "fa_qbs.csv",
+    "RB": "fa_rbs.csv",
+    "WR": "fa_wrs.csv",
     # Add more if needed
 }
 
