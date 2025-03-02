@@ -38,7 +38,10 @@ def scrape_team_cap_data():
         cols = row.find_all("td")
         if len(cols) >= 11:  # Ensure row has enough columns
             ranks.append(cols[0].text.strip())
-            teams.append(cols[1].text.strip().split()[0])  # Keeps only the first word (abbreviation)
+            team_name = cols[1].text.strip().split()[0]  # Keeps only the first word (abbreviation)
+            if team_name == 'LAR':  # Change 'LAR' to 'LA'
+                team_name = 'LA'
+            teams.append(team_name)
             players_active.append(cols[2].text.strip())
             avg_age_team.append(cols[3].text.strip())
             total_cap_top_51.append(cols[4].text.strip())
@@ -68,8 +71,9 @@ def scrape_team_cap_data():
         # Remove '$' and ',' then convert to numeric, replacing errors with NaN
         df[col] = pd.to_numeric(df[col].str.replace('[\$,]', '', regex=True), errors='coerce')
 
+    
     # Save to CSV
-    df.to_csv("team_cap_data.csv", index=False)
+    df.to_csv("backend/processed_data/team_cap_data.csv", index=False)
 
     return df
 

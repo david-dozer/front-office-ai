@@ -248,3 +248,21 @@ def get_player_info(team_abbr: str, position: str, player_name: str):
     matched_row["final_fit"] = final_fit_value
 
     return matched_row
+
+# --- New Endpoint: /oline ---
+@app.get("/oline")
+def get_oline_data():
+    """
+    Reads all rows from oline_data.csv (the computed linemen stats and ratings)
+    and returns them as a list of dicts.
+    """
+    oline_csv = os.path.join(DATA_DIR, "fa_oline.csv")
+    data = []
+    try:
+        with open(oline_csv, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                data.append(row)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="oline_data.csv not found")
+    return data
