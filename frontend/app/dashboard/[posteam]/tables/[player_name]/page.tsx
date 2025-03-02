@@ -19,6 +19,16 @@ const nextGenStatsRenderers: Record<string, (playerData: any, teamScheme: string
   WR: renderWRNextGenStats,
 };
 
+// Helper to format whole number stats
+function formatStat(value: string | number, type: 'total'): string {
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) {
+    return value.toString();
+  }
+  // For total stats, if it's an integer, display without decimals.
+  return Number.isInteger(num) ? num.toString() : num.toFixed(0);
+}
+
 export default function PlayerPage() {
   const params = useParams();
   const [playerData, setPlayerData] = useState<any>(null);
@@ -92,7 +102,7 @@ export default function PlayerPage() {
                   <h4 className="card-title mb-2"><strong>{playerData.player_name}</strong></h4>
                   <p><strong>Age:</strong> {parseInt(playerData.age, 10)}</p>
                   <p><strong>Height:</strong> {convertHeightToFeetInches(playerData.height)}</p>
-                  <p><strong>Weight:</strong> {playerData.weight}</p>
+                  <p><strong>Weight:</strong> {formatStat(playerData.weight, 'total')} lbs</p>
                   <p><strong>YOE:</strong> {playerData.YOE}</p>
                   <p><strong>Position:</strong> {playerData.Position}</p>
                   <p><strong>Projected AAV:</strong> 
@@ -122,34 +132,62 @@ export default function PlayerPage() {
         <div className="col-md-4">
           <div className="card shadow mb-4">
             <div className="card-header py-3">
-              <h6 className="m-0 font-weight-bold text-primary">Standard Stats</h6>
+              <h6 className="m-0 font-weight-bold text-primary">Standard Stats {playerData.season}</h6>
             </div>
             <div className="card-body">
               {/* Dynamically render player stats */}
               {playerData.Position === 'QB' && (
                 <>
-                  <p><strong>Passing TDs:</strong> {playerData.passing_tds}</p>
-                  <p><strong>Passing Yards:</strong> {playerData.passing_yards}</p>
-                  <p><strong>Interceptions:</strong> {playerData.interceptions}</p>
-                  <p><strong>Games:</strong> {playerData.games}</p>
+                  <p>
+                    <strong>Passing TDs:</strong> {formatStat(playerData.passing_tds, 'total')}
+                  </p>
+                  <p>
+                    <strong>Passing Yards:</strong> {formatStat(playerData.passing_yards, 'total')}
+                  </p>
+                  <p>
+                    <strong>Interceptions:</strong> {formatStat(playerData.interceptions, 'total')}
+                  </p>
+                  <p>
+                    <strong>Games:</strong> {formatStat(playerData.games, 'total')}
+                  </p>
                 </>
               )}
               {playerData.Position === 'RB' && (
                 <>
-                  <p><strong>Rushing TDs:</strong> {playerData.rushing_tds}</p>
-                  <p><strong>Rushing Yards:</strong> {playerData.rushing_yards}</p>
-                  <p><strong>Fumbles:</strong> {playerData.rushing_fumbles}</p>
-                  <p><strong>Carries:</strong> {playerData.carries}</p>
-                  <p><strong>Games:</strong> {playerData.games}</p>
+                  <p>
+                    <strong>Rushing TDs:</strong> {formatStat(playerData.rushing_tds, 'total')}
+                  </p>
+                  <p>
+                    <strong>Rushing Yards:</strong> {formatStat(playerData.rushing_yards, 'total')}
+                  </p>
+                  <p>
+                    <strong>Fumbles:</strong> {formatStat(playerData.rushing_fumbles, 'total')}
+                  </p>
+                  <p>
+                    <strong>Carries:</strong> {formatStat(playerData.carries, 'total')}
+                  </p>
+                  <p>
+                    <strong>Games:</strong> {formatStat(playerData.games, 'total')}
+                  </p>
                 </>
               )}
               {playerData.Position === 'WR' && (
                 <>
-                  <p><strong>Receiving TDs:</strong> {playerData.receiving_tds}</p>
-                  <p><strong>Catches:</strong> {playerData.receptions}</p>
-                  <p><strong>Receiving Yards:</strong> {playerData.receiving_yards}</p>
-                  <p><strong>Targets:</strong> {playerData.targets}</p>
-                  <p><strong>Games:</strong> {playerData.games}</p>
+                  <p>
+                    <strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')}
+                  </p>
+                  <p>
+                    <strong>Catches:</strong> {formatStat(playerData.receptions, 'total')}
+                  </p>
+                  <p>
+                    <strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards, 'total')}
+                  </p>
+                  <p>
+                    <strong>Targets:</strong> {formatStat(playerData.targets, 'total')}
+                  </p>
+                  <p>
+                    <strong>Games:</strong> {formatStat(playerData.games, 'total')}
+                  </p>
                 </>
               )}
             </div>

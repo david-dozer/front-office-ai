@@ -38,7 +38,7 @@ def scrape_team_cap_data():
         cols = row.find_all("td")
         if len(cols) >= 11:  # Ensure row has enough columns
             ranks.append(cols[0].text.strip())
-            teams.append(cols[1].text.strip())
+            teams.append(cols[1].text.strip().split()[0])  # Keeps only the first word (abbreviation)
             players_active.append(cols[2].text.strip())
             avg_age_team.append(cols[3].text.strip())
             total_cap_top_51.append(cols[4].text.strip())

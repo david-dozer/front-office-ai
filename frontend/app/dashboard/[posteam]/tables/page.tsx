@@ -34,6 +34,7 @@ function formatAAV(aav: number): string {
 export default function TablesPage() {
   const { posteam } = useParams(); // e.g., 'NYJ'
   const [players, setPlayers] = useState<Player[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState('Filter by Position');
 
   useEffect(() => {
     async function fetchData() {
@@ -74,39 +75,79 @@ export default function TablesPage() {
   }, [posteam]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && players.length > 0) {
-        const checkDataTables = setInterval(() => {
-            try {
-                if (window.jQuery && window.jQuery.fn.DataTable) {
-                    clearInterval(checkDataTables);
-                    if (!window.jQuery.fn.DataTable.isDataTable('#dataTable')) {
-                        const dt = window.jQuery('#dataTable').DataTable({
-                            "columnDefs": [
-                                { "orderable": false, "targets": [0, 1, 4] },
-                                { "orderable": true, "targets": [2, 3, 5] }
-                            ],
-                            "order": [[5, "desc"]]
-                        });
-
-                        $('#dataTable thead th:eq(5)').on('click', function() {
-                            dt.order([5, "desc"]).draw();
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error("Error initializing DataTable:", error);
-                // Optionally, you can set a state to show a user-friendly message
+    if (typeof window === 'undefined' || players.length === 0) return;
+  
+    // Flag to track initialization status
+    let isInitialized = false;
+    
+    const checkDataTables = setInterval(() => {
+      // Skip if already initialized
+      if (isInitialized) {
+        clearInterval(checkDataTables);
+        return;
+      }
+  
+      try {
+        // Most comprehensive check for jQuery and DataTables
+        if (
+          window.jQuery && 
+          typeof window.jQuery.fn === 'object' && 
+          typeof window.jQuery.fn.DataTable === 'function' &&
+          typeof window.jQuery.fn.DataTable.isDataTable === 'function'
+        ) {
+          console.log("Libraries loaded, initializing table...");
+          
+          // Mark as initialized to prevent duplicate initialization
+          isInitialized = true;
+          clearInterval(checkDataTables);
+          
+          const dt = window.jQuery('#dataTable').DataTable({
+            "columnDefs": [
+              { "orderable": false, "targets": [0, 1, 4] },
+              { "orderable": true, "targets": [2, 3, 5] }
+            ],
+            "order": [[5, "desc"]]
+          });
+  
+          window.jQuery('#dataTable thead th:eq(5)').on('click', function() {
+            dt.order([5, "desc"]).draw();
+          });
+          
+          // Attach click handler to dropdown items
+          window.jQuery('.dropdown-menu a').on('click', (e: JQuery.ClickEvent) => {
+            e.preventDefault();
+            
+            const anchor = e.currentTarget;
+            const value = window.jQuery(anchor).data('value');
+            const text = window.jQuery(anchor).text();
+            
+            // Update dropdown button text
+            window.jQuery('#positionDropdown').text('Position: ' + text);
+            
+            if (value === '') {
+              dt.column(1).search('').draw();
+            } else if (value === 'Offense') {
+              dt.column(1).search('QB|RB|WR|TE', true, false).draw();
+            } else {
+              dt.column(1).search(`^${value}$`, true, false).draw();
             }
-        }, 100);
-    }
-}, [players]);
+          });
+        }
+      } catch (error) {
+        console.error('DataTable initialization error:', error);
+      }
+    }, 250); // Slightly longer interval (250ms instead of 100ms)
+    
+    // Clean up interval on unmount
+    return () => clearInterval(checkDataTables);
+  }, [players]);
 
 const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);
 
   return (
     <>
       <Script src="https://code.jquery.com/jquery-3.6.0.min.js" strategy="beforeInteractive" />
-      <Script src="/vendor/datatables/jquery.dataTables.min.js" strategy="beforeInteractive" />
+      <Script src="/vendor/datatables/jquery.dataTables.min.js" strategy="afterInteractive" />
       <Script src="/vendor/datatables/dataTables.bootstrap4.min.js" strategy="afterInteractive" />
 
       <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -139,6 +180,30 @@ const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);
           </div>
           <div className="card-body">
             <div className="table-responsive">
+              <div className="dropdown">
+                  <button 
+                    className="btn btn-secondary dropdown-toggle" 
+                    type="button" 
+                    id="positionDropdown" 
+                    data-toggle="dropdown" 
+                    aria-haspopup="true" 
+                    aria-expanded="false"
+                  >
+                    Filter by Position
+                  </button>
+                  <div 
+                    className="dropdown-menu dropdown-menu-right shadow animated--grow-in" 
+                    aria-labelledby="positionDropdown"
+                  >
+                    <a className="dropdown-item" href="#" data-value="">All</a>
+                    <a className="dropdown-item" href="#" data-value="Offense">Offense</a>
+                    <a className="dropdown-item" href="#" data-value="QB">QB</a>
+                    <a className="dropdown-item" href="#" data-value="RB">RB</a>
+                    <a className="dropdown-item" href="#" data-value="WR">WR</a>
+                    <a className="dropdown-item" href="#" data-value="TE">TE</a>
+                    {/* Add more positions if needed */}
+                  </div>
+                </div>
               <table
                 className="table table-bordered"
                 id="dataTable"
