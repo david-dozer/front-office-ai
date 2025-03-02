@@ -1,4 +1,4 @@
-# NFL Free Agency Scheme Fitter
+# freeagencyai.com - soon to be published...
 
 ## Overview
 This tool is designed to evaluate free-agent fits for NFL teams based on **standard, advanced, and Next Gen Stats**. The project currently focuses on **quarterbacks (QBs), running backs (RBs), and wide receivers (WRs)**, with plans to expand to **all offensive and defensive positions**.
@@ -59,7 +59,7 @@ npm install
 #### **Start Backend**
 ```sh
 cd backend
-python app.py
+uvicorn app:app --host 0.0.0.0 --port 5000 --reload 
 ```
 
 #### **Start Frontend**
