@@ -81,6 +81,9 @@ def select_pos_active_season(group, position):
     elif position == 'WR':
         metric = 'targets'
         threshold = 40
+    elif position == 'TE':
+        metric = 'targets'
+        threshold = 30
     else:
         # Default to QB criteria if position is unknown
         metric = 'attempts'
@@ -98,7 +101,7 @@ def select_pos_active_season(group, position):
         selected_row = group.loc[group[metric].idxmax()]
     
     # Normalize per-game stats before returning the row
-    if position in ['RB', 'WR'] and 'target_share' in selected_row:
+    if position in ['RB', 'WR', 'TE'] and 'target_share' in selected_row:
         if selected_row['games'] > 0:
             selected_row['target_share'] /= selected_row['games']
         else:
@@ -151,7 +154,7 @@ def get_next_gen_stats(player_id, position, seasons=[2024, 2023, 2022]):
     """
     try:
         if position == 'QB':
-            file_path = '../processed_data/qb_ngs.csv'
+            file_path = 'backend/processed_data/qb_ngs.csv'
             key_metrics = [
                 'avg_time_to_throw',
                 'avg_completed_air_yards',
@@ -165,7 +168,7 @@ def get_next_gen_stats(player_id, position, seasons=[2024, 2023, 2022]):
                 'completion_percentage_above_expectation'
             ]
         elif position == 'RB':
-            file_path = '../processed_data/rb_ngs.csv'
+            file_path = 'backend/processed_data/rb_ngs.csv'
             key_metrics = [
                 'efficiency',
                 'percent_attempts_gte_eight_defenders',
@@ -176,8 +179,8 @@ def get_next_gen_stats(player_id, position, seasons=[2024, 2023, 2022]):
                 'rush_yards_over_expected_per_att',
                 'rush_pct_over_expected'
             ]
-        elif position == 'WR':
-            file_path = '../processed_data/wr_ngs.csv'
+        elif position == 'WR' or position == 'TE':
+            file_path = 'backend/processed_data/wr_ngs.csv'
             key_metrics = [
                 'avg_cushion',
                 'avg_separation',
@@ -223,7 +226,7 @@ def main():
     merged_df = merge_seasonal_and_roster(seasonal_df, roster_df)
     
     # Process for each position: QB, RB, and WR
-    positions = ['QB', 'RB', 'WR']
+    positions = ['QB', 'RB', 'WR', 'TE']
     final_dfs = {}
     
     for pos in positions:
@@ -241,7 +244,7 @@ def main():
             final_columns = QB_SEASONAL_COLUMNS + COMMON_ROSTER_COLUMNS
         elif pos == 'RB':
             final_columns = RB_SEASONAL_COLUMNS + COMMON_ROSTER_COLUMNS
-        elif pos == 'WR':
+        elif pos == 'WR' or pos == 'TE':
             final_columns = WR_SEASONAL_COLUMNS + COMMON_ROSTER_COLUMNS
         # Ensure only columns that exist in the dataframe are used
         final_columns = [col for col in final_columns if col in selected.columns]
@@ -262,10 +265,12 @@ def main():
         print(f"Number of {pos} rows after selection: {pos_final.shape[0]}")
     
     # Save the final dataframes for each position to CSV files in the processed_data folder
-    final_dfs['QB'].to_csv('../processed_data/qb_data.csv', index=False)
-    final_dfs['RB'].to_csv('../processed_data/rb_data.csv', index=False)
-    final_dfs['WR'].to_csv('../processed_data/wr_data.csv', index=False)
-    print("Saved qb_data.csv, rb_data.csv, and wr_data.csv to processed_data folder.")
+    final_dfs['QB'].to_csv('backend/processed_data/qb_data.csv', index=False)
+    final_dfs['RB'].to_csv('backend/processed_data/rb_data.csv', index=False)
+    final_dfs['WR'].to_csv('backend/processed_data/wr_data.csv', index=False)
+    final_dfs['TE'] = final_dfs['TE'].sort_values('targets', ascending=False)
+    final_dfs['TE'].to_csv('backend/processed_data/te_data.csv', index=False)
+    print("Saved qb_data.csv, rb_data.csv, wr_data.csv, and te_data.csv to processed_data folder.")
     
     # Step 4: Scrape free agents from Spotrac and merge with the QB data
     print("Scraping free agent data from Spotrac...")
@@ -273,15 +278,21 @@ def main():
     fa_qb_df = final_dfs['QB'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
     fa_rb_df = final_dfs['RB'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
     fa_wr_df = final_dfs['WR'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
+    fa_te_df = final_dfs['TE'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
+    
+    # Sort TE dataframe by 'targets'
+    fa_te_df = fa_te_df.sort_values('targets', ascending=False)
 
     # Print the number of rows for each free agent dataframe
     print(f"Number of FA QB rows: {fa_qb_df.shape[0]}")
     print(f"Number of FA RB rows: {fa_rb_df.shape[0]}")
     print(f"Number of FA WR rows: {fa_wr_df.shape[0]}")
+    print(f"Number of FA TE rows: {fa_te_df.shape[0]}")
     
-    fa_qb_df.to_csv('../processed_data/fa_qbs.csv', index=False)
-    fa_rb_df.to_csv('../processed_data/fa_rbs.csv', index=False)
-    fa_wr_df.to_csv('../processed_data/fa_wrs.csv', index=False)
+    fa_qb_df.to_csv('backend/processed_data/fa_qbs.csv', index=False)
+    fa_rb_df.to_csv('backend/processed_data/fa_rbs.csv', index=False)
+    fa_wr_df.to_csv('backend/processed_data/fa_wrs.csv', index=False)
+    fa_te_df.to_csv('backend/processed_data/fa_tes.csv', index=False)
     print("Saved fa_qbs.csv to processed_data folder.")
 
 if __name__ == "__main__":

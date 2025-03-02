@@ -43,7 +43,14 @@ const Header: React.FC = () => {
       </button>
 
       {/* Sidebar Toggle (Topbar) */}
-      <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
+      <button 
+        id="sidebarToggleTop" 
+        className="btn btn-link d-md-none rounded-circle mr-3"
+        data-toggle="collapse" 
+        data-target="#sidebar"
+        aria-expanded="false"
+        aria-controls="sidebar"
+      >
         <i className="fa fa-bars"></i>
       </button>
 
