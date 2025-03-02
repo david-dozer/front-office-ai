@@ -51,19 +51,16 @@ export default function OLDisplayStats({ playerData, totalCount }: OLDisplayStat
     <div>
       <h2>Offensive Line Player Stats</h2>
       <p>
+        <strong>Games:</strong> {playerData.games}
+      </p>
+      <p>
         <strong>Final Rating:</strong> {finalRatingPercent} / 100
       </p>
       <p>
         <strong>Average Snaps per Game:</strong> {avg} 
       </p>
       <p>
-        <strong>Avg Snap Ranking:</strong> {avgRanking} out of 366
-      </p>
-      <p>
-        <strong>Team Snaps:</strong> {teamSnaps}
-      </p>
-      <p>
-        <strong>Team Snaps Ranking:</strong> {teamSnapsRanking} out of 366
+        <strong>Team Snaps: {teamSnaps} </strong> ({avgRanking} out of 366)
       </p>
     </div>
   );

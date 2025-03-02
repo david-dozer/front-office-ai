@@ -64,8 +64,7 @@ const Sidebar: React.FC = () => {
       style={sidebarStyle}
     >
       {/* Sidebar - Brand */}
-      <Link
-        href="/landing"
+      <div
         className="sidebar-brand d-flex align-items-center justify-content-center"
       >
         {/* <div className="sidebar-brand-icon">
@@ -74,7 +73,7 @@ const Sidebar: React.FC = () => {
         <div className="sidebar-brand-text mx-3">
           {team ? team.team_name : "Select A Team"}
         </div>
-      </Link>
+      </div>
 
       <hr className="sidebar-divider my-0" />
 

@@ -130,7 +130,7 @@ export default function PlayerPage() {
                 <div className="col-md-4 d-flex flex-column align-items-center justify-content-center ml-n5">
                   <CircularProgressBar 
                     progress={(playerData.final_fit || playerData.final_rating || 0) * 100} 
-                    size={250} 
+                    size={222} 
                     strokeWidth={15} 
                     duration={1500}
                     headshotUrl={playerData.headshot_url} 
@@ -190,7 +190,7 @@ export default function PlayerPage() {
           <div className="col-md-12">
             <div className="card shadow mb-4">
               <div className="card-header py-3">
-                <h6 className="m-0 font-weight-bold text-primary">Offensive Line Player Stats</h6>
+                <h6 className="m-0 font-weight-bold text-primary">2024 Stats</h6>
               </div>
               <div className="card-body">
                 <OLDisplayStats playerData={playerData} totalCount={totalCount} />
