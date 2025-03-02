@@ -266,3 +266,27 @@ def get_oline_data():
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="oline_data.csv not found")
     return data
+
+# --- New Endpoint: /teams/{team_abbr}/olineinfo/{player_name} ---
+@app.get("/teams/{team_abbr}/olineinf/{player_name}")
+def get_oline_player_info(team_abbr: str, player_name: str):
+    """
+    Retrieve a given lineman's info for a team from oline_data.csv.
+    """
+    # Validate team abbreviation and convert to full team name.
+    team_name = TEAM_ABBR_TO_NAME.get(team_abbr.upper())
+    if not team_name:
+        raise HTTPException(status_code=404, detail=f"Unknown team abbreviation: {team_abbr}")
+
+    # Build the path to oline_data.csv.
+    oline_csv = os.path.join(DATA_DIR, "fa_oline.csv")
+    try:
+        with open(oline_csv, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if row.get("name", "").strip().lower() == player_name.strip().lower():
+                    return row
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="oline_data.csv not found")
+    
+    raise HTTPException(status_code=404, detail=f"Player '{player_name}' not found")

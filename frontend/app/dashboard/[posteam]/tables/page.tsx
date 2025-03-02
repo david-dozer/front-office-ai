@@ -9,7 +9,7 @@ import CircularProgressBar from '@/app/components/CircularProgressBar';
 interface Player {
   id: string; // Assumes the API provides a unique id for each player
   name: string;
-  projectedSalary?: number;
+  projectedSalary?: string;
   prev_team: string;
   position: string;
   age: number;
@@ -21,13 +21,11 @@ function formatAAV(aav: number): string {
   if (typeof aav !== 'number') {
     return "Invalid AAV";
   }
-
   const formattedAAV = aav.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
   });
-
   return formattedAAV;
 }
 
@@ -41,54 +39,69 @@ export default function TablesPage() {
       try {
         if (!posteam) return;
 
-        const positions = ['qb', 'rb', 'wr'];
+        // Define endpoints for QB, RB, WR and oline free agent data.
+        const endpoints = [
+          { pos: 'qb', endpoint: `http://localhost:5000/teams/${posteam}/qbfits` },
+          { pos: 'rb', endpoint: `http://localhost:5000/teams/${posteam}/rbfits` },
+          { pos: 'wr', endpoint: `http://localhost:5000/teams/${posteam}/wrfits` },
+          { pos: 'oline', endpoint: `http://localhost:5000/oline` }
+        ];
+
         let allPlayers: Player[] = [];
 
-        for (const pos of positions) {
-          const res = await fetch(`http://localhost:5000/teams/${posteam}/${pos}fits`);
+        for (const item of endpoints) {
+          const res = await fetch(item.endpoint);
           const data = await res.json();
 
-          // Include an id from the API and map the rest of the fields.
-          const formattedPlayers = data.map((player: any) => ({
-            id: player.id, // make sure the API returns an id
-            name: player[`${pos}_name`] || "Unknown",
-            position: pos.toUpperCase(),
-            age: Math.ceil(player.age),
-            projectedSalary: formatAAV(player.aav),
-            prev_team: player.prev_team,
-            fit: player.final_fit,
-            headshot_url: player.headshot, // Ensure this field exists in API response
-          }));
-
+          let formattedPlayers;
+          if (item.pos === 'oline') {
+            // For oline, convert aav from string to number and use player.pos as the position.
+            formattedPlayers = data.map((player: any, index: number) => ({
+              id: player.id || `oline-${index}`,
+              name: player.name || "Unknown",
+              position: player.pos || "Unknown", // use the actual position
+              age: player.age ? Math.ceil(player.age) : 0,
+              projectedSalary: player.aav ? formatAAV(Number(player.aav)) : "",
+              prev_team: player.prevteam || "",
+              fit: player.final_rating, // final_rating is used as fit
+              headshot_url: player.headshot_url,
+            }));
+          } else {
+            // For QB, RB, WR endpoints assume they return final_fit field.
+            formattedPlayers = data.map((player: any) => ({
+              id: player.id,
+              name: player[`${item.pos}_name`] || "Unknown",
+              position: item.pos.toUpperCase(),
+              age: Math.ceil(player.age),
+              projectedSalary: formatAAV(player.aav),
+              prev_team: player.prev_team,
+              fit: player.final_fit,
+              headshot_url: player.headshot, // Adjust if needed
+            }));
+          }
           allPlayers = [...allPlayers, ...formattedPlayers];
         }
 
-        // Initial sort descending by 'fit'
+        // Sort all players descending by their fit value.
         allPlayers.sort((a, b) => b.fit - a.fit);
         setPlayers(allPlayers);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
     }
-
     fetchData();
   }, [posteam]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || players.length === 0) return;
   
-    // Flag to track initialization status
     let isInitialized = false;
-    
     const checkDataTables = setInterval(() => {
-      // Skip if already initialized
       if (isInitialized) {
         clearInterval(checkDataTables);
         return;
       }
-  
       try {
-        // Most comprehensive check for jQuery and DataTables
         if (
           window.jQuery && 
           typeof window.jQuery.fn === 'object' && 
@@ -96,8 +109,6 @@ export default function TablesPage() {
           typeof window.jQuery.fn.DataTable.isDataTable === 'function'
         ) {
           console.log("Libraries loaded, initializing table...");
-          
-          // Mark as initialized to prevent duplicate initialization
           isInitialized = true;
           clearInterval(checkDataTables);
           
@@ -113,21 +124,21 @@ export default function TablesPage() {
             dt.order([5, "desc"]).draw();
           });
           
-          // Attach click handler to dropdown items
+          // Updated dropdown click handler.
           window.jQuery('.dropdown-menu a').on('click', (e: JQuery.ClickEvent) => {
             e.preventDefault();
-            
             const anchor = e.currentTarget;
             const value = window.jQuery(anchor).data('value');
             const text = window.jQuery(anchor).text();
-            
-            // Update dropdown button text
             window.jQuery('#positionDropdown').text('Position: ' + text);
             
             if (value === '') {
               dt.column(1).search('').draw();
-            } else if (value === 'Offense') {
+            } else if (value === 'Skilled Offense') {
               dt.column(1).search('QB|RB|WR|TE', true, false).draw();
+            } else if (value === 'OLINE') {
+              // Filter positions that match any of the offensive line positions.
+              dt.column(1).search('^(OT|OL|G|C)$', true, false).draw();
             } else {
               dt.column(1).search(`^${value}$`, true, false).draw();
             }
@@ -136,13 +147,11 @@ export default function TablesPage() {
       } catch (error) {
         console.error('DataTable initialization error:', error);
       }
-    }, 250); // Slightly longer interval (250ms instead of 100ms)
-    
-    // Clean up interval on unmount
+    }, 250);
     return () => clearInterval(checkDataTables);
   }, [players]);
 
-const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);
+  const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);
 
   return (
     <>
@@ -181,29 +190,32 @@ const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);
           <div className="card-body">
             <div className="table-responsive">
               <div className="dropdown">
-                  <button 
-                    className="btn btn-secondary dropdown-toggle" 
-                    type="button" 
-                    id="positionDropdown" 
-                    data-toggle="dropdown" 
-                    aria-haspopup="true" 
-                    aria-expanded="false"
-                  >
-                    Filter by Position
-                  </button>
-                  <div 
-                    className="dropdown-menu dropdown-menu-right shadow animated--grow-in" 
-                    aria-labelledby="positionDropdown"
-                  >
-                    <a className="dropdown-item" href="#" data-value="">All</a>
-                    <a className="dropdown-item" href="#" data-value="Offense">Offense</a>
-                    <a className="dropdown-item" href="#" data-value="QB">QB</a>
-                    <a className="dropdown-item" href="#" data-value="RB">RB</a>
-                    <a className="dropdown-item" href="#" data-value="WR">WR</a>
-                    <a className="dropdown-item" href="#" data-value="TE">TE</a>
-                    {/* Add more positions if needed */}
-                  </div>
+                <button 
+                  className="btn btn-secondary dropdown-toggle" 
+                  type="button" 
+                  id="positionDropdown" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false"
+                >
+                  Filter by Position
+                </button>
+                <div 
+                  className="dropdown-menu dropdown-menu-right shadow animated--grow-in" 
+                  aria-labelledby="positionDropdown"
+                >
+                  <a className="dropdown-item" href="#" data-value="">All</a>
+                  <a className="dropdown-item" href="#" data-value="Skilled Offense">Skilled Offense</a>
+                  <a className="dropdown-item" href="#" data-value="QB">QB</a>
+                  <a className="dropdown-item" href="#" data-value="RB">RB</a>
+                  <a className="dropdown-item" href="#" data-value="WR">WR</a>
+                  <a className="dropdown-item" href="#" data-value="TE">TE</a>
+                  <div className="dropdown-divider"></div>
+                  <a className="dropdown-item" href="#" data-value="OLINE">
+                    OLine (OT, G, C, OL)
+                  </a>
                 </div>
+              </div>
               <table
                 className="table table-bordered"
                 id="dataTable"
@@ -217,7 +229,6 @@ const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);
                     <th className="sortable" style={{cursor: 'pointer'}}>Age</th>
                     <th className="sortable" style={{cursor: 'pointer'}}>AAV</th>
                     <th>Previous Team</th>
-                    {/* Add pointer cursor and a class for the sortable column */}
                     <th className="sortable" style={{cursor: 'pointer'}}>Fit</th>
                   </tr>
                 </thead>
