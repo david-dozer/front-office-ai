@@ -95,6 +95,27 @@ def main():
     offense_stats = pd.read_csv("backend/processed_data/team_offense_stats.csv")
     merged_stats = pd.merge(merged_stats, offense_stats, left_on='team_name', right_on='Tm', how='left')
     merged_stats = merged_stats.drop(columns=['Rk', 'Tm', 'G'])
+
+    # Define the columns and whether a lower value is better (True for ascending rank)
+    columns_to_rank = {
+        "PointsScored": False,   # higher is better, so descending
+        "TotalYds": False,       # higher is better
+        "TotalTO": True,         # lower is better
+        "PassingYds": False,     # higher is better
+        "PassingTD": False,      # higher is better
+        "Int": True,             # lower is better
+        "Passing1stD": False,    # higher is better
+        "Att": False,            # higher is better
+        "RushingYds": False,     # higher is better
+        "RushingTD": False,      # higher is better
+        "PctScoreDrives": False, # higher is better
+        "TO%": True              # lower is better
+    }
+
+    for col, ascending in columns_to_rank.items():
+        merged_stats[col + "_Rank"] = merged_stats[col].rank(ascending=ascending, method="min")
+
+    # save csv
     merged_stats.to_csv("backend/processed_data/team_seasonal_stats.csv", index=False)
     
     print("\nFinal seasonal stats updated with Cap Space All and offense stats, and saved to backend/processed_data/team_seasonal_stats.csv")
