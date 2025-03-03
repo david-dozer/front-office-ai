@@ -1,5 +1,5 @@
 import React from 'react';
-
+// TODO: rankings out of 295
 // Helper to format stat values
 function formatStat(value: string | number, type: 'total' | 'average'): string {
   const num = typeof value === 'string' ? parseFloat(value) : value;

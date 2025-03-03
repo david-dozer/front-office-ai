@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from te_fit import team_df, fa_te_imputed_scaled, get_top3_scheme_weights_te, raw_fit_functions_te, fit_te_df, full_te_imputed_scaled
+from scripts.te_fit import team_df, fa_te_imputed_scaled, get_top3_scheme_weights_te, raw_fit_functions_te, fit_te_df, full_te_imputed_scaled
 
 def get_te_fits_for_team(team_name):
     """

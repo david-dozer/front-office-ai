@@ -8,18 +8,21 @@ import CircularProgressBar from '@/app/components/CircularProgressBar';
 import { renderQBAdvancedStats, renderQBNextGenStats } from '@/app/utils/QBDisplayStats';
 import { renderRBAdvancedStats, renderRBNextGenStats, renderRBStandardReceivingStats } from '@/app/utils/RBDisplayStats';
 import { renderWRAdvancedStats, renderWRNextGenStats } from '@/app/utils/WRDisplayStats';
+import { renderTEAdvancedStats, renderTENextGenStats} from '@/app/utils/TEDisplayStats';
 import OLDisplayStats from '@/app/utils/OLDisplayStats';
 
 const advancedStatsRenderers: Record<string, (playerData: any, teamScheme: string) => React.ReactElement> = {
   QB: renderQBAdvancedStats,
   RB: renderRBAdvancedStats,
   WR: renderWRAdvancedStats,
+  TE: renderTEAdvancedStats
 };
 
 const nextGenStatsRenderers: Record<string, (playerData: any, teamScheme: string) => React.ReactElement> = {
   QB: renderQBNextGenStats,
   RB: renderRBNextGenStats,
   WR: renderWRNextGenStats,
+  TE: renderTENextGenStats
 };
 
 // Helper to format whole number stats
@@ -48,7 +51,7 @@ export default function PlayerPage() {
     async function fetchPlayer() {
       try {
         // Try endpoints for QB, RB, WR, and then oline
-        const positions = ['QB', 'RB', 'WR', 'oline'];
+        const positions = ['QB', 'RB', 'WR', 'TE', 'oline'];
         for (const pos of positions) {
           let url = '';
           if (pos.toLowerCase() === 'oline') {
@@ -169,7 +172,7 @@ export default function PlayerPage() {
                     <p><strong>Games:</strong> {formatStat(playerData.games, 'total')}</p>
                   </>
                 )}
-                {playerData.Position === 'WR' && (
+                {playerData.Position === 'WR' || playerData.Position === 'TE' && (
                   <>
                     <p><strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')}</p>
                     <p><strong>Catches:</strong> {formatStat(playerData.receptions, 'total')}</p>
@@ -184,7 +187,7 @@ export default function PlayerPage() {
         )}
       </div>
 
-      {/* If the player is an offensive lineman (using the "pos" field) render OL stats */}
+      {/* If the player is an offensive lineman or TE (using the "pos" field) render OL or TE advanced stats */}
       {isOLine && (
         <div className="row mb-4">
           <div className="col-md-12">

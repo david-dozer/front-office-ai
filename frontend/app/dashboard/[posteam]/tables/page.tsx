@@ -44,6 +44,7 @@ export default function TablesPage() {
           { pos: 'qb', endpoint: `http://localhost:5000/teams/${posteam}/qbfits` },
           { pos: 'rb', endpoint: `http://localhost:5000/teams/${posteam}/rbfits` },
           { pos: 'wr', endpoint: `http://localhost:5000/teams/${posteam}/wrfits` },
+          { pos: 'te', endpoint: `http://localhost:5000/teams/${posteam}/tefits` },
           { pos: 'oline', endpoint: `http://localhost:5000/oline` }
         ];
 
@@ -67,7 +68,7 @@ export default function TablesPage() {
               headshot_url: player.headshot_url,
             }));
           } else {
-            // For QB, RB, WR endpoints assume they return final_fit field.
+            // For QB, RB, WR, TE endpoints assume they return final_fit field.
             formattedPlayers = data.map((player: any) => ({
               id: player.id,
               name: player[`${item.pos}_name`] || "Unknown",
@@ -205,7 +206,7 @@ export default function TablesPage() {
                   aria-labelledby="positionDropdown"
                 >
                   <a className="dropdown-item" href="#" data-value="">All</a>
-                  <a className="dropdown-item" href="#" data-value="Skilled Offense">Skilled Offense</a>
+                  <a className="dropdown-item" href="#" data-value="Skilled Offense">Skilled Offense (QB, RB, WR, TE)</a>
                   <a className="dropdown-item" href="#" data-value="QB">QB</a>
                   <a className="dropdown-item" href="#" data-value="RB">RB</a>
                   <a className="dropdown-item" href="#" data-value="WR">WR</a>

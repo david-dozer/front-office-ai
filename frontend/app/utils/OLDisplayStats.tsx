@@ -9,7 +9,7 @@ interface OLDisplayStatsProps {
 }
 
 // Helper to add an ordinal suffix to a number (e.g., 1 -> 1st, 2 -> 2nd, etc.)
-function ordinalSuffixOf(i: number): string {
+export function ordinalSuffixOf(i: number): string {
   const j = i % 10, k = i % 100;
   if (j === 1 && k !== 11) {
     return i + "st";
@@ -60,7 +60,7 @@ export default function OLDisplayStats({ playerData, totalCount }: OLDisplayStat
         <strong>Average Snaps per Game:</strong> {avg} 
       </p>
       <p>
-        <strong>Team Snaps: {teamSnaps} </strong> ({avgRanking} out of 366)
+        <strong>Team Snaps: {teamSnaps} </strong> ({avgRanking} out of 366 linemen)
       </p>
     </div>
   );

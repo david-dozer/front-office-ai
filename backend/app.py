@@ -7,6 +7,7 @@ import os
 from scripts.qb_fit_app import get_qb_fits_for_team
 from scripts.rb_fit_app import get_rb_fits_for_team
 from scripts.wr_fit_app import get_wr_fits_for_team
+from scripts.te_fit_app import get_te_fits_for_team
 
 # --- Directory Setup ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))    # path to backend/
@@ -56,6 +57,7 @@ FITS_FUNCTIONS = {
     "QB": get_qb_fits_for_team,
     "RB": get_rb_fits_for_team,
     "WR": get_wr_fits_for_team,
+    "TE": get_te_fits_for_team
     # Add more if needed (TE, etc.)
 }
 
@@ -64,6 +66,7 @@ POSITION_DATA_FILES = {
     "QB": "fa_qbs.csv",
     "RB": "fa_rbs.csv",
     "WR": "fa_wrs.csv",
+    "TE": "fa_tes.csv"
     # Add more if needed
 }
 
@@ -143,6 +146,21 @@ def wr_fits_for_team_endpoint(team_abbr: str):
 
     return fits_df.to_dict(orient="records")
 
+@app.get("/teams/{team_abbr}/tefits")
+def te_fits_for_team_endpoint(team_abbr: str):
+    """
+    Return TE fit data for the given team abbreviation.
+    """
+    team_name = TEAM_ABBR_TO_NAME.get(team_abbr.upper())
+    if not team_name:
+        raise HTTPException(status_code=404, detail=f"Unknown team abbreviation: {team_abbr}")
+
+    fits_df = get_te_fits_for_team(team_name)
+    if fits_df is None or fits_df.empty:
+        raise HTTPException(status_code=404, detail=f"No TE fits found for team: {team_abbr}")
+
+    return fits_df.to_dict(orient="records")
+
 # --- Helper: read_csv_rows for a given position ---
 def read_csv_rows(position: str):
     """
@@ -189,12 +207,13 @@ def binary_search_by_name(rows, name_key: str, target_name: str):
 @app.get("/teams/{team_abbr}/{position}info/{player_name}")
 def get_player_info(team_abbr: str, position: str, player_name: str):
     """
-    Retrieve a given player's info (QB/RB/WR) for a team:
+    Retrieve a given player's info (QB/RB/WR/TE) for a team:
       1. Convert team_abbr to full team name.
       2. Get the correct fits DataFrame for position.
       3. Find 'final_fit' for the given player_name in that DataFrame.
       4. Open {position}_data.csv and do a (binary) search for the same player_name.
       5. Merge final_fit into that CSV row and return it.
+      6. If the player is a TE, also include advanced metric rankings.
     """
     # 1. Validate team
     team_name = TEAM_ABBR_TO_NAME.get(team_abbr.upper())
@@ -217,9 +236,21 @@ def get_player_info(team_abbr: str, position: str, player_name: str):
     # Find the player's final_fit
     fits_list = fits_df.to_dict(orient="records")
     final_fit_value = None
+    adv_rankings = {}
+
     for record in fits_list:
         if record.get(df_name_col, "").strip().lower() == player_name.strip().lower():
             final_fit_value = record.get("final_fit")
+
+            # If position is TE, grab additional ranking fields
+            if pos_upper == "TE":
+                adv_rankings = {
+                    "adv_receiving_epa_rank": record.get("adv_receiving_epa_rank"),
+                    "adv_receiving_first_downs_rank": record.get("adv_receiving_first_downs_rank"),
+                    "adv_ngs_catch_percentage_rank": record.get("adv_ngs_catch_percentage_rank"),
+                    "adv_ngs_avg_yac_rank": record.get("adv_ngs_avg_yac_rank"),
+                    "adv_ngs_avg_separation_rank": record.get("adv_ngs_avg_separation_rank"),
+                }
             break
 
     if final_fit_value is None:
@@ -247,7 +278,12 @@ def get_player_info(team_abbr: str, position: str, player_name: str):
     # 5. Merge final_fit into the CSV row
     matched_row["final_fit"] = final_fit_value
 
+    # 6. If TE, add advanced metric rankings to the response
+    if pos_upper == "TE":
+        matched_row.update(adv_rankings)
+
     return matched_row
+
 
 # --- New Endpoint: /oline ---
 @app.get("/oline")
@@ -290,3 +326,4 @@ def get_oline_player_info(team_abbr: str, player_name: str):
         raise HTTPException(status_code=404, detail="oline_data.csv not found")
     
     raise HTTPException(status_code=404, detail=f"Player '{player_name}' not found")
+

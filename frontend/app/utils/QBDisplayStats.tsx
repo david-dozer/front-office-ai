@@ -1,5 +1,5 @@
 import React from 'react';
-
+// TODO: rankings out of 97
 function formatStat(value: string | number, type: 'total' | 'average'): string {
   // Convert string values to a number.
   const num = typeof value === 'string' ? parseFloat(value) : value;

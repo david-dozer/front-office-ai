@@ -268,7 +268,7 @@ def main():
     final_dfs['QB'].to_csv('backend/processed_data/qb_data.csv', index=False)
     final_dfs['RB'].to_csv('backend/processed_data/rb_data.csv', index=False)
     final_dfs['WR'].to_csv('backend/processed_data/wr_data.csv', index=False)
-    final_dfs['TE'] = final_dfs['TE'].sort_values('targets', ascending=False)
+    # final_dfs['TE'] = final_dfs['TE'].sort_values('targets', ascending=False)
     final_dfs['TE'].to_csv('backend/processed_data/te_data.csv', index=False)
     print("Saved qb_data.csv, rb_data.csv, wr_data.csv, and te_data.csv to processed_data folder.")
     
@@ -281,7 +281,7 @@ def main():
     fa_te_df = final_dfs['TE'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
     
     # Sort TE dataframe by 'targets'
-    fa_te_df = fa_te_df.sort_values('targets', ascending=False)
+    # fa_te_df = fa_te_df.sort_values('targets', ascending=False)
 
     # Print the number of rows for each free agent dataframe
     print(f"Number of FA QB rows: {fa_qb_df.shape[0]}")

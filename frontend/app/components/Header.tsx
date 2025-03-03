@@ -7,6 +7,7 @@ const Header: React.FC = () => {
   const [teamColor, setTeamColor] = useState<string | null>(null);
   const [teamLogo, setTeamLogo] = useState<string | null>(null);
   const [capSpace, setCapSpace] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetch('http://localhost:5000/teams')
@@ -46,13 +47,14 @@ const Header: React.FC = () => {
       <button 
         id="sidebarToggleTop" 
         className="btn btn-link d-md-none rounded-circle mr-3"
-        data-toggle="collapse" 
-        data-target="#sidebar"
-        aria-expanded="false"
-        aria-controls="sidebar"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         <i className="fa fa-bars"></i>
       </button>
+
+      <div id="sidebar" className={`collapse ${sidebarOpen ? 'show' : ''}`}>
+        {/* Sidebar content */}
+      </div>
 
       {/* Centered Cap Space */}
       <div className="ml-auto text-right">
