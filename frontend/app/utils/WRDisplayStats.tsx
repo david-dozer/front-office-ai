@@ -1,5 +1,6 @@
 import React from 'react';
-// TODO: rankings out of 295
+import { ordinalSuffixOf } from './OLDisplayStats';
+
 // Helper to format stat values
 function formatStat(value: string | number, type: 'total' | 'average'): string {
   const num = typeof value === 'string' ? parseFloat(value) : value;
@@ -12,69 +13,134 @@ function formatStat(value: string | number, type: 'total' | 'average'): string {
   return value.toString();
 }
 
+// Helper to format ranking output in smaller font
+function formatRank(rank: number): React.ReactElement {
+  return (
+    <span style={{ fontSize: "0.70em", color: "#666" }}>
+      ({ordinalSuffixOf(rank)} out of 295 WRs)
+    </span>
+  );
+}
+
 export function renderWRAdvancedStats(playerData: any, teamScheme: string): React.ReactElement {
   switch (teamScheme) {
     case 'Air Raid':
       return (
         <>
-          <p><strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')}</p>
-          <p><strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')}</p>
-          <p><strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')}</p>
-          <p><strong>Target Share:</strong> {formatStat(playerData.target_share, 'average')}</p>
+          <p>
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
+          </p>
+          <p>
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+          </p>
+          <p>
+            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+          </p>
+          <p>
+            <strong>Target Share:</strong> {formatStat(playerData.target_share, 'average')} {formatRank(playerData.target_share_rank)}
+          </p>
         </>
       );
     case 'Spread Option':
       return (
         <>
-          <p><strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')}</p>
-          <p><strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')}</p>
-          <p><strong>RACR:</strong> {formatStat(playerData.racr, 'average')}</p>
-          <p><strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')}</p>
+          <p>
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+          </p>
+          <p>
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+          </p>
+          <p>
+            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+          </p>
+          <p>
+            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+          </p>
         </>
       );
     case 'West Coast':
       return (
         <>
-          <p><strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')}</p>
-          <p><strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')}</p>
-          <p><strong>Air Yards Share:</strong> {formatStat(playerData.air_yards_share, 'average')}</p>
-          <p><strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')}</p>
+          <p>
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+          </p>
+          <p>
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+          </p>
+          <p>
+            <strong>Air Yards Share:</strong> {formatStat(playerData.air_yards_share, 'average')} {formatRank(playerData.air_yards_share_rank)}
+          </p>
+          <p>
+            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+          </p>
         </>
       );
     case 'West Coast McVay':
       return (
         <>
-          <p><strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')}</p>
-          <p><strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')}</p>
-          <p><strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')}</p>
-          <p><strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')}</p>
+          <p>
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
+          </p>
+          <p>
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+          </p>
+          <p>
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+          </p>
+          <p>
+            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+          </p>
         </>
       );
     case 'Shanahan Wide Zone':
       return (
         <>
-          <p><strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')}</p>
-          <p><strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')}</p>
-          <p><strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')}</p>
-          <p><strong>RACR:</strong> {formatStat(playerData.racr, 'average')}</p>
+          <p>
+            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+          </p>
+          <p>
+            <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} {formatRank(playerData.receiving_fumbles_rank)}
+          </p>
+          <p>
+            <strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')} {formatRank(playerData.receiving_fumbles_lost_rank)}
+          </p>
+          <p>
+            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+          </p>
         </>
       );
     case 'Run Power':
       return (
         <>
-          <p><strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')}</p>
-          <p><strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')}</p>
-          <p><strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')}</p>
-          <p><strong>Target Share:</strong> {formatStat(playerData.target_share, 'average')}</p>
+          <p>
+            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+          </p>
+          <p>
+            <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} {formatRank(playerData.receiving_fumbles_rank)}
+          </p>
+          <p>
+            <strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')} {formatRank(playerData.receiving_fumbles_lost_rank)}
+          </p>
+          <p>
+            <strong>Target Share:</strong> {formatStat(playerData.target_share, 'average')} {formatRank(playerData.target_share_rank)}
+          </p>
         </>
       );
     case 'Pistol Power Spread':
       return (
         <>
-          <p><strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')}</p>
-          <p><strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')}</p>
-          <p><strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')}</p>
-          <p><strong>RACR:</strong> {formatStat(playerData.racr, 'average')}</p>
+          <p>
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
+          </p>
+          <p>
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+          </p>
+          <p>
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+          </p>
+          <p>
+            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+          </p>
         </>
       );
     default:
@@ -83,68 +149,57 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
 }
 
 export function renderWRNextGenStats(playerData: any, teamScheme: string): React.ReactElement {
+  // Check if any Next Gen Stats are empty
+  if (
+    playerData.ngs_avg_separation === "" ||
+    playerData.ngs_avg_intended_air_yards === "" ||
+    playerData.ngs_catch_percentage === "" ||
+    playerData.ngs_avg_expected_yac === "" ||
+    playerData.ngs_percent_share_of_intended_air_yards === "" ||
+    playerData.ngs_avg_yac_above_expectation === "" ||
+    playerData.ngs_avg_yac === ""
+  ) {
+    return <p>Not enough activity for Next Gen Stats...</p>;
+  }
+
   switch (teamScheme) {
     case 'Air Raid':
       return (
         <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-          <p><strong>NGS Avg Expected YAC:</strong> {formatStat(playerData.ngs_avg_expected_yac, 'average')}</p>
+          <p>
+            <strong>Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')} {formatRank(playerData.ngs_avg_separation_rank)}
+          </p>
+          <p>
+            <strong>Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+          </p>
+          <p>
+            <strong>Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}% {formatRank(playerData.ngs_catch_percentage_rank)}
+          </p>
+          <p>
+            <strong>Avg Expected YAC:</strong> {formatStat(playerData.ngs_avg_expected_yac, 'average')} {formatRank(playerData.ngs_avg_expected_yac_rank)}
+          </p>
         </>
       );
     case 'Spread Option':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-          <p><strong>NGS % Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}</p>
-        </>
-      );
     case 'West Coast':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS % Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-        </>
-      );
     case 'West Coast McVay':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Avg YAC Above Expectation:</strong> {formatStat(playerData.ngs_avg_yac_above_expectation, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-        </>
-      );
     case 'Shanahan Wide Zone':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-          <p><strong>NGS Avg YAC:</strong> {formatStat(playerData.ngs_avg_yac, 'average')}</p>
-        </>
-      );
     case 'Run Power':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-          <p><strong>NGS Avg YAC:</strong> {formatStat(playerData.ngs_avg_yac, 'average')}</p>
-        </>
-      );
     case 'Pistol Power Spread':
       return (
         <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Avg YAC Above Expectation:</strong> {formatStat(playerData.ngs_avg_yac_above_expectation, 'average')}</p>
-          <p><strong>NGS % Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}</p>
+          <p>
+            <strong>Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')} {formatRank(playerData.ngs_avg_separation_rank)}
+          </p>
+          <p>
+            <strong>Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+          </p>
+          <p>
+            <strong>Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}% {formatRank(playerData.ngs_catch_percentage_rank)}
+          </p>
+          <p>
+            <strong>% Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')} {formatRank(playerData.ngs_percent_share_of_intended_air_yards_rank)}
+          </p>
         </>
       );
     default:

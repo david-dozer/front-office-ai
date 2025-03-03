@@ -172,7 +172,16 @@ export default function PlayerPage() {
                     <p><strong>Games:</strong> {formatStat(playerData.games, 'total')}</p>
                   </>
                 )}
-                {playerData.Position === 'WR' || playerData.Position === 'TE' && (
+                {playerData.Position === 'WR' && (
+                  <>
+                    <p><strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')}</p>
+                    <p><strong>Catches:</strong> {formatStat(playerData.receptions, 'total')}</p>
+                    <p><strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards, 'total')}</p>
+                    <p><strong>Targets:</strong> {formatStat(playerData.targets, 'total')}</p>
+                    <p><strong>Games:</strong> {formatStat(playerData.games, 'total')}</p>
+                  </>
+                )}
+                {playerData.Position === 'TE' && (
                   <>
                     <p><strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')}</p>
                     <p><strong>Catches:</strong> {formatStat(playerData.receptions, 'total')}</p>
