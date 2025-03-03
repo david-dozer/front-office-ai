@@ -39,26 +39,36 @@ export function renderTEAdvancedStats(playerData: any, teamScheme: string): Reac
 }
 
 export function renderTENextGenStats(playerData: any, teamScheme: string): React.ReactElement {
-  switch (teamScheme) {
-    case 'Air Raid':
-    case 'Spread Option':
-    case 'West Coast':
-    case 'West Coast McVay':
-    case 'Run Power':
-    case 'Pistol Power Spread':
-      return (
-        <>
-          <p><strong>Yards After Catch:</strong> {formatStat(playerData.ngs_avg_yac, 'average')} {formatRank(playerData.adv_ngs_avg_yac_rank)}</p>
-          <p><strong>Catch%:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}% {formatRank(playerData.adv_ngs_catch_percentage_rank)}</p>
-        </>
-      );
-    case 'West Coast':
-      return (
-        <>
-          <p><strong>Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')} {formatRank(playerData.adv_ngs_avg_separation_rank)}</p>
-        </>
-      );
-    default:
-      return <p>No Next Gen stats available for the selected scheme.</p>;
-  }
+    // Check if any Next Gen Stats are missing or null
+    if (
+      playerData.ngs_avg_yac == "" ||
+      playerData.ngs_catch_percentage == "" ||
+      playerData.ngs_avg_separation == ""
+    ) {
+      return <p>Not enough activity for Next Gen Stats...</p>;
+    }
+  
+    switch (teamScheme) {
+      case 'Air Raid':
+      case 'Spread Option':
+      case 'West Coast':
+      case 'West Coast McVay':
+      case 'Run Power':
+      case 'Pistol Power Spread':
+        return (
+          <>
+            <p><strong>Yards After Catch:</strong> {formatStat(playerData.ngs_avg_yac, 'average')} {formatRank(playerData.adv_ngs_avg_yac_rank)}</p>
+            <p><strong>Catch%:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}% {formatRank(playerData.adv_ngs_catch_percentage_rank)}</p>
+          </>
+        );
+      case 'West Coast':
+        return (
+          <>
+            <p><strong>Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')} {formatRank(playerData.adv_ngs_avg_separation_rank)}</p>
+          </>
+        );
+      default:
+        return <p>No Next Gen stats available for the selected scheme.</p>;
+    }
 }
+

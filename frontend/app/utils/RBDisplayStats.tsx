@@ -90,6 +90,18 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
 }
 
 export function renderRBNextGenStats(playerData: any, teamScheme: string): React.ReactElement {
+  // Check if any Next Gen Stats are empty
+  if (
+    playerData.ngs_efficiency === "" ||
+    playerData.ngs_avg_time_to_los === "" ||
+    playerData.ngs_avg_rush_yards === "" ||
+    playerData.ngs_expected_rush_yards === "" ||
+    playerData.ngs_rush_yards_over_expected === "" ||
+    playerData.ngs_rush_yards_over_expected_per_att === ""
+  ) {
+    return <p>Not enough activity for Next Gen Stats...</p>;
+  }
+
   switch (teamScheme) {
     case 'Air Raid':
       return (

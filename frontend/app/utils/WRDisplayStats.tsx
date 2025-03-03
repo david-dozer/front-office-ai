@@ -83,6 +83,19 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
 }
 
 export function renderWRNextGenStats(playerData: any, teamScheme: string): React.ReactElement {
+  // Check if any Next Gen Stats are empty
+  if (
+    playerData.ngs_avg_separation === "" ||
+    playerData.ngs_avg_intended_air_yards === "" ||
+    playerData.ngs_catch_percentage === "" ||
+    playerData.ngs_avg_expected_yac === "" ||
+    playerData.ngs_percent_share_of_intended_air_yards === "" ||
+    playerData.ngs_avg_yac_above_expectation === "" ||
+    playerData.ngs_avg_yac === ""
+  ) {
+    return <p>Not enough activity for Next Gen Stats...</p>;
+  }
+
   switch (teamScheme) {
     case 'Air Raid':
       return (
@@ -94,56 +107,16 @@ export function renderWRNextGenStats(playerData: any, teamScheme: string): React
         </>
       );
     case 'Spread Option':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-          <p><strong>NGS % Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}</p>
-        </>
-      );
     case 'West Coast':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS % Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-        </>
-      );
     case 'West Coast McVay':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Avg YAC Above Expectation:</strong> {formatStat(playerData.ngs_avg_yac_above_expectation, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-        </>
-      );
     case 'Shanahan Wide Zone':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-          <p><strong>NGS Avg YAC:</strong> {formatStat(playerData.ngs_avg_yac, 'average')}</p>
-        </>
-      );
     case 'Run Power':
-      return (
-        <>
-          <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
-          <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
-          <p><strong>NGS Avg YAC:</strong> {formatStat(playerData.ngs_avg_yac, 'average')}</p>
-        </>
-      );
     case 'Pistol Power Spread':
       return (
         <>
           <p><strong>NGS Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')}</p>
           <p><strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')}</p>
-          <p><strong>NGS Avg YAC Above Expectation:</strong> {formatStat(playerData.ngs_avg_yac_above_expectation, 'average')}</p>
+          <p><strong>NGS Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}%</p>
           <p><strong>NGS % Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}</p>
         </>
       );
@@ -151,3 +124,4 @@ export function renderWRNextGenStats(playerData: any, teamScheme: string): React
       return <p>No next gen stats available for the selected scheme.</p>;
   }
 }
+

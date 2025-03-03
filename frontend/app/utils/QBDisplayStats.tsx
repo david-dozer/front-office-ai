@@ -87,6 +87,19 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
 }
 
 export function renderQBNextGenStats(playerData: any, teamScheme: string): React.ReactElement {
+  // Check if any Next Gen Stats are empty
+  if (
+    playerData.ngs_avg_time_to_throw === "" ||
+    playerData.ngs_avg_intended_air_yards === "" ||
+    playerData.ngs_completion_percentage === "" ||
+    playerData.ngs_passer_rating === "" ||
+    playerData.ngs_expected_completion_percentage === "" ||
+    playerData.ngs_avg_air_yards_differential === "" ||
+    playerData.ngs_completion_percentage_above_expectation === ""
+  ) {
+    return <p>Not enough activity for Next Gen Stats...</p>;
+  }
+  
   switch (teamScheme) {
     case 'Air Raid':
       return (

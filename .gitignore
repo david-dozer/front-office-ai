@@ -6,3 +6,4 @@ pfr.py
 scheme.txt
 season.txt
 qb_players.csv
+backend/scripts/wr_fit_data.csv
