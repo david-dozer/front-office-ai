@@ -267,14 +267,24 @@ def main():
     # Save the final dataframes for each position to CSV files in the processed_data folder
     final_dfs['QB'].to_csv('backend/processed_data/qb_data.csv', index=False)
     final_dfs['RB'].to_csv('backend/processed_data/rb_data.csv', index=False)
+    # Convert 'Lil'Jordan Humphrey' to 'Lil'jordan Humphrey' in the WR dataframe before saving
+    final_dfs['WR']['player_name'] = final_dfs['WR']['player_name'].replace('Lil\'Jordan Humphrey', 'Lil\'jordan Humphrey')
     final_dfs['WR'].to_csv('backend/processed_data/wr_data.csv', index=False)
-    # final_dfs['TE'] = final_dfs['TE'].sort_values('targets', ascending=False)
     final_dfs['TE'].to_csv('backend/processed_data/te_data.csv', index=False)
     print("Saved qb_data.csv, rb_data.csv, wr_data.csv, and te_data.csv to processed_data folder.")
+
+    # Check if Lil'Jordan Humphrey is in the WR dataframe
+    if 'Lil\'jordan Humphrey' in final_dfs['WR']['player_name'].values:
+        print("Lil'jordan Humphrey is in the WR dataframe.")
+        # Print Lil'Jordan Humphrey's row
+        print(final_dfs['WR'][final_dfs['WR']['player_name'] == 'Lil\'jordan Humphrey'])
+    else:
+        print("Lil'jordan Humphrey is not in the WR dataframe.")
     
     # Step 4: Scrape free agents from Spotrac and merge with the QB data
     print("Scraping free agent data from Spotrac...")
     free_agents_df = scrape_free_agents(off_url)
+    free_agents_df['Name'] = free_agents_df['Name'].str.replace('’', '\'')
     fa_qb_df = final_dfs['QB'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
     fa_rb_df = final_dfs['RB'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
     fa_wr_df = final_dfs['WR'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
@@ -283,11 +293,13 @@ def main():
     # Sort TE dataframe by 'targets'
     # fa_te_df = fa_te_df.sort_values('targets', ascending=False)
 
-    # Print the number of rows for each free agent dataframe
-    print(f"Number of FA QB rows: {fa_qb_df.shape[0]}")
-    print(f"Number of FA RB rows: {fa_rb_df.shape[0]}")
-    print(f"Number of FA WR rows: {fa_wr_df.shape[0]}")
-    print(f"Number of FA TE rows: {fa_te_df.shape[0]}")
+    # Check if Lil'Jordan Humphrey is in the WR dataframe
+    if 'Lil\'jordan Humphrey' in fa_wr_df['player_name'].values:
+        print("Lil'jordan Humphrey is in the WR dataframe.")
+        # Print Lil'Jordan Humphrey's row
+        print(fa_wr_df[fa_wr_df['player_name'] == 'Lil\'jordan Humphrey'])
+    else:
+        print("Lil'jordan Humphrey is not in the WR dataframe.")
     
     fa_qb_df.to_csv('backend/processed_data/fa_qbs.csv', index=False)
     fa_rb_df.to_csv('backend/processed_data/fa_rbs.csv', index=False)

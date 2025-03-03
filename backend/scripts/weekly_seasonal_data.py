@@ -105,7 +105,7 @@ def main():
         "PassingTD": False,      # higher is better
         "Int": True,             # lower is better
         "Passing1stD": False,    # higher is better
-        "Att": False,            # higher is better
+        "Y/A": False,            # higher is better
         "RushingYds": False,     # higher is better
         "RushingTD": False,      # higher is better
         "PctScoreDrives": False, # higher is better
