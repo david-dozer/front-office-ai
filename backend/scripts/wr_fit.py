@@ -211,6 +211,7 @@ for _, team_row in team_df.iterrows():
         aav = wr_row['AAV']
         prev_team = wr_row['Prev Team']
         age = wr_row['Age']
+        games = wr_row['games']
         headshot = wr_row['headshot_url']
         fit_components = {}
         for scheme, weight in scheme_weights.items():
@@ -220,6 +221,8 @@ for _, team_row in team_df.iterrows():
             else:
                 fit_components[scheme] = np.nan
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        if games < 9:
+            final_fit -= 0.1  # Adjust for insufficient games
         # Add volume bonus based on per-game receptions and targets
         final_fit += compute_volume_bonus(wr_row)
         records_wr.append({
@@ -228,6 +231,7 @@ for _, team_row in team_df.iterrows():
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot, 
             'final_fit': final_fit,
             'production_score': compute_production_score_wr(wr_row),

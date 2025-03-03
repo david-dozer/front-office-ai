@@ -218,6 +218,7 @@ for _, team_row in team_df.iterrows():
         aav = rb_row['AAV']
         prev_team = rb_row['Prev Team']
         age = rb_row['Age']
+        games = rb_row['games']
         headshot = rb_row['headshot_url']
         fit_components = {}
         for scheme, weight in scheme_weights.items():
@@ -227,6 +228,8 @@ for _, team_row in team_df.iterrows():
             else:
                 fit_components[scheme] = np.nan
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        if games < 9:
+            final_fit -= 0.1  # Adjust for insufficient games
 
         # Bonus for high-volume rushers (workhorses)
         if rb_row['carries'] >= 150:
@@ -243,6 +246,7 @@ for _, team_row in team_df.iterrows():
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot, 
             'final_fit': final_fit,
             'production_score': compute_production_score_rb(rb_row),

@@ -31,6 +31,7 @@ def get_qb_fits_for_team(team_name):
         aav = qb_row['AAV']
         prev_team = qb_row['Prev Team']
         age = qb_row['Age']
+        games = qb_row['games']
         headshot = qb_row['headshot_url']
         fit_components = {}
 
@@ -44,6 +45,8 @@ def get_qb_fits_for_team(team_name):
 
         # Compute final weighted fit score
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        if games < 9:
+            final_fit -= 0.1  # Adjust for insufficient games
 
         # Store results
         records.append({
@@ -51,6 +54,7 @@ def get_qb_fits_for_team(team_name):
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot, 
             'final_fit': final_fit
         })

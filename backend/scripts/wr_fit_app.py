@@ -35,6 +35,7 @@ def get_wr_fits_for_team(team_name):
         aav = wr_row['AAV']
         prev_team = wr_row['Prev Team']
         age = wr_row['Age']
+        games = wr_row['games']
         headshot = wr_row['headshot_url']
         fit_components = {}
         for scheme, weight in scheme_weights.items():
@@ -44,12 +45,20 @@ def get_wr_fits_for_team(team_name):
             else:
                 fit_components[scheme] = np.nan
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        if games < 9:
+            final_fit -= 0.1  # Adjust for insufficient games
         final_fit += compute_volume_bonus(wr_row)
+
+        # custom mod for big names, and dyami brown did great in the playoffs
+        if wr_name in ["Dyami Brown", "DeAndre Hopkins", "Stefon Diggs", "Keenan Allen"]:
+            final_fit += 0.15
+
         records.append({
             'wr_name': wr_name,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot,
             'final_fit': final_fit
         })

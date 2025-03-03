@@ -189,6 +189,7 @@ for _, team_row in team_df.iterrows():
         aav = te_row['AAV'] if 'AAV' in te_row else np.nan
         prev_team = te_row['Prev Team'] if 'Prev Team' in te_row else np.nan
         age = te_row['Age']
+        games = te_row['games']
         headshot = te_row['headshot_url'] if 'headshot_url' in te_row else ''
         fit_components = {}
         for scheme, weight in scheme_weights.items():
@@ -198,12 +199,15 @@ for _, team_row in team_df.iterrows():
             else:
                 fit_components[scheme] = np.nan
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        if games < 9:
+            final_fit -= 0.1  # Adjust for insufficient games
         records_te.append({
             'team_name': team_name,
             'te_name': te_name,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot, 
             'final_fit': final_fit,
             'production_score': compute_production_score_te(te_row),

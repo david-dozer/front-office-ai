@@ -94,6 +94,7 @@ def apply_final_scaling(df):
        final_rating = team_relative_rating * 0.75 + 0.1
     """
     df['final_rating'] = df['team_relative_rating'] * 0.7 + 0.1
+    df['final_rating'] -= 0.1 if df['games'] < 9 else 0
     return df
 
 def clean_columns(df):

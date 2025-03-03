@@ -163,6 +163,7 @@ for _, team_row in team_df.iterrows():
         aav = qb_row['AAV']
         prev_team = qb_row['Prev Team']
         age = qb_row['Age']
+        games = qb_row['games']
         headshot = qb_row['headshot_url']
         # Compute raw fit for each scheme in the team's top 3.
         fit_components = {}
@@ -174,12 +175,15 @@ for _, team_row in team_df.iterrows():
                 fit_components[scheme] = np.nan
         # Compute the final weighted fit.
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        if games < 9:
+            final_fit -= 0.1  # Adjust for insufficient games
         records.append({
             'team_name': team_name,
             'qb_name': qb_name,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot, 
             'final_fit': final_fit,
             'production_score': compute_production_score(qb_row),

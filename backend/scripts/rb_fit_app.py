@@ -31,6 +31,7 @@ def get_rb_fits_for_team(team_name):
         aav = rb_row['AAV']
         prev_team = rb_row['Prev Team']
         age = rb_row['Age']
+        games = rb_row['games']
         headshot = rb_row['headshot_url']
         fit_components = {}
 
@@ -44,6 +45,8 @@ def get_rb_fits_for_team(team_name):
 
         # Calculate the final weighted fit score for this RB
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        if games < 9:
+            final_fit -= 0.1  # Adjust for insufficient games
 
         # Bonus for players with high raw yards per carry (ypc > 4.2)
         if rb_row['yards_per_carry'] > 4.2:
@@ -54,6 +57,7 @@ def get_rb_fits_for_team(team_name):
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot, 
             'final_fit': final_fit
         })
