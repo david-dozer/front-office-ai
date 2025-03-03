@@ -77,7 +77,7 @@ def main():
     # assigns schemes, and writes back to the seasonal stats CSV.
     scheme.apply_offensive_scheme()
 
-    # --- Scrape Team Cap Data and Merge ---
+    # --- Merge Team Cap Data and Merge ---
     cap_df = scrape_team_cap_data()  # Scrapes and saves ../processed_data/team_cap_data.csv
     # Read the updated seasonal stats (which now includes scheme information)
     seasonal_stats = pd.read_csv("backend/processed_data/team_seasonal_stats.csv")
@@ -85,12 +85,19 @@ def main():
     # Merge on team abbreviation; in cap_df the team abbreviation is in the "Team" column,
     # while in seasonal_stats it is in "posteam".
     merged_stats = pd.merge(seasonal_stats, cap_df[['Team', 'Cap Space All']], left_on='posteam', right_on='Team', how='left')
-    # Optionally drop the redundant 'Team' column
-    merged_stats = merged_stats.drop(columns=['Team'])
+    # Optionally drop the redundant 'Team' column and rename 'Cap Space All' to 'cap_space_all'
+    merged_stats = merged_stats.drop(columns=['Team']).rename(columns={'Cap Space All': 'cap_space_all'})
     
     # Save the final CSV
     merged_stats.to_csv("backend/processed_data/team_seasonal_stats.csv", index=False)
-    print("\nFinal seasonal stats updated with Cap Space All and saved to backend/processed_data/team_seasonal_stats.csv")
+
+    # --- Merge Team Offense Stats ---
+    offense_stats = pd.read_csv("backend/processed_data/team_offense_stats.csv")
+    merged_stats = pd.merge(merged_stats, offense_stats, left_on='team_name', right_on='Tm', how='left')
+    merged_stats = merged_stats.drop(columns=['Rk', 'Tm', 'G'])
+    merged_stats.to_csv("backend/processed_data/team_seasonal_stats.csv", index=False)
+    
+    print("\nFinal seasonal stats updated with Cap Space All and offense stats, and saved to backend/processed_data/team_seasonal_stats.csv")
 
 if __name__ == "__main__":
     main()

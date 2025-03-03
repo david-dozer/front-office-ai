@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-# from scripts.wr_fit import team_df, wr_imputed_scaled, get_top3_scheme_weights_wr, raw_fit_functions_wr, fit_wr_df
-from wr_fit import team_df, wr_imputed_scaled, get_top3_scheme_weights_wr, raw_fit_functions_wr, fit_wr_df
+from scripts.wr_fit import team_df, wr_imputed_scaled, get_top3_scheme_weights_wr, raw_fit_functions_wr, fit_wr_df
+# from wr_fit import team_df, wr_imputed_scaled, get_top3_scheme_weights_wr, raw_fit_functions_wr, fit_wr_df
 
 def compute_volume_bonus(wr_row):
     """
