@@ -28,6 +28,7 @@ def get_te_fits_for_team(team_name):
     # Iterate through each TE in the free agent TE DataFrame (fa_tes)
     for _, te_row in fa_te_imputed_scaled.iterrows():
         te_name = te_row['player_name']
+        te_id = te_row['player_id']
         aav = te_row['AAV'] if 'AAV' in te_row else np.nan
         prev_team = te_row['Prev Team'] if 'Prev Team' in te_row else np.nan
         age = te_row['Age']
@@ -47,6 +48,7 @@ def get_te_fits_for_team(team_name):
 
         records.append({
             'te_name': te_name,
+            'te_id': te_id,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,

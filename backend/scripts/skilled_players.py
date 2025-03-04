@@ -2,6 +2,7 @@ import nfl_data_py as nfl
 import pandas as pd
 from playerscrape import scrape_free_agents, off_url
 import numpy as np
+import re
 
 # --- Define column lists ---
 COMMON_ROSTER_COLUMNS = [
@@ -275,24 +276,84 @@ def main():
     # Step 4: Scrape free agents from Spotrac and merge with the QB data
     print("Scraping free agent data from Spotrac...")
     free_agents_df = scrape_free_agents(off_url)
-    fa_qb_df = final_dfs['QB'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
-    fa_rb_df = final_dfs['RB'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
-    fa_wr_df = final_dfs['WR'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
-    fa_te_df = final_dfs['TE'].merge(free_agents_df, left_on='player_name', right_on='Name', how='inner')
+
+
+    def only_alpha_lower(s):
+        """Return only alphabetic characters in lowercase (drop spaces, punctuation, etc.)."""
+        if pd.isna(s):
+            return None
+        return re.sub(r'[^a-z]', '', s.lower())
+
+    # Make copies so we don't modify the originals
+    fa_qb_df = final_dfs['QB'].copy()
+    fa_rb_df = final_dfs['RB'].copy()
+    fa_wr_df = final_dfs['WR'].copy()
+    fa_te_df = final_dfs['TE'].copy()
+
+    free_agents_copy = free_agents_df.copy()
+
+    # Create temporary clean-name columns for each dataset
+    fa_qb_df['player_name_clean'] = fa_qb_df['player_name'].apply(only_alpha_lower)
+    fa_rb_df['player_name_clean'] = fa_rb_df['player_name'].apply(only_alpha_lower)
+    fa_wr_df['player_name_clean'] = fa_wr_df['player_name'].apply(only_alpha_lower)
+    fa_te_df['player_name_clean'] = fa_te_df['player_name'].apply(only_alpha_lower)
+
+    free_agents_copy['Name_clean'] = free_agents_copy['Name'].apply(only_alpha_lower)
+
+    # Now merge on the clean columns
+    fa_qb_merged = fa_qb_df.merge(
+        free_agents_copy, 
+        left_on='player_name_clean', 
+        right_on='Name_clean', 
+        how='inner'
+    )
+
+    fa_rb_merged = fa_rb_df.merge(
+        free_agents_copy, 
+        left_on='player_name_clean', 
+        right_on='Name_clean', 
+        how='inner'
+    )
+
+    fa_wr_merged = fa_wr_df.assign(player_name_lower=fa_wr_df['player_name'].str.lower()) \
+    .merge(
+        free_agents_copy.assign(name_lower=free_agents_copy['Name'].str.lower()),
+        left_on='player_name_lower',
+        right_on='name_lower',
+        how='inner'
+    )
+
+    fa_te_merged = fa_te_df.merge(
+        free_agents_copy, 
+        left_on='player_name_clean', 
+        right_on='Name_clean', 
+        how='inner'
+    )
+
+    # Drop the temporary columns if you no longer need them
+    fa_qb_merged.drop(['player_name_clean', 'Name_clean'], axis=1, inplace=True)
+    fa_rb_merged.drop(['player_name_clean', 'Name_clean'], axis=1, inplace=True)
+    fa_wr_merged.drop(['player_name_lower', 'name_lower'], axis=1, inplace=True)
+    fa_te_merged.drop(['player_name_clean', 'Name_clean'], axis=1, inplace=True)
     
     # Sort TE dataframe by 'targets'
     # fa_te_df = fa_te_df.sort_values('targets', ascending=False)
 
-    # Print the number of rows for each free agent dataframe
-    print(f"Number of FA QB rows: {fa_qb_df.shape[0]}")
-    print(f"Number of FA RB rows: {fa_rb_df.shape[0]}")
-    print(f"Number of FA WR rows: {fa_wr_df.shape[0]}")
-    print(f"Number of FA TE rows: {fa_te_df.shape[0]}")
+    # Sort all dataframes by 'player_id' in ascending order and print the number of rows for each free agent dataframe
+    fa_qb_merged = fa_qb_merged.sort_values(by='player_id', ascending=True)
+    fa_rb_merged = fa_rb_merged.sort_values(by='player_id', ascending=True)
+    fa_wr_merged = fa_wr_merged.sort_values(by='player_id', ascending=True)
+    fa_te_merged = fa_te_merged.sort_values(by='player_id', ascending=True)
+
+    print(f"Number of FA QB rows: {fa_qb_merged.shape[0]}")
+    print(f"Number of FA RB rows: {fa_rb_merged.shape[0]}")
+    print(f"Number of FA WR rows: {fa_wr_merged.shape[0]}")
+    print(f"Number of FA TE rows: {fa_te_merged.shape[0]}")
     
-    fa_qb_df.to_csv('backend/processed_data/fa_qbs.csv', index=False)
-    fa_rb_df.to_csv('backend/processed_data/fa_rbs.csv', index=False)
-    fa_wr_df.to_csv('backend/processed_data/fa_wrs.csv', index=False)
-    fa_te_df.to_csv('backend/processed_data/fa_tes.csv', index=False)
+    fa_qb_merged.to_csv('backend/processed_data/fa_qbs.csv', index=False)
+    fa_rb_merged.to_csv('backend/processed_data/fa_rbs.csv', index=False)
+    fa_wr_merged.to_csv('backend/processed_data/fa_wrs.csv', index=False)
+    fa_te_merged.to_csv('backend/processed_data/fa_tes.csv', index=False)
     print("Saved fa_qbs.csv to processed_data folder.")
 
 if __name__ == "__main__":

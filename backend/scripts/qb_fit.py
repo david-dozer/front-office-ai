@@ -160,6 +160,7 @@ for _, team_row in team_df.iterrows():
     # Loop over each QB in our (first 15) qb data.
     for _, qb_row in qb_imputed_scaled.iterrows():
         qb_name = qb_row['player_name']
+        qb_id = qb_row['player_id']
         aav = qb_row['AAV']
         prev_team = qb_row['Prev Team']
         age = qb_row['Age']
@@ -177,6 +178,7 @@ for _, team_row in team_df.iterrows():
         records.append({
             'team_name': team_name,
             'qb_name': qb_name,
+            'qb_id': qb_id,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,

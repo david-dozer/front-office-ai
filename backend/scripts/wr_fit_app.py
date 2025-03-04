@@ -16,6 +16,7 @@ def get_wr_fits_for_team(team_name):
     records = []
     for _, wr_row in wr_imputed_scaled.iterrows():
         wr_name = wr_row['player_name']
+        wr_id = wr_row['player_id']
         aav = wr_row['AAV']
         prev_team = wr_row['Prev Team']
         age = wr_row['Age']
@@ -25,6 +26,7 @@ def get_wr_fits_for_team(team_name):
         final_fit = compute_final_fit_wr(wr_row, scheme_weights, raw_fit_functions_wr)
         records.append({
             'wr_name': wr_name,
+            'wr_id': wr_id,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,

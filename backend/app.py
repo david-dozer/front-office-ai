@@ -98,29 +98,29 @@ ADVANCED_RANK_FIELDS = {
         "ngs_avg_yac_rank"
     ],
     "RB": [
-        "rushing_epa_rank",
-        "receiving_air_yards_rank",
-        "receiving_yards_after_catch_rank",
-        "receiving_first_downs_rank",
-        "racr_rank",
-        "rushing_first_downs_rank",
-        "rushing_2pt_conversions_rank",
-        "rushing_fumbles_lost_rank",
-        "receiving_epa_rank",
-        "ngs_efficiency_rank",
-        "ngs_avg_time_to_los_inv_rank",
-        "ngs_avg_rush_yards_rank",
-        "ngs_expected_rush_yards_rank",
-        "ngs_rush_yards_over_expected_rank",
-        "ngs_rush_yards_over_expected_per_att_rank",
-        "ngs_rush_pct_over_expected_rank",
-        "receptions_rank",
-        "targets_rank",
-        "receiving_yards_rank",
-        "receiving_tds_rank",
-        "receiving_fumbles_rank",
-        "receiving_fumbles_lost_rank"
-    ]
+    "rushing_epa_rank",
+    "receiving_air_yards_rank",
+    "receiving_yards_after_catch_rank",
+    "receiving_first_downs_rank",
+    "racr_rank",
+    "rushing_first_downs_rank",
+    "rushing_2pt_conversions_rank",
+    "rushing_fumbles_lost_rank",
+    "receiving_epa_rank",
+    "ngs_efficiency_rank",
+    "ngs_avg_time_to_los_inv_rank",
+    "ngs_avg_rush_yards_rank",
+    "ngs_expected_rush_yards_rank",
+    "ngs_rush_yards_over_expected_rank",
+    "ngs_rush_yards_over_expected_per_att_rank",
+    "ngs_rush_pct_over_expected_rank",
+    "receptions_rank",
+    "targets_rank",
+    "receiving_yards_rank",
+    "receiving_tds_rank",
+    "receiving_fumbles_rank",
+    "receiving_fumbles_lost_rank"
+]
 }
 
 app = FastAPI()
@@ -233,32 +233,31 @@ def read_csv_rows(position: str):
             detail=f"CSV file '{csv_filename}' not found in processed_data folder"
         )
 
-# --- Helper: optional binary search by player name ---
-def binary_search_by_name(rows, name_key: str, target_name: str):
+# --- Helper: optional binary search by player ID ---
+def binary_search_by_id(rows, id_key: str, target_id: str):
     """
-    Assume 'rows' is sorted ascending by 'name_key'.
+    Assume 'rows' is sorted ascending by 'id_key'.
     Perform a binary search, case-insensitive.
     Returns the matching row or None if not found.
     """
     left, right = 0, len(rows) - 1
-    target_lower = target_name.lower()
 
     while left <= right:
         mid = (left + right) // 2
-        mid_name = rows[mid][name_key].strip().lower()
+        mid_id = rows[mid][id_key].strip()
 
-        if mid_name == target_lower:
+        if mid_id == target_id:
             return rows[mid]
-        elif mid_name < target_lower:
+        elif mid_id < target_id:
             left = mid + 1
         else:
             right = mid - 1
 
     return None
 
-# --- 5. Universal endpoint: /teams/{team_abbr}/{position}info/{player_name} ---
-@app.get("/teams/{team_abbr}/{position}info/{player_name}")
-def get_player_info(team_abbr: str, position: str, player_name: str):
+# --- 5. Universal endpoint: /teams/{team_abbr}/{position}info/{player_id} ---
+@app.get("/teams/{team_abbr}/{position}info/{player_id}")
+def get_player_info(team_abbr: str, position: str, player_id: str):
     # 1. Validate team and position as before...
     team_name = TEAM_ABBR_TO_NAME.get(team_abbr.upper())
     if not team_name:
@@ -273,13 +272,13 @@ def get_player_info(team_abbr: str, position: str, player_name: str):
     if fits_df is None or fits_df.empty:
         raise HTTPException(status_code=404, detail=f"No {pos_upper} fits found for team: {team_abbr}")
 
-    df_name_col = f"{position.lower()}_name"
+    df_id_col = f"{position.lower()}_id"
     fits_list = fits_df.to_dict(orient="records")
     final_fit_value = None
     adv_rankings = {}
 
     for record in fits_list:
-        if record.get(df_name_col, "").strip().lower() == player_name.strip().lower():
+        if record.get(df_id_col, "").strip() == player_id.strip():
             final_fit_value = record.get("final_fit")
             # If advanced ranking fields are defined for this position, extract them
             if pos_upper in ADVANCED_RANK_FIELDS:
@@ -291,16 +290,16 @@ def get_player_info(team_abbr: str, position: str, player_name: str):
     if final_fit_value is None:
         raise HTTPException(
             status_code=404,
-            detail=f"No {pos_upper} fit data found for '{player_name}' on team '{team_abbr}'"
+            detail=f"No {pos_upper} fit data found for ID '{player_id}' on team '{team_abbr}'"
         )
 
     # 3. Read the CSV data for the position and perform a binary search to find the matching row
     rows = read_csv_rows(pos_upper)
-    matched_row = binary_search_by_name(rows, "player_name", player_name)
+    matched_row = binary_search_by_id(rows, "player_id", player_id)
     if not matched_row:
         raise HTTPException(
             status_code=404,
-            detail=f"No row in {pos_upper}_data.csv matched name '{player_name}'"
+            detail=f"No row in {pos_upper}_data.csv matched ID '{player_id}'"
         )
 
     # 4. Merge final_fit and advanced rankings into the matched CSV row
@@ -329,8 +328,8 @@ def get_oline_data():
     return data
 
 # --- New Endpoint: /teams/{team_abbr}/olineinfo/{player_name} ---
-@app.get("/teams/{team_abbr}/olineinf/{player_name}")
-def get_oline_player_info(team_abbr: str, player_name: str):
+@app.get("/teams/{team_abbr}/olineinf/{player_id}")
+def get_oline_player_info(team_abbr: str, player_id: str):
     """
     Retrieve a given lineman's info for a team from oline_data.csv.
     """
@@ -345,10 +344,10 @@ def get_oline_player_info(team_abbr: str, player_name: str):
         with open(oline_csv, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                if row.get("name", "").strip().lower() == player_name.strip().lower():
+                if row.get("id", "").strip() == player_id:
                     return row
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="oline_data.csv not found")
     
-    raise HTTPException(status_code=404, detail=f"Player '{player_name}' not found")
+    raise HTTPException(status_code=404, detail=f"Player '{player_id}' not found")
 

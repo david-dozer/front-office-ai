@@ -70,7 +70,7 @@ export default function TablesPage() {
           } else {
             // For QB, RB, WR, TE endpoints assume they return final_fit field.
             formattedPlayers = data.map((player: any) => ({
-              id: player.id,
+              id: player[`${item.pos}_id`] || "Unknown",
               name: player[`${item.pos}_name`] || "Unknown",
               position: item.pos.toUpperCase(),
               age: Math.ceil(player.age),
@@ -168,13 +168,15 @@ export default function TablesPage() {
         <div className="row justify-content-center">
           {topFits.map((player, idx) => (
             <div key={idx} className="col-md-4 mb-4 d-flex flex-column align-items-center">
-              <CircularProgressBar 
-                progress={(player.fit || 0) * 100} 
-                size={250} 
-                strokeWidth={15} 
-                duration={1500}
-                headshotUrl={player.headshot_url} 
-              />
+              <a href={`/dashboard/${posteam}/tables/${player.id}`}>
+                <CircularProgressBar 
+                  progress={(player.fit || 0) * 100} 
+                  size={250} 
+                  strokeWidth={15} 
+                  duration={1500}
+                  headshotUrl={player.headshot_url} 
+                />
+              </a>
               <small className="text-muted mt-3">
                 <strong>{player.name} - Fit: {(player.fit * 100).toFixed(1)}%</strong>
               </small>
@@ -238,9 +240,10 @@ export default function TablesPage() {
                     <tr key={idx}>
                       <td>
                         <Link 
-                          href={`/dashboard/${posteam}/tables/${player.name}`} 
+                          href={`/dashboard/${posteam}/tables/${player.id}`} 
                           className="m-0 font-weight-bold text-primary"
                           style={{ textDecoration: "none" }}
+                          onClick={() => console.log("Player: {player.id}")}
                         >
                           {player.name}
                         </Link>

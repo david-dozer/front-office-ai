@@ -35,7 +35,13 @@ def scrape_free_agents(url):
     for row in rows[1:]:
         cols = row.find_all("td")
         if len(cols) >= 7:  # Ensure row has enough columns
-            names.append(cols[0].text.strip())
+            name = cols[0].text.strip()
+            # Special cases for name cleanup
+            if name == "D.J. Turner":
+                name = "DJ Turner"
+            # elif "Humphrey" in name:
+            #     name = "Lil'Jordan Humphrey"
+            names.append(name)
             positions.append(cols[1].text.strip())
             ages.append(cols[2].text.strip())
             yoes.append(cols[3].text.strip())
@@ -65,8 +71,8 @@ def scrape_free_agents(url):
     # Then clean and convert non-empty values
     df['AAV'] = df['AAV'].str.replace('$', '').str.replace(',', '').astype(float, errors='ignore')
 
-    # Save to CSV
-    # df.to_csv('../processed_data/free_agents.csv', index=False)
+    # Save WRs to CSV
+    df.to_csv('backend/processed_data/free_agents.csv', index=False)
 
     return df
 

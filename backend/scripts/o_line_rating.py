@@ -149,6 +149,8 @@ def main():
         df_fa = df_fa.drop(columns=['Name'])
     
     df_fa = clean_columns(df_fa)
+    df_fa['id'] = range(len(df_fa))
+    df_fa = df_fa[['id'] + df_fa.columns.tolist()[:-1]]
     df_fa.to_csv(fa_oline_output_filepath, index=False)
     print(f"Saved free agent linemen data with final ratings to {fa_oline_output_filepath}")
 

@@ -253,6 +253,7 @@ for _, team_row in team_df.iterrows():
     scheme_weights = get_top3_scheme_weights_wr(team_row)
     for _, wr_row in wr_imputed_scaled.iterrows():
         wr_name = wr_row['player_name']
+        wr_id = wr_row['player_id']
         aav = wr_row['AAV']
         prev_team = wr_row['Prev Team']
         age = wr_row['Age']
@@ -262,6 +263,7 @@ for _, team_row in team_df.iterrows():
         records_wr.append({
             'team_name': team_name,
             'wr_name': wr_name,
+            'wr_id': wr_id,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,

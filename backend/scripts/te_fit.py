@@ -186,6 +186,7 @@ for _, team_row in team_df.iterrows():
     scheme_weights = get_top3_scheme_weights_te(team_row)
     for _, te_row in fa_te_imputed_scaled.iterrows():
         te_name = te_row['player_name']
+        te_id = te_row['player_id']
         aav = te_row['AAV'] if 'AAV' in te_row else np.nan
         prev_team = te_row['Prev Team'] if 'Prev Team' in te_row else np.nan
         age = te_row['Age']
@@ -201,6 +202,7 @@ for _, team_row in team_df.iterrows():
         records_te.append({
             'team_name': team_name,
             'te_name': te_name,
+            'te_id': te_id,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,

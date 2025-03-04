@@ -16,6 +16,7 @@ def get_rb_fits_for_team(team_name):
     records = []
     for _, rb_row in rb_imputed_scaled.iterrows():
         rb_name = rb_row['player_name']
+        rb_id = rb_row['player_id']
         aav = rb_row['AAV']
         prev_team = rb_row['Prev Team']
         age = rb_row['Age']
@@ -24,6 +25,7 @@ def get_rb_fits_for_team(team_name):
         final_fit = compute_final_fit_rb(rb_row, scheme_weights, raw_fit_functions_rb)
         records.append({
             'rb_name': rb_name,
+            'rb_id': rb_id,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
