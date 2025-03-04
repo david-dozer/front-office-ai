@@ -157,8 +157,8 @@ export default function TablesPage() {
   return (
     <>
       <Script src="https://code.jquery.com/jquery-3.6.0.min.js" strategy="beforeInteractive" />
-      <Script src="/vendor/datatables/jquery.dataTables.min.js" strategy="afterInteractive" />
-      <Script src="/vendor/datatables/dataTables.bootstrap4.min.js" strategy="afterInteractive" />
+      <Script src="/vendor/datatables/jquery.dataTables.js" strategy="afterInteractive" />
+      <Script src="/vendor/datatables/dataTables.bootstrap4.js" strategy="afterInteractive" />
 
       <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">Free Agent Fits</h1>
@@ -228,7 +228,7 @@ export default function TablesPage() {
                     <th>Name</th>
                     <th>Position</th>
                     <th className="sortable" style={{cursor: 'pointer'}}>Age</th>
-                    <th className="sortable" style={{cursor: 'pointer'}}>AAV</th>
+                    <th className="sortable" style={{cursor: 'pointer'}}>Prev. AAV</th>
                     <th>Previous Team</th>
                     <th className="sortable" style={{cursor: 'pointer'}}>Fit</th>
                   </tr>

@@ -96,6 +96,30 @@ ADVANCED_RANK_FIELDS = {
         "ngs_percent_share_of_intended_air_yards_rank",
         "ngs_avg_yac_above_expectation_rank",
         "ngs_avg_yac_rank"
+    ],
+    "RB": [
+        "rushing_epa_rank",
+        "receiving_air_yards_rank",
+        "receiving_yards_after_catch_rank",
+        "receiving_first_downs_rank",
+        "racr_rank",
+        "rushing_first_downs_rank",
+        "rushing_2pt_conversions_rank",
+        "rushing_fumbles_lost_rank",
+        "receiving_epa_rank",
+        "ngs_efficiency_rank",
+        "ngs_avg_time_to_los_inv_rank",
+        "ngs_avg_rush_yards_rank",
+        "ngs_expected_rush_yards_rank",
+        "ngs_rush_yards_over_expected_rank",
+        "ngs_rush_yards_over_expected_per_att_rank",
+        "ngs_rush_pct_over_expected_rank",
+        "receptions_rank",
+        "targets_rank",
+        "receiving_yards_rank",
+        "receiving_tds_rank",
+        "receiving_fumbles_rank",
+        "receiving_fumbles_lost_rank"
     ]
 }
 

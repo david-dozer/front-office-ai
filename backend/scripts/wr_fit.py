@@ -11,8 +11,8 @@ from sklearn.metrics import mean_squared_error
 team_df = pd.read_csv('../backend/processed_data/team_seasonal_stats.csv')
 wr_df = pd.read_csv('../backend/processed_data/fa_wrs.csv')
 
-# === 2. Preprocess Free Agent WR Data: Imputation and Scaling ===
-# Compute per-game metrics
+# === 2. Preprocess WR Data ===
+# Replace 0 games with NaN to avoid division by zero
 wr_df['games'] = wr_df['games'].replace(0, np.nan)
 wr_df['receiving_yards_per_game'] = wr_df['receiving_yards'] / wr_df['games']
 wr_df['receiving_tds_per_game'] = wr_df['receiving_tds'] / wr_df['games']
@@ -21,30 +21,32 @@ wr_df['targets_per_game'] = wr_df['targets'] / wr_df['games']
 wr_df['receiving_first_downs_per_game'] = wr_df['receiving_first_downs'] / wr_df['games']
 wr_df['receiving_2pt_conversions_per_game'] = wr_df.get('receiving_2pt_conversions', 0) / wr_df['games']
 
-# Define columns for production, efficiency, volume, and ranking extras
+# Define columns for production, efficiency, volume, and extra stats
 production_cols_wr = [
-    'receiving_yards_per_game', 'receiving_tds_per_game', 'receptions_per_game', 
-    'receiving_first_downs_per_game', 'receiving_2pt_conversions_per_game'
+    'receiving_yards_per_game', 'receiving_tds_per_game',
+    'receptions_per_game', 'receiving_first_downs_per_game',
+    'receiving_2pt_conversions_per_game'
 ]
 efficiency_cols_wr = [
-    'receiving_epa', 'ngs_avg_yac', 'ngs_avg_separation', 
+    'receiving_epa', 'ngs_avg_yac', 'ngs_avg_separation',
     'air_yards_share', 'target_share', 'ngs_catch_percentage'
 ]
 volume_cols = ['receptions_per_game', 'targets_per_game']
+# Extra columns (if missing, they are filled with NaN)
 ranking_cols_extra = [
-    'receiving_air_yards', 'receiving_yards_after_catch', 'receiving_first_downs',
-    'receiving_fumbles', 'receiving_fumbles_lost',
-    'ngs_avg_expected_yac', 'ngs_avg_intended_air_yards', 'ngs_avg_yac_above_expectation',
-    'ngs_percent_share_of_intended_air_yards', 'racr'
+    'receiving_air_yards', 'receiving_yards_after_catch',
+    'receiving_first_downs', 'receiving_fumbles', 'receiving_fumbles_lost',
+    'ngs_avg_expected_yac', 'ngs_avg_intended_air_yards',
+    'ngs_avg_yac_above_expectation', 'ngs_percent_share_of_intended_air_yards',
+    'racr'
 ]
-# Add any missing ranking columns as NaN
 for col in ranking_cols_extra:
     if col not in wr_df.columns:
         wr_df[col] = np.nan
 
+# Combine all columns to be imputed and scaled
 all_wr_cols = list(set(production_cols_wr + efficiency_cols_wr + volume_cols + ranking_cols_extra))
 
-# Impute and scale
 imputer = SimpleImputer(strategy='median')
 wr_imputed = wr_df.copy()
 wr_imputed[all_wr_cols] = imputer.fit_transform(wr_imputed[all_wr_cols])
@@ -54,12 +56,46 @@ wr_imputed_scaled = wr_imputed.copy()
 scaled_cols_wr = ["scaled_" + col for col in all_wr_cols]
 wr_imputed_scaled[scaled_cols_wr] = scaler.fit_transform(wr_imputed[all_wr_cols])
 
+# Auxiliary metric: Yards per Reception (YPR)
 def safe_ypr(row):
     return row['receiving_yards'] / row['receptions'] if row['receptions'] > 0 else 0
 wr_imputed_scaled['ypr'] = wr_imputed_scaled.apply(safe_ypr, axis=1)
 
-# === 3. Define Raw Fit Functions for Each Scheme ===
+# === 3. Bonus Functions for WRs ===
+def compute_volume_bonus(wr_row):
+    """
+    Volume bonus:
+      +0.05 if receptions per game ≥ 6
+      +0.05 if targets per game ≥ 8
+    """
+    bonus = 0
+    if wr_row['receptions_per_game'] >= 6:
+        bonus += 0.05
+    if wr_row['targets_per_game'] >= 8:
+        bonus += 0.05
+    return bonus
+
+def compute_ypr_bonus_wr(wr_row):
+    """
+    YPR bonus:
+      +0.05 if yards per reception exceeds 14
+    """
+    bonus = 0
+    ypr = wr_row.get('ypr', 0)
+    if ypr > 14:
+        bonus += 0.05
+    return bonus
+
+# === 4. Raw Fit Functions for Wideouts ===
 def compute_production_score_wr(wr_row):
+    """
+    Production score is a weighted sum of per-game receiving stats.
+      - 40% receiving yards per game
+      - 20% receiving TDs per game
+      - 20% receptions per game
+      - 10% receiving first downs per game
+      - 10% receiving 2pt conversions per game
+    """
     return (
         0.4 * wr_row['scaled_receiving_yards_per_game'] +
         0.2 * wr_row['scaled_receiving_tds_per_game'] +
@@ -67,14 +103,6 @@ def compute_production_score_wr(wr_row):
         0.1 * wr_row['scaled_receiving_first_downs_per_game'] +
         0.1 * wr_row.get('scaled_receiving_2pt_conversions_per_game', 0)
     )
-
-def compute_volume_bonus(wr_row):
-    bonus = 0
-    if wr_row['receptions_per_game'] >= 6:
-        bonus += 0.05
-    if wr_row['targets_per_game'] >= 8:
-        bonus += 0.05
-    return bonus
 
 def compute_raw_fit_air_raid_wr(wr_row):
     prod = compute_production_score_wr(wr_row)
@@ -157,7 +185,7 @@ raw_fit_functions_wr = {
     'pistol_power_spread': compute_raw_fit_pistol_power_spread_wr
 }
 
-# === 4. Compute Team's Top 3 Scheme Weights for WRs ===
+# === 5. Scheme Weights for WRs ===
 def get_top3_scheme_weights_wr(team_row):
     schemes = {
         'air_raid': team_row['score_air_raid'],
@@ -171,10 +199,54 @@ def get_top3_scheme_weights_wr(team_row):
     sorted_schemes = sorted(schemes.items(), key=lambda x: x[1], reverse=True)
     top3 = sorted_schemes[:3]
     total = sum(score for _, score in top3)
-    weights = {scheme: score / total for scheme, score in top3}
+    weights = {scheme: score/total for scheme, score in top3}
     return weights
 
-# === 5. Build the (Team, WR) Fit Dataset from Free Agent WRs ===
+# === 6. Unified Final Fit Calculation for WRs (No Ranking) ===
+def compute_final_fit_wr(wr_row, scheme_weights, raw_fit_functions):
+    """
+    Computes the final fit score for a WR by:
+      - Calculating a base weighted fit across the team's top 3 schemes.
+      - Applying a penalty for insufficient games.
+      - Adding bonuses for volume, yards-per-reception (YPR), and big name recognition.
+    
+    Parameters:
+      wr_row (pd.Series): A row from the free agent WR dataset.
+      scheme_weights (dict): Mapping of scheme names to their weight.
+      raw_fit_functions (dict): Mapping of scheme names to their raw fit calculation functions.
+    
+    Returns:
+      float: The final fit score.
+    """
+    # Calculate the base weighted fit.
+    fit_components = {}
+    for scheme, weight in scheme_weights.items():
+        if scheme in raw_fit_functions:
+            fit_components[scheme] = raw_fit_functions[scheme](wr_row)
+        else:
+            fit_components[scheme] = np.nan
+
+    base_fit = sum(
+        scheme_weights[scheme] * fit_components[scheme]
+        for scheme in scheme_weights if np.isfinite(fit_components[scheme])
+    )
+    
+    # Penalize for low games played.
+    if wr_row['games'] < 9:
+        base_fit -= 0.1
+    
+    # Add volume bonus and YPR bonus.
+    base_fit += compute_volume_bonus(wr_row)
+    base_fit += compute_ypr_bonus_wr(wr_row)
+    
+    # Add bonus for "big name" receivers.
+    big_name_list = ["Dyami Brown", "DeAndre Hopkins", "Stefon Diggs", "Keenan Allen", "Amari Cooper"]
+    if wr_row['player_name'] in big_name_list:
+        base_fit += 0.11
+
+    return base_fit
+
+# === 7. Build the (Team, WR) Fit Dataset (No Ranking) ===
 records_wr = []
 for _, team_row in team_df.iterrows():
     team_name = team_row['team_name']
@@ -186,17 +258,7 @@ for _, team_row in team_df.iterrows():
         age = wr_row['Age']
         games = wr_row['games']
         headshot = wr_row['headshot_url']
-        fit_components = {}
-        for scheme, weight in scheme_weights.items():
-            if scheme in raw_fit_functions_wr:
-                raw_fit = raw_fit_functions_wr[scheme](wr_row)
-                fit_components[scheme] = raw_fit
-            else:
-                fit_components[scheme] = np.nan
-        final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
-        if games < 9:
-            final_fit -= 0.1
-        final_fit += compute_volume_bonus(wr_row)
+        final_fit = compute_final_fit_wr(wr_row, scheme_weights, raw_fit_functions_wr)
         records_wr.append({
             'team_name': team_name,
             'wr_name': wr_name,
@@ -204,26 +266,20 @@ for _, team_row in team_df.iterrows():
             'prev_team': prev_team,
             'age': age,
             'games': games,
-            'headshot': headshot, 
-            'final_fit': final_fit,
-            'production_score': compute_production_score_wr(wr_row),
-            'air_raid_fit': fit_components.get('air_raid', np.nan),
-            'spread_option_fit': fit_components.get('spread_option', np.nan),
-            'west_coast_fit': fit_components.get('west_coast', np.nan),
-            'mcvay_fit': fit_components.get('mcvay', np.nan),
-            'shanahan_fit': fit_components.get('shanahan', np.nan),
-            'run_power_fit': fit_components.get('run_power', np.nan),
-            'pistol_power_spread_fit': fit_components.get('pistol_power_spread', np.nan)
+            'headshot': headshot,
+            'final_fit': final_fit
         })
 
 fit_wr_df = pd.DataFrame(records_wr)
 fit_wr_df = fit_wr_df.dropna(subset=['final_fit'])
+print("Sample computed (Team, WR) fit scores:")
+print(fit_wr_df[['wr_name', 'final_fit']].head())
 
-# === 6. Train a Simple Linear Regression Model Using a Pipeline ===
-features_wr = ['production_score', 'air_raid_fit', 'spread_option_fit', 'west_coast_fit', 
-               'mcvay_fit', 'shanahan_fit', 'run_power_fit', 'pistol_power_spread_fit']
-X_wr = fit_wr_df[features_wr]
-y_wr = fit_wr_df['final_fit']
+# === 8. Train a Simple Linear Regression Model Using a Pipeline (Optional) ===
+# Here, we illustrate a basic pipeline. In practice, your target may differ.
+features_wr = ['final_fit']  # For example, you might include other features as well.
+X_wr = fit_wr_df[['final_fit']]
+y_wr = fit_wr_df['final_fit']  # This is illustrative; adjust as needed.
 X_train_wr, X_test_wr, y_train_wr, y_test_wr = train_test_split(X_wr, y_wr, test_size=0.2, random_state=42)
 pipeline_wr = Pipeline([
     ('imputer', SimpleImputer(strategy='median')),

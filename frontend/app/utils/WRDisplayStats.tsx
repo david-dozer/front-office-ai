@@ -37,7 +37,7 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
-            <strong>Target Share:</strong> {formatStat(playerData.target_share, 'average')} {formatRank(playerData.target_share_rank)}
+            <strong>Target Share:</strong> {formatStat(playerData.target_share * 100, 'average')}% {formatRank(playerData.target_share_rank)}
           </p>
         </>
       );
@@ -99,10 +99,10 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
-            <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} {formatRank(playerData.receiving_fumbles_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')} {formatRank(playerData.receiving_fumbles_lost_rank)}
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
             <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
@@ -119,10 +119,10 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} {formatRank(playerData.receiving_fumbles_rank)}
           </p>
           <p>
-            <strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')} {formatRank(playerData.receiving_fumbles_lost_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Target Share:</strong> {formatStat(playerData.target_share, 'average')} {formatRank(playerData.target_share_rank)}
+            <strong>Target Share:</strong> {formatStat(playerData.target_share * 100, 'average')}% {formatRank(playerData.target_share_rank)}
           </p>
         </>
       );
@@ -198,7 +198,7 @@ export function renderWRNextGenStats(playerData: any, teamScheme: string): React
             <strong>Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}% {formatRank(playerData.ngs_catch_percentage_rank)}
           </p>
           <p>
-            <strong>% Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')} {formatRank(playerData.ngs_percent_share_of_intended_air_yards_rank)}
+            <strong>Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}% {formatRank(playerData.ngs_percent_share_of_intended_air_yards_rank)}
           </p>
         </>
       );
