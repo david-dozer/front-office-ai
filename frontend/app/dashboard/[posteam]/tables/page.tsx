@@ -113,6 +113,11 @@ export default function TablesPage() {
           isInitialized = true;
           clearInterval(checkDataTables);
           
+          // Destroy the existing DataTable if it exists
+          if (window.jQuery.fn.DataTable.isDataTable('#dataTable')) {
+            window.jQuery('#dataTable').DataTable().destroy();
+          }
+          
           const dt = window.jQuery('#dataTable').DataTable({
             "columnDefs": [
               { "orderable": false, "targets": [0, 1, 4] },
@@ -149,6 +154,7 @@ export default function TablesPage() {
         console.error('DataTable initialization error:', error);
       }
     }, 250);
+    
     return () => clearInterval(checkDataTables);
   }, [players]);
 

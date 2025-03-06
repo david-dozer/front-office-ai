@@ -213,7 +213,9 @@ def compute_final_fit_rb(rb_row, scheme_weights, raw_fit_functions):
     base_fit += compute_ypc_bonus_rb(rb_row)
     base_fit += compute_receiving_bonus_rb(rb_row)
     
-    return base_fit
+    recency_penalty = (2024- int(rb_row['season'])) * 0.05
+
+    return base_fit - recency_penalty
 
 # === 7. Build (Team, RB) Fit Dataset ===
 records_rb = []

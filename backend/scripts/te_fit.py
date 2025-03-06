@@ -199,6 +199,8 @@ for _, team_row in team_df.iterrows():
             else:
                 fit_components[scheme] = np.nan
         final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        recency_penalty = (2024- int(te_row['season'])) * 0.05
+        final_fit -= recency_penalty
         records_te.append({
             'team_name': team_name,
             'te_name': te_name,

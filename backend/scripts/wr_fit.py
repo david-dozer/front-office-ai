@@ -244,7 +244,9 @@ def compute_final_fit_wr(wr_row, scheme_weights, raw_fit_functions):
     if wr_row['player_name'] in big_name_list:
         base_fit += 0.11
 
-    return base_fit
+    recency_penalty = (2024- int(wr_row['season'])) * 0.05
+
+    return base_fit - recency_penalty
 
 # === 7. Build the (Team, WR) Fit Dataset (No Ranking) ===
 records_wr = []
