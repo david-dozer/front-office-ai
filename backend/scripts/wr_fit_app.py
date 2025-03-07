@@ -51,7 +51,7 @@ def get_wr_fits_for_team(team_name):
     for _, wr_row in wr_imputed_scaled.iterrows():
         wr_name = wr_row['player_name']
         wr_id = wr_row['player_id']
-        aav = wr_row['AAV']
+        aav = wr_row.get('market_value', wr_row.get('AAV'))
         prev_team = wr_row['Prev Team']
         age = wr_row['Age']
         games = wr_row['games']
@@ -59,8 +59,8 @@ def get_wr_fits_for_team(team_name):
         # Use the unified function to compute final fit (with bonuses)
         final_fit = compute_final_fit_wr(wr_row, scheme_weights, raw_fit_functions_wr)
         final_fit += compute_team_need_bonus_wr(team_row)
-        if age > 31:
-            final_fit -= (age - 31) * 0.02
+        if age > 29:
+            final_fit -= (age - 31) * 0.04
         records.append({
             'wr_name': wr_name,
             'wr_id': wr_id,

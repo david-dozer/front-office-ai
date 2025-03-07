@@ -137,11 +137,12 @@ def main():
     
     # 8. Scrape free agent linemen.
     free_agents_df = scrape_free_agents(off_url)
-    free_agents_df = scrape_market_values_concurrently(free_agents_df, max_workers=5, delay=0.2)
+    # free_agents_df = scrape_market_values_concurrently(free_agents_df, max_workers=5, delay=0.2)
     
     # 9. Merge free agent data with the full linemen data.
     # Assuming free_agents_df uses the same key "name" (case-sensitive match).
     df_fa = df_oline.merge(free_agents_df, left_on='NAME', right_on='Name', how='inner')
+    df_fa = scrape_market_values_concurrently(df_fa, max_workers=5, delay=0.2)
     
     # 10. Sort free agent data by final_rating (highest first) and clean columns.
     df_fa = df_fa.sort_values(by='final_rating', ascending=False)

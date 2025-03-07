@@ -256,7 +256,7 @@ for _, team_row in team_df.iterrows():
     for _, wr_row in wr_imputed_scaled.iterrows():
         wr_name = wr_row['player_name']
         wr_id = wr_row['player_id']
-        aav = wr_row['AAV']
+        aav = wr_row.get('market_value', wr_row.get('AAV'))
         prev_team = wr_row['Prev Team']
         age = wr_row['Age']
         games = wr_row['games']

@@ -55,7 +55,7 @@ def get_rb_fits_for_team(team_name):
     for _, rb_row in rb_imputed_scaled.iterrows():
         rb_name = rb_row['player_name']
         rb_id = rb_row['player_id']
-        aav = rb_row['AAV']
+        aav = rb_row.get('market_value', rb_row.get('AAV'))
         prev_team = rb_row['Prev Team']
         age = rb_row['Age']
         games = rb_row['games']

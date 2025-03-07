@@ -126,7 +126,7 @@ export default function PlayerPage() {
                   </p>
                   <p>
                     <strong>Projected AAV:</strong> 
-                    {(playerData.aav || playerData.AAV) ? ` $${(+ (playerData.aav || playerData.AAV)).toLocaleString()}` : ''}
+                    {(playerData.market_value) ? ` $${(+ (playerData.market_value)).toLocaleString()}` : ''}
                   </p>
                 </div>
                 {/* Right: Circular Progress Bar */}

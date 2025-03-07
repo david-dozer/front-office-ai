@@ -33,7 +33,7 @@ def get_qb_fits_for_team(team_name):
         qb_name = qb_row['player_name']
         qb_id = qb_row['player_id']
         completed_air_yards = qb_row['passing_yards']
-        aav = qb_row['AAV']
+        aav = qb_row.get('market_value', qb_row.get('AAV'))
         prev_team = qb_row['Prev Team']
         age = qb_row['Age']
         games = qb_row['games']

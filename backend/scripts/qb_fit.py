@@ -317,7 +317,7 @@ for _, team_row in team_df.iterrows():
     for _, qb_row in qb_imputed_scaled.iterrows():
         qb_name = qb_row['player_name']
         qb_id = qb_row['player_id']
-        aav = qb_row['AAV']
+        aav = qb_row.get('market_value', qb_row.get('AAV'))
         completed_air_yards = qb_row['passing_yards']
         prev_team = qb_row['Prev Team']
         age = qb_row['Age']

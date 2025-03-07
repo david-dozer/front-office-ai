@@ -57,7 +57,7 @@ def get_te_fits_for_team(team_name):
     for _, te_row in fa_te_imputed_scaled.iterrows():
         te_name = te_row['player_name']
         te_id = te_row['player_id']
-        aav = te_row['AAV'] if 'AAV' in te_row else np.nan
+        aav = te_row.get('market_value', te_row.get('AAV'))
         prev_team = te_row['Prev Team'] if 'Prev Team' in te_row else np.nan
         age = te_row['Age']
         headshot = te_row['headshot_url'] if 'headshot_url' in te_row else ''

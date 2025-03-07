@@ -32,7 +32,13 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Passing EPA:</strong> {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive this QB is."
+            >
+              Passing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
             <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}
@@ -49,7 +55,13 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Passing EPA:</strong> {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive this QB is."
+            >
+              Passing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
             <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}
@@ -66,7 +78,13 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Passing EPA:</strong> {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive this QB is."
+            >
+              Passing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
             <strong>Passing Yards After Catch:</strong> {formatStat(playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.passing_yards_after_catch_rank)}
@@ -83,7 +101,13 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Passing EPA:</strong> {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive this QB is."
+            >
+              Passing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
             <strong>Passing First Downs:</strong> {formatStat(playerData.passing_first_downs, 'total')} {formatRank(playerData.passing_first_downs_rank)}
@@ -103,7 +127,13 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Passing EPA:</strong> {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive this QB is."
+            >
+              Passing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
             <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}
@@ -120,7 +150,13 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Passing EPA:</strong> {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive this QB is."
+            >
+              Passing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
             <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
@@ -137,7 +173,13 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Passing EPA:</strong> {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive this QB is."
+            >
+              Passing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
             <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}

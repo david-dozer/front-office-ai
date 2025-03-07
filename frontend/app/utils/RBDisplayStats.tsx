@@ -27,7 +27,13 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive of a runner this RB is."
+            >
+              Rushing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
             <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
@@ -47,7 +53,13 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive of a runner this RB is."
+            >
+              Rushing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
             <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
@@ -67,7 +79,13 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive of a runner this RB is."
+            >
+              Rushing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
             <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
@@ -87,7 +105,13 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive of a runner this RB is."
+            >
+              Rushing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
             <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
@@ -107,7 +131,13 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive of a runner this RB is."
+            >
+              Rushing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
             <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
@@ -124,7 +154,13 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive of a runner this RB is."
+            >
+              Rushing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
             <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
@@ -141,7 +177,13 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive of a runner this RB is."
+            >
+              Rushing EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
             <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}

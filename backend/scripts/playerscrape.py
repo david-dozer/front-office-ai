@@ -158,8 +158,8 @@ def scrape_market_values_concurrently(df, max_workers=5, delay=0.2):
         if mv is not None:
             market_values.append(mv)
         else:
-            # Fallback to the original AAV if no Market Value
-            market_values.append(None)
+            market_values.append(df.loc[i, 'AAV'])
+            # market_values.append(None)
 
     df['market_value'] = market_values
     return df
