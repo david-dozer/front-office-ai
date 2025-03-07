@@ -241,7 +241,7 @@ export default function TablesPage() {
                     <th>Name</th>
                     <th>Position</th>
                     <th className="sortable" style={{cursor: 'pointer'}}>Age</th>
-                    <th className="sortable" style={{cursor: 'pointer'}}>Prev. AAV</th>
+                    <th className="sortable" style={{cursor: 'pointer'}}>Proj. AAV</th>
                     <th>Previous Team</th>
                     <th className="sortable" style={{cursor: 'pointer'}}>Fit</th>
                   </tr>

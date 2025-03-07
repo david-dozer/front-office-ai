@@ -1,6 +1,6 @@
 import nfl_data_py as nfl
 import pandas as pd
-from playerscrape import scrape_free_agents, off_url
+from playerscrape import get_available_free_agents, scrape_market_values_concurrently, off_url
 import numpy as np
 import re
 
@@ -275,8 +275,9 @@ def main():
     
     # Step 4: Scrape free agents from Spotrac and merge with the QB data
     print("Scraping free agent data from Spotrac...")
-    free_agents_df = scrape_free_agents(off_url)
-
+    # free_agents_df = scrape_free_agents(off_url)
+    free_agents_df = get_available_free_agents(off_url)
+    free_agents_df = scrape_market_values_concurrently(free_agents_df, max_workers=5, delay=0.2)
 
     def only_alpha_lower(s):
         """Return only alphabetic characters in lowercase (drop spaces, punctuation, etc.)."""

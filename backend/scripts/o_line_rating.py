@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import nfl_data_py as nfl
-from playerscrape import scrape_free_agents, off_url
+from playerscrape import scrape_free_agents, scrape_market_values_concurrently, off_url
 
 def get_roster_data(year):
     """
@@ -137,6 +137,7 @@ def main():
     
     # 8. Scrape free agent linemen.
     free_agents_df = scrape_free_agents(off_url)
+    free_agents_df = scrape_market_values_concurrently(free_agents_df, max_workers=5, delay=0.2)
     
     # 9. Merge free agent data with the full linemen data.
     # Assuming free_agents_df uses the same key "name" (case-sensitive match).
