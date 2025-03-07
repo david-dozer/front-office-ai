@@ -120,6 +120,25 @@ ADVANCED_RANK_FIELDS = {
     "receiving_tds_rank",
     "receiving_fumbles_rank",
     "receiving_fumbles_lost_rank"
+    ],
+    "QB": [
+    "passing_air_yards_rank",
+    "passing_yards_after_catch_rank",
+    "pass_yards_minus_yac_rank",
+    "passing_epa_rank",
+    "sacks_rank",
+    "sack_fumbles_rank",
+    "passing_first_downs_rank",
+    "ngs_avg_time_to_throw_rank",
+    "ngs_avg_intended_air_yards_rank",
+    "ngs_completion_percentage_rank",
+    "ngs_passer_rating_rank",
+    "ngs_expected_completion_percentage_rank",
+    "ngs_avg_air_yards_differential_rank",
+    "ngs_completion_percentage_above_expectation_rank",
+    "rushing_yards_rank",
+    "carries_rank",
+    "rushing_tds_rank"
 ]
 }
 

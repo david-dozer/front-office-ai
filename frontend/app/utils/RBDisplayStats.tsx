@@ -13,25 +13,33 @@ function formatStat(value: string | number, type: 'total' | 'average'): string {
   return value.toString();
 }
 
+function formatRank(rank: number): React.ReactElement {
+  return (
+    <span style={{ fontSize: "0.70em", color: "#666" }}>
+      ({ordinalSuffixOf(rank)} out of 182 RBs)
+    </span>
+  );
+}
+
 export function renderRBAdvancedStats(playerData: any, teamScheme: string): React.ReactElement {
   switch (teamScheme) {
     case 'Air Raid':
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} ({ordinalSuffixOf(playerData.rushing_epa_rank)} out of 182 RBs)
+            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
-            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} ({ordinalSuffixOf(playerData.receiving_air_yards_rank)} out of 182 RBs)
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} ({ordinalSuffixOf(playerData.receiving_yards_after_catch_rank)} out of 182 RBs)
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} ({ordinalSuffixOf(playerData.receiving_first_downs_rank)} out of 182 RBs)
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} ({ordinalSuffixOf(playerData.racr_rank)} out of 182 RBs)
+            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
           </p>
         </>
       );
@@ -39,19 +47,19 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} ({ordinalSuffixOf(playerData.rushing_epa_rank)} out of 182 RBs)
+            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
-            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} ({ordinalSuffixOf(playerData.rushing_first_downs_rank)} out of 182 RBs)
+            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} ({ordinalSuffixOf(playerData.receiving_yards_after_catch_rank)} out of 182 RBs)
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} ({ordinalSuffixOf(playerData.receiving_first_downs_rank)} out of 182 RBs)
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} ({ordinalSuffixOf(playerData.racr_rank)} out of 182 RBs)
+            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
           </p>
         </>
       );
@@ -59,19 +67,19 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} ({ordinalSuffixOf(playerData.rushing_epa_rank)} out of 182 RBs)
+            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} ({ordinalSuffixOf(playerData.receiving_yards_after_catch_rank)} out of 182 RBs)
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} ({ordinalSuffixOf(playerData.receiving_first_downs_rank)} out of 182 RBs)
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} ({ordinalSuffixOf(playerData.receiving_air_yards_rank)} out of 182 RBs)
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
           </p>
           <p>
-            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} ({ordinalSuffixOf(playerData.racr_rank)} out of 182 RBs)
+            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
           </p>
         </>
       );
@@ -79,19 +87,19 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} ({ordinalSuffixOf(playerData.rushing_epa_rank)} out of 182 RBs)
+            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
-            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} ({ordinalSuffixOf(playerData.rushing_first_downs_rank)} out of 182 RBs)
+            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} ({ordinalSuffixOf(playerData.receiving_first_downs_rank)} out of 182 RBs)
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} ({ordinalSuffixOf(playerData.receiving_yards_after_catch_rank)} out of 182 RBs)
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} ({ordinalSuffixOf(playerData.receiving_epa_rank)} out of 182 RBs)
+            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
         </>
       );
@@ -99,19 +107,19 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} ({ordinalSuffixOf(playerData.rushing_epa_rank)} out of 182 RBs)
+            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
-            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} ({ordinalSuffixOf(playerData.rushing_first_downs_rank)} out of 182 RBs)
+            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
           </p>
           <p>
-            <strong>Rushing 2pt Conversions:</strong> {formatStat(playerData.rushing_2pt_conversions, 'total')} ({ordinalSuffixOf(playerData.rushing_2pt_conversions_rank)} out of 182 RBs)
+            <strong>Rushing 2pt Conversions:</strong> {formatStat(playerData.rushing_2pt_conversions, 'total')} {formatRank(playerData.rushing_2pt_conversions_rank)}
           </p>
           <p>
-            <strong>Rushing Fumbles Lost:</strong> {formatStat(playerData.rushing_fumbles_lost, 'total')} ({ordinalSuffixOf(playerData.rushing_fumbles_lost_rank)} out of 182 RBs)
+            <strong>Rushing Fumbles Lost:</strong> {formatStat(playerData.rushing_fumbles_lost, 'total')} {formatRank(playerData.rushing_fumbles_lost_rank)}
           </p>
           <p>
-            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} ({ordinalSuffixOf(playerData.receiving_air_yards_rank)} out of 182 RBs)
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
           </p>
         </>
       );
@@ -119,19 +127,19 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} ({ordinalSuffixOf(playerData.rushing_epa_rank)} out of 182 RBs)
+            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
-            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} ({ordinalSuffixOf(playerData.rushing_first_downs_rank)} out of 182 RBs)
+            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
           </p>
           <p>
-            <strong>Rushing 2pt Conversions:</strong> {formatStat(playerData.rushing_2pt_conversions, 'total')} ({ordinalSuffixOf(playerData.rushing_2pt_conversions_rank)} out of 182 RBs)
+            <strong>Rushing 2pt Conversions:</strong> {formatStat(playerData.rushing_2pt_conversions, 'total')} {formatRank(playerData.rushing_2pt_conversions_rank)}
           </p>
           <p>
-            <strong>Rushing Fumbles Lost:</strong> {formatStat(playerData.rushing_fumbles_lost, 'total')} ({ordinalSuffixOf(playerData.rushing_fumbles_lost_rank)} out of 182 RBs)
+            <strong>Rushing Fumbles Lost:</strong> {formatStat(playerData.rushing_fumbles_lost, 'total')} {formatRank(playerData.rushing_fumbles_lost_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} ({ordinalSuffixOf(playerData.receiving_first_downs_rank)} out of 182 RBs)
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
         </>
       );
@@ -139,19 +147,19 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} ({ordinalSuffixOf(playerData.rushing_epa_rank)} out of 182 RBs)
+            <strong>Rushing EPA:</strong> {formatStat(playerData.rushing_epa, 'average')} {formatRank(playerData.rushing_epa_rank)}
           </p>
           <p>
-            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} ({ordinalSuffixOf(playerData.rushing_first_downs_rank)} out of 182 RBs)
+            <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} ({ordinalSuffixOf(playerData.receiving_yards_after_catch_rank)} out of 182 RBs)
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} ({ordinalSuffixOf(playerData.receiving_first_downs_rank)} out of 182 RBs)
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} ({ordinalSuffixOf(playerData.racr_rank)} out of 182 RBs)
+            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
           </p>
         </>
       );
@@ -178,19 +186,19 @@ export function renderRBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} ({playerData.ngs_efficiency_rank}th out of 182 RBs)
+            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} {formatRank(playerData.ngs_efficiency_rank)}
           </p>
           <p>
-            <strong>NGS Avg Time to LOS:</strong> {formatStat(playerData.ngs_avg_time_to_los, 'average')} ({playerData.ngs_avg_time_to_los_inv_rank}th out of 182 RBs)
+            <strong>NGS Avg Time to LOS:</strong> {formatStat(playerData.ngs_avg_time_to_los, 'average')} {formatRank(playerData.ngs_avg_time_to_los_inv_rank)}
           </p>
           <p>
-            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} ({playerData.ngs_avg_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} {formatRank(playerData.ngs_avg_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} ({playerData.ngs_expected_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} {formatRank(playerData.ngs_expected_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} ({playerData.ngs_rush_yards_over_expected_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_rank)}
           </p>
         </>
       );
@@ -198,19 +206,19 @@ export function renderRBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} ({playerData.ngs_efficiency_rank}th out of 182 RBs)
+            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} {formatRank(playerData.ngs_efficiency_rank)}
           </p>
           <p>
-            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} ({playerData.ngs_avg_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} {formatRank(playerData.ngs_avg_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} ({playerData.ngs_expected_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} {formatRank(playerData.ngs_expected_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} ({playerData.ngs_rush_yards_over_expected_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} ({playerData.ngs_rush_yards_over_expected_per_att_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_per_att_rank)}
           </p>
         </>
       );
@@ -218,19 +226,19 @@ export function renderRBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} ({playerData.ngs_efficiency_rank}th out of 182 RBs)
+            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} {formatRank(playerData.ngs_efficiency_rank)}
           </p>
           <p>
-            <strong>NGS Avg Time to LOS:</strong> {formatStat(playerData.ngs_avg_time_to_los, 'average')} ({playerData.ngs_avg_time_to_los_inv_rank}th out of 182 RBs)
+            <strong>NGS Avg Time to LOS:</strong> {formatStat(playerData.ngs_avg_time_to_los, 'average')} {formatRank(playerData.ngs_avg_time_to_los_inv_rank)}
           </p>
           <p>
-            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} ({playerData.ngs_avg_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} {formatRank(playerData.ngs_avg_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} ({playerData.ngs_expected_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} {formatRank(playerData.ngs_expected_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} ({playerData.ngs_rush_yards_over_expected_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_rank)}
           </p>
         </>
       );
@@ -238,19 +246,19 @@ export function renderRBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} ({playerData.ngs_efficiency_rank}th out of 182 RBs)
+            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} {formatRank(playerData.ngs_efficiency_rank)}
           </p>
           <p>
-            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} ({playerData.ngs_avg_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} {formatRank(playerData.ngs_avg_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} ({playerData.ngs_expected_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} {formatRank(playerData.ngs_expected_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} ({playerData.ngs_rush_yards_over_expected_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_rank)}
           </p>
           <p>
-            <strong>NGS Avg Time to LOS:</strong> {formatStat(playerData.ngs_avg_time_to_los, 'average')} ({playerData.ngs_avg_time_to_los_inv_rank}th out of 182 RBs)
+            <strong>NGS Avg Time to LOS:</strong> {formatStat(playerData.ngs_avg_time_to_los, 'average')} {formatRank(playerData.ngs_avg_time_to_los_inv_rank)}
           </p>
         </>
       );
@@ -258,19 +266,19 @@ export function renderRBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} ({playerData.ngs_efficiency_rank}th out of 182 RBs)
+            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} {formatRank(playerData.ngs_efficiency_rank)}
           </p>
           <p>
-            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} ({playerData.ngs_avg_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} {formatRank(playerData.ngs_avg_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} ({playerData.ngs_expected_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} {formatRank(playerData.ngs_expected_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} ({playerData.ngs_rush_yards_over_expected_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} ({playerData.ngs_rush_yards_over_expected_per_att_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_per_att_rank)}
           </p>
         </>
       );
@@ -278,19 +286,19 @@ export function renderRBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} ({playerData.ngs_efficiency_rank}th out of 182 RBs)
+            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} {formatRank(playerData.ngs_efficiency_rank)}
           </p>
           <p>
-            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} ({playerData.ngs_avg_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} {formatRank(playerData.ngs_avg_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} ({playerData.ngs_expected_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} {formatRank(playerData.ngs_expected_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} ({playerData.ngs_rush_yards_over_expected_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} ({playerData.ngs_rush_yards_over_expected_per_att_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_per_att_rank)}
           </p>
         </>
       );
@@ -298,19 +306,19 @@ export function renderRBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} ({playerData.ngs_efficiency_rank}th out of 182 RBs)
+            <strong>NGS Efficiency:</strong> {formatStat(playerData.ngs_efficiency, 'average')} {formatRank(playerData.ngs_efficiency_rank)}
           </p>
           <p>
-            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} ({playerData.ngs_avg_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Avg Rush Yards:</strong> {formatStat(playerData.ngs_avg_rush_yards, 'average')} {formatRank(playerData.ngs_avg_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} ({playerData.ngs_expected_rush_yards_rank}th out of 182 RBs)
+            <strong>NGS Expected Rush Yards:</strong> {formatStat(playerData.ngs_expected_rush_yards, 'average')} {formatRank(playerData.ngs_expected_rush_yards_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} ({playerData.ngs_rush_yards_over_expected_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected:</strong> {formatStat(playerData.ngs_rush_yards_over_expected, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_rank)}
           </p>
           <p>
-            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} ({playerData.ngs_rush_yards_over_expected_per_att_rank}th out of 182 RBs)
+            <strong>NGS Rush Yards Over Expected per Att:</strong> {formatStat(playerData.ngs_rush_yards_over_expected_per_att, 'average')} {formatRank(playerData.ngs_rush_yards_over_expected_per_att_rank)}
           </p>
         </>
       );
@@ -323,22 +331,22 @@ export function renderRBStandardReceivingStats(playerData: any): React.ReactElem
   return (
     <>
       <p>
-        <strong>Receptions:</strong> {formatStat(playerData.receptions, 'total')} ({ordinalSuffixOf(playerData.receptions_rank)} out of 182 RBs)
+        <strong>Receptions:</strong> {formatStat(playerData.receptions, 'total')} {formatRank(playerData.receptions_rank)}
       </p>
       <p>
-        <strong>Targets:</strong> {formatStat(playerData.targets, 'total')} ({ordinalSuffixOf(playerData.targets_rank)} out of 182 RBs)
+        <strong>Targets:</strong> {formatStat(playerData.targets, 'total')} {formatRank(playerData.targets_rank)}
       </p>
       <p>
-        <strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards, 'total')} ({ordinalSuffixOf(playerData.receiving_yards_rank)} out of 182 RBs)
+        <strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards, 'total')} {formatRank(playerData.receiving_yards_rank)}
       </p>
       <p>
-        <strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')} ({ordinalSuffixOf(playerData.receiving_tds_rank)} out of 182 RBs)
+        <strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')} {formatRank(playerData.receiving_tds_rank)}
       </p>
       <p>
-        <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} ({ordinalSuffixOf(playerData.receiving_fumbles_rank)} out of 182 RBs)
+        <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} {formatRank(playerData.receiving_fumbles_rank)}
       </p>
       <p>
-        <strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')} ({ordinalSuffixOf(playerData.receiving_fumbles_lost_rank)} out of 182 RBs)
+        <strong>Receiving Fumbles Lost:</strong> {formatStat(playerData.receiving_fumbles_lost, 'total')} {formatRank(playerData.receiving_fumbles_lost_rank)}
       </p>
     </>
   );

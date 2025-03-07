@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
-from scripts.qb_fit import team_df, qb_imputed_scaled, pipeline, get_top3_scheme_weights_for_model, raw_fit_functions
+from scripts.qb_fit import (
+    team_df, qb_imputed_scaled, get_top3_scheme_weights_qb, raw_fit_functions_qb,
+    compute_final_fit_qb, compute_team_need_bonus, compute_full_qb_rankings, compute_rushing_bonus_qb
+)
 
 def get_qb_fits_for_team(team_name):
     """
@@ -22,43 +25,54 @@ def get_qb_fits_for_team(team_name):
     team_row = team_row.iloc[0]  # Take the first matching row
 
     # Get the team's top 3 scheme weights
-    scheme_weights = get_top3_scheme_weights_for_model(team_row)
+    scheme_weights = get_top3_scheme_weights_qb(team_row)
 
     # Compute raw fit scores for each QB
     records = []
     for _, qb_row in qb_imputed_scaled.iterrows():
         qb_name = qb_row['player_name']
         qb_id = qb_row['player_id']
+        completed_air_yards = qb_row['passing_yards']
         aav = qb_row['AAV']
         prev_team = qb_row['Prev Team']
         age = qb_row['Age']
+        games = qb_row['games']
         headshot = qb_row['headshot_url']
-        fit_components = {}
 
-        # Compute raw fit for each of the team's top 3 schemes
-        for scheme, weight in scheme_weights.items():
-            if scheme in raw_fit_functions:
-                raw_fit = raw_fit_functions[scheme](qb_row)
-                fit_components[scheme] = raw_fit
-            else:
-                fit_components[scheme] = np.nan
-
-        # Compute final weighted fit score
-        final_fit = sum(scheme_weights[scheme] * fit_components[scheme] for scheme in scheme_weights)
+        # Compute base final fit (without need bonus)
+        base_fit = compute_final_fit_qb(qb_row, scheme_weights, raw_fit_functions_qb)
+        team_need_bonus = compute_team_need_bonus(team_row)
+        # Add bonus for QB mobility (for applicable schemes)
+        mobility_schemes = ['spread_option', 'pistol_power_spread']
+        if any(scheme in scheme_weights for scheme in mobility_schemes):
+            base_fit += compute_rushing_bonus_qb(qb_row)
+        # Apply the team need bonus in the app
+        final_fit = base_fit + team_need_bonus
+        if age > 35:
+            final_fit -= 0.05
+        final_fit = max(final_fit, np.random.uniform(0, 0.2))  
+        # Ensure the final score isn't negative and add a random number from 0 to 0.2.
 
         # Store results
         records.append({
             'qb_name': qb_name,
             'qb_id': qb_id,
+            'completed_air_yards': completed_air_yards,
             'aav': aav,
             'prev_team': prev_team,
             'age': age,
+            'games': games,
             'headshot': headshot, 
             'final_fit': final_fit
         })
 
     # Convert to DataFrame and sort by best fit
     results_df = pd.DataFrame(records).sort_values(by='final_fit', ascending=False)
+    # Merge in the full QB ranking information.
+    ranking_qb_df = compute_full_qb_rankings()
+    # Add completed air yards to results df
+    results_df['completed_air_yards'] = results_df['qb_name'].map(qb_imputed_scaled.set_index('player_name')['passing_yards'])
+    results_df = results_df.merge(ranking_qb_df, left_on='qb_name', right_on='player_name', how='left').drop(columns=['player_name'])
 
     return results_df
 

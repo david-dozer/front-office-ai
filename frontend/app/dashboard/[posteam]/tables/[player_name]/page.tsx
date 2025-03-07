@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Script from 'next/script';
 import CircularProgressBar from '@/app/components/CircularProgressBar';
-import { renderQBAdvancedStats, renderQBNextGenStats } from '@/app/utils/QBDisplayStats';
+import { renderQBAdvancedStats, renderQBNextGenStats, renderRushingStats } from '@/app/utils/QBDisplayStats';
 import { renderRBAdvancedStats, renderRBNextGenStats, renderRBStandardReceivingStats } from '@/app/utils/RBDisplayStats';
 import { renderWRAdvancedStats, renderWRNextGenStats } from '@/app/utils/WRDisplayStats';
 import { renderTEAdvancedStats, renderTENextGenStats} from '@/app/utils/TEDisplayStats';
@@ -130,10 +130,10 @@ export default function PlayerPage() {
                   </p>
                 </div>
                 {/* Right: Circular Progress Bar */}
-                <div className="col-md-4 d-flex flex-column align-items-center justify-content-center ml-n5">
+                <div className="col-12 col-md-4 d-flex flex-column align-items-center justify-content-center ml-md-n5 ml-0">
                   <CircularProgressBar 
                     progress={(playerData.final_fit || playerData.final_rating || 0) * 100} 
-                    size={222} 
+                    size={225} 
                     strokeWidth={15} 
                     duration={1500}
                     headshotUrl={playerData.headshot_url} 
