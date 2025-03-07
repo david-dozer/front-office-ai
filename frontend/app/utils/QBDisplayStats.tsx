@@ -1,7 +1,7 @@
 import React from 'react';
 import { ordinalSuffixOf } from './OLDisplayStats';
 
-// TODO: rankings out of 97 (adjust total count as needed)
+// TODO: rankings out of 97 (adjust total count as needed) QBs
 function formatStat(value: string | number, type: 'total' | 'average'): string {
   // Convert string values to a number.
   const num = typeof value === 'string' ? parseFloat(value) : value;
