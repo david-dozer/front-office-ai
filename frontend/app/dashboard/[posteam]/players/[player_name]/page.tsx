@@ -203,7 +203,7 @@ export default function PlayerPage() {
             <div className="card shadow mb-4">
               <div className="card-header py-3">
                 <h6 className="m-0 font-weight-bold text-primary">2024 Stats</h6>
-              </div>
+              </div>e
               <div className="card-body">
                 <OLDisplayStats playerData={playerData} totalCount={totalCount} />
               </div>
@@ -248,6 +248,39 @@ export default function PlayerPage() {
             </div>
           </div>
         </div>
+      )}
+      {/* Conditional Rushing Stats for QBs */}
+      {!isOLine && playerPos === 'QB' &&
+        ["PISTOL POWER SPREAD", "SPREAD OPTION", "SHANAHAN WIDE ZONE", "RUN POWER"].includes(teamScheme.toUpperCase()) && (
+          <div className="row mb-4">
+            <div className="col-md-6">
+              <div className="card shadow mb-4">
+                <div className="card-header py-3">
+                  <h6 className="m-0 font-weight-bold text-primary">Rushing Stats</h6>
+                </div>
+                <div className="card-body">
+                  {renderRushingStats(playerData)}
+                </div>
+              </div>
+            </div>
+          </div>
+      )}
+
+      {/* Conditional Standard Receiving Stats Card for RBs */}
+      {!isOLine && playerPos === 'RB' &&
+        ["AIR RAID", "WEST COAST", "WEST COAST MCVAY", "MCVAY SYSTEM"].includes(teamScheme.toUpperCase()) && (
+          <div className="row mb-4">
+            <div className="col-md-6">
+              <div className="card shadow mb-4">
+                <div className="card-header py-3">
+                  <h6 className="m-0 font-weight-bold text-primary">Receiving Stats</h6>
+                </div>
+                <div className="card-body">
+                  {renderRBStandardReceivingStats(playerData)}
+                </div>
+              </div>
+            </div>
+          </div>
       )}
     </div>
   );

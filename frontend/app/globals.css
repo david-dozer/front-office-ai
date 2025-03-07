@@ -75,5 +75,26 @@ a {
   margin: 0;
 }
 
+@media (max-width: 430px) {
+  .container-landing {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  /* Make each team take up half the row, for example */
+  .col-3 {
+    flex: 0 0 50% !important; /* 2 logos per row */
+    max-width: 50% !important;
+    padding: 0;
+  }
+
+  img.img-fluid {
+    max-width: 80px;
+    height: auto;
+  }
+}
+
+
 
 

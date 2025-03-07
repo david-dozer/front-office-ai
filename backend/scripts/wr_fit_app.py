@@ -2,6 +2,40 @@ import pandas as pd
 import numpy as np
 from scripts.wr_fit import team_df, wr_imputed_scaled, get_top3_scheme_weights_wr, raw_fit_functions_wr, compute_final_fit_wr, compute_full_wr_rankings
 
+def compute_team_need_bonus_wr(team_row):
+    """
+    Computes a team need bonus for wide receivers using passing ranking columns.
+    
+    Uses columns:
+      - PassingYds_Rank
+      - PassingTD_Rank
+      - Passing1stD_Rank
+      
+    Since wide receivers are critical to passing production, if a team is inside
+    the top 8 (i.e. average rank < 8), a penalty is applied.
+    
+    Tiers for average rank (avg_rank):
+      • avg_rank ≥ 28: +0.06 bonus
+      • 22 ≤ avg_rank < 28: +0.05 bonus
+      • 17 ≤ avg_rank < 22: +0.04 bonus
+      • 8 ≤ avg_rank < 17: +0.03 bonus
+      • avg_rank < 8: –0.2 bonus
+    """
+    ranking_cols = ['PassingYds_Rank', 'PassingTD_Rank', 'Passing1stD_Rank']
+    avg_rank = team_row[ranking_cols].mean()
+    
+    if avg_rank < 8:
+        bonus = -0.1
+    elif 8 <= avg_rank < 17:
+        bonus = 0.03
+    elif 17 <= avg_rank < 22:
+        bonus = 0.05
+    elif 22 <= avg_rank < 28:
+        bonus = 0.06
+    else:
+        bonus = 0.075
+    return bonus
+
 def get_wr_fits_for_team(team_name):
     """
     Given an NFL team name, computes the best WR fits using the unified final fit function.
@@ -24,6 +58,9 @@ def get_wr_fits_for_team(team_name):
         headshot = wr_row['headshot_url']
         # Use the unified function to compute final fit (with bonuses)
         final_fit = compute_final_fit_wr(wr_row, scheme_weights, raw_fit_functions_wr)
+        final_fit += compute_team_need_bonus_wr(team_row)
+        if age > 31:
+            final_fit -= (age - 31) * 0.02
         records.append({
             'wr_name': wr_name,
             'wr_id': wr_id,

@@ -2,6 +2,44 @@ import pandas as pd
 import numpy as np
 from scripts.rb_fit import team_df, rb_imputed_scaled, get_top3_scheme_weights_rb, raw_fit_functions_rb, compute_full_rb_rankings, compute_final_fit_rb
 
+def compute_team_need_bonus_rb(team_row):
+    """
+    Computes a team need bonus for running backs using rushing ranking columns.
+    
+    Uses columns:
+      - RushingYds_Rank
+      - RushingTD_Rank
+      - Y/A_Rank
+      
+    There are no excluded teams for RBs.
+    
+    The bonus is based on the average of these ranking columns.
+    Lower rankings indicate better performance. Thus, if a team is excelling in rushing 
+    (avg_rank < 15), it receives a penalty (-0.2 bonus) because it doesn't need RB help.
+    Conversely, if the average rank is high (poor rushing production), the team gets a positive bonus.
+    
+    Tiers:
+      • avg_rank ≥ 28: +0.06 bonus
+      • 22 ≤ avg_rank < 28: +0.05 bonus
+      • 17 ≤ avg_rank < 22: +0.04 bonus
+      • 15 ≤ avg_rank < 17: +0.03 bonus
+      • avg_rank < 15: -0.2 bonus
+    """
+    ranking_cols = ['RushingYds_Rank', 'RushingTD_Rank', 'Y/A_Rank']
+    avg_rank = team_row[ranking_cols].mean()
+    
+    if avg_rank >= 28:
+        bonus = 0.06
+    elif 22 <= avg_rank < 28:
+        bonus = 0.05
+    elif 17 <= avg_rank < 22:
+        bonus = 0.04
+    elif 15 <= avg_rank < 17:
+        bonus = 0.03
+    else:
+        bonus = -0.2
+    return bonus
+
 def get_rb_fits_for_team(team_name):
     """
     Computes the RB fits for a given team, using the unified final fit function
@@ -23,6 +61,9 @@ def get_rb_fits_for_team(team_name):
         games = rb_row['games']
         headshot = rb_row['headshot_url']
         final_fit = compute_final_fit_rb(rb_row, scheme_weights, raw_fit_functions_rb)
+        final_fit += compute_team_need_bonus_rb(team_row)
+        if age > 30:
+            final_fit -= (age - 30) * 0.02
         records.append({
             'rb_name': rb_name,
             'rb_id': rb_id,

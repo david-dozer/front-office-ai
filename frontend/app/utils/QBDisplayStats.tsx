@@ -21,7 +21,7 @@ function formatStat(value: string | number, type: 'total' | 'average'): string {
 function formatRank(rank: number): React.ReactElement {
   return (
     <span style={{ fontSize: "0.70em", color: "#666" }}>
-      ({ordinalSuffixOf(rank)} out of 97 QBs)
+      ({ordinalSuffixOf(rank)} out of 295 QBs)
     </span>
   );
 }
@@ -291,7 +291,10 @@ export function renderRushingStats(playerData: any): React.ReactElement {
   return (
     <>
       <p>
-        <strong>Rushing Yards:</strong> {formatStat(playerData.rushing_yards, 'total')} ({formatStat(yardsPerCarry, 'average')} yards per rush)
+        <strong>Rushing Yards:</strong> {formatStat(playerData.rushing_yards, 'total')} 
+        <span style={{ fontSize: "0.70em", color: "#666" }}>
+          {` (${formatStat(yardsPerCarry, 'average')} yards per rush)`}
+        </span>
       </p>
       <p>
         <strong>Carries:</strong> {formatStat(playerData.carries, 'total')} {formatRank(playerData.carries_rank)}

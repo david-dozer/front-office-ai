@@ -113,9 +113,6 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
           </p>
           <p>
-            <strong>Rushing 2pt Conversions:</strong> {formatStat(playerData.rushing_2pt_conversions, 'total')} {formatRank(playerData.rushing_2pt_conversions_rank)}
-          </p>
-          <p>
             <strong>Rushing Fumbles Lost:</strong> {formatStat(playerData.rushing_fumbles_lost, 'total')} {formatRank(playerData.rushing_fumbles_lost_rank)}
           </p>
           <p>
@@ -131,9 +128,6 @@ export function renderRBAdvancedStats(playerData: any, teamScheme: string): Reac
           </p>
           <p>
             <strong>Rushing First Downs:</strong> {formatStat(playerData.rushing_first_downs, 'total')} {formatRank(playerData.rushing_first_downs_rank)}
-          </p>
-          <p>
-            <strong>Rushing 2pt Conversions:</strong> {formatStat(playerData.rushing_2pt_conversions, 'total')} {formatRank(playerData.rushing_2pt_conversions_rank)}
           </p>
           <p>
             <strong>Rushing Fumbles Lost:</strong> {formatStat(playerData.rushing_fumbles_lost, 'total')} {formatRank(playerData.rushing_fumbles_lost_rank)}

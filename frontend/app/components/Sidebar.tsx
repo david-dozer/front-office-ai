@@ -87,7 +87,7 @@ const Sidebar: React.FC = () => {
 
       {/* Tables Nav Item */}
       <li className={`nav-item ${isTablesActive ? 'active' : ''}`}>
-        <Link href={`/dashboard/${posteam}/tables`} className="nav-link">
+        <Link href={`/dashboard/${posteam}/players`} className="nav-link">
           <i className="fas fa-fw fa-table"></i>
           <span>Players Available</span>
         </Link>

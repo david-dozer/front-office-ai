@@ -34,7 +34,13 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive a receiver is."
+            >
+              Receiving EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
             <strong>Target Share:</strong> {formatStat(playerData.target_share * 100, 'average')}% {formatRank(playerData.target_share_rank)}
@@ -51,10 +57,22 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+            <strong
+              title="RACR is a measure of how well a receiver converts air yards to receiving yards."
+            >
+              RACR:
+            </strong>
+            {' '}
+            {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
           </p>
           <p>
-            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive a receiver is."
+            >
+              Receiving EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
         </>
       );
@@ -71,7 +89,13 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Air Yards Share:</strong> {formatStat(playerData.air_yards_share, 'average')} {formatRank(playerData.air_yards_share_rank)}
           </p>
           <p>
-            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive a receiver is."
+            >
+              Receiving EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
         </>
       );
@@ -88,7 +112,13 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive a receiver is."
+            >
+              Receiving EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
         </>
       );
@@ -96,7 +126,13 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive a receiver is."
+            >
+              Receiving EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
             <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
@@ -105,7 +141,13 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+            <strong
+              title="RACR is a measure of how well a receiver converts air yards to receiving yards."
+            >
+              RACR:
+            </strong>
+            {' '}
+            {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
           </p>
         </>
       );
@@ -113,7 +155,13 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Receiving EPA:</strong> {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            <strong
+              title="Expected Points Added (EPA) measures how explosive a receiver is."
+            >
+              Receiving EPA:
+            </strong>
+            {' '}
+            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
             <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} {formatRank(playerData.receiving_fumbles_rank)}
@@ -139,7 +187,13 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
             <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>RACR:</strong> {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+            <strong
+              title="RACR is a measure of how well a receiver converts air yards to receiving yards."
+            >
+              RACR:
+            </strong>
+            {' '}
+            {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
           </p>
         </>
       );

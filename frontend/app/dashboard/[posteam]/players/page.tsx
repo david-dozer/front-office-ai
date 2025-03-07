@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Script from 'next/script';
 import CircularProgressBar from '@/app/components/CircularProgressBar';
@@ -33,6 +33,7 @@ export default function TablesPage() {
   const { posteam } = useParams(); // e.g., 'NYJ'
   const [players, setPlayers] = useState<Player[]>([]);
   const [selectedFilter, setSelectedFilter] = useState('Filter by Position');
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -137,6 +138,10 @@ export default function TablesPage() {
             const value = window.jQuery(anchor).data('value');
             const text = window.jQuery(anchor).text();
             window.jQuery('#positionDropdown').text('Position: ' + text);
+            localStorage.setItem('selectedPosition', value);
+            
+            // Push a new URL with the query parameter.
+            window.history.replaceState(null, '', window.location.pathname + '?positionSelected=' + value);
             
             if (value === '') {
               dt.column(1).search('').draw();
@@ -174,7 +179,7 @@ export default function TablesPage() {
         <div className="row justify-content-center">
           {topFits.map((player, idx) => (
             <div key={idx} className="col-md-4 mb-4 d-flex flex-column align-items-center">
-              <a href={`/dashboard/${posteam}/tables/${player.id}`}>
+              <a href={`/dashboard/${posteam}/players/${player.id}`}>
                 <CircularProgressBar 
                   progress={(player.fit || 0) * 100} 
                   size={250} 
@@ -246,7 +251,7 @@ export default function TablesPage() {
                     <tr key={idx}>
                       <td>
                         <Link 
-                          href={`/dashboard/${posteam}/tables/${player.id}`} 
+                          href={`/dashboard/${posteam}/players/${player.id}`} 
                           className="m-0 font-weight-bold text-primary"
                           style={{ textDecoration: "none" }}
                           onClick={() => console.log("Player: {player.id}")}
