@@ -18,7 +18,7 @@ const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   // SWR fetches and caches the teams data.
-  const { data: teams, error } = useSWR<Team[]>(
+  const { data: teams} = useSWR<Team[]>(
     'http://localhost:5000/teams',
     fetcher,
     {
@@ -32,7 +32,7 @@ const Sidebar: React.FC = () => {
 
   // Utility: darkens a hex color by a given percentage.
   function darkenColor(hex: string, percent: number): string {
-    let color = hex.startsWith('#') ? hex.slice(1) : hex;
+    const color = hex.startsWith('#') ? hex.slice(1) : hex;
     const num = parseInt(color, 16);
     let r = (num >> 16) & 0xff;
     let g = (num >> 8) & 0xff;

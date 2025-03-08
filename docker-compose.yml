@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   backend:
     build:
@@ -7,9 +9,8 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/app
-    environment:
-      - FLASK_ENV=development
-    command: ["python", "app.py"]
+    # Remove Flask environment variable and update the command for FastAPI
+    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
     networks:
       - app-network
     restart: unless-stopped
@@ -20,12 +21,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    depends_on:
-      - backend
-    command: ["npm", "run", "dev"]
     networks:
       - app-network
     restart: unless-stopped

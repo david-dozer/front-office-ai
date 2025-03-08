@@ -34,5 +34,5 @@ COPY . /app
 # Expose Flask's default port
 EXPOSE 5000
 
-# Run the Flask app
-CMD ["python", "app.py"]
+# Run the FASTAPI app
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]

@@ -1,20 +1,29 @@
-# Use Node.js 22 as base image
-FROM node:22.14.0
+# Stage 1: Build the application
+FROM node:22.14.0 AS builder
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and lock file before copying the rest (to leverage caching)
+# Copy package files and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the frontend code
-COPY . /app
+# Copy the rest of the application code and build the production version
+COPY . .
+RUN npm run build
 
-# Expose port 3000 for Next.js frontend
+# Stage 2: Run the application in production
+FROM node:22.14.0
+
+WORKDIR /app
+
+# Set environment variable for production
+ENV NODE_ENV production
+
+# Copy only the necessary files from the build stage
+COPY --from=builder /app/ ./
+
+# Expose port 3000 for the Next.js app
 EXPOSE 3000
 
-# Run the Next.js development server
-CMD ["npm", "run", "dev"]
+# Start the app in production mode
+CMD ["npm", "start"]

@@ -32,8 +32,8 @@ function formatAAV(aav: number): string {
 export default function TablesPage() {
   const { posteam } = useParams(); // e.g., 'NYJ'
   const [players, setPlayers] = useState<Player[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState('Filter by Position');
-  const router = useRouter();
+  const [_, __] = useState('Filter by Position');
+  // const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {

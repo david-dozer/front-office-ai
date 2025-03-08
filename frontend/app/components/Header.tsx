@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Image from "next/image";
+
+type TeamData = {
+  posteam: string;
+  team_color2?: string;
+  team_logo_espn?: string;
+  cap_space_all?: number;
+};
 
 const Header: React.FC = () => {
   const { posteam } = useParams();
@@ -9,11 +17,13 @@ const Header: React.FC = () => {
   const [capSpace, setCapSpace] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+
+
   useEffect(() => {
     fetch('http://localhost:5000/teams')
       .then(response => response.json())
       .then(data => {
-        const teamData = data.find((t: any) => t.posteam === posteam);
+        const teamData: TeamData | undefined = data.find((t: TeamData) => t.posteam === posteam);
         if (teamData) {
           if (teamData.team_color2) {
             setTeamColor(teamData.team_color2);
@@ -78,11 +88,7 @@ const Header: React.FC = () => {
             aria-haspopup="true" 
             aria-expanded="false"
           >
-            <img 
-              className="img-profile rounded-circle border border-dark border-5 p-01" 
-              src={teamLogo || '/next.svg'} 
-              alt="Profile" 
-            />
+            <Image src={teamLogo || '/next.svg'} width={50} height={50} alt="Profile" />;
           </a>
           <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
           <a 
