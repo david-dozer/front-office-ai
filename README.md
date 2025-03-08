@@ -38,8 +38,8 @@ This tool is designed to evaluate free-agent fits for NFL teams based on **stand
 ## Installation
 ### **1. Clone the Repository**
 ```sh
-git clone https://github.com/your-username/nfl-free-agency-scheme-fitter.git
-cd nfl-free-agency-scheme-fitter
+git clone git@github.com:david-dozer/front-office-ai.git
+cd front-office-ai
 ```
 
 ### **2. Install Dependencies**
