@@ -33,40 +33,22 @@ This tool is designed to evaluate free-agent fits for NFL teams based on **stand
 - **Machine Learning** (Stat analysis & player fit model)
 
 ### **Database**
-- **PostgreSQL** (Player & team data storage)
+- **CSV storage** (Player & team data storage)
 
-## Installation
-### **1. Clone the Repository**
+## Docker Deployment
+
+You can also run the entire application as a single Docker container. The consolidated Docker image is available on Docker Hub.
+
+### Pull the Docker Image
 ```sh
-git clone https://github.com/your-username/nfl-free-agency-scheme-fitter.git
-cd nfl-free-agency-scheme-fitter
+docker pull daviddozer/front-office-ai-pre-rankings:latest
 ```
 
-### **2. Install Dependencies**
-#### **Backend (FastAPI & ML)**
+### Run the Docker Container
 ```sh
-cd backend
-pip install -r requirements.txt
+docker run -d -p 3000:3000 -p 5000:5000 daviddozer/front-office-ai-pre-rankings:latest
 ```
-
-#### **Frontend (Next.js & Bootstrap)**
-```sh
-cd frontend
-npm install
-```
-
-### **3. Run the Project**
-#### **Start Backend**
-```sh
-cd backend
-uvicorn app:app --host 0.0.0.0 --port 5000 --reload 
-```
-
-#### **Start Frontend**
-```sh
-cd frontend
-npm run dev
-```
+This will run the container in detached mode, mapping the container's port 3000 to your host's port 3000 (frontend) and port 5000 to your host's port 5000 (backend).
 
 ## Usage
 1. Select an **NFL team** from the list.
