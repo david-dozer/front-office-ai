@@ -1,16 +1,25 @@
-// ranked stats out of 366
 "use client";
 
 import React from 'react';
 
+export interface OLPlayerData {
+  overall_ranking?: number | string;
+  final_rating: number | string;
+  avg?: number | string;
+  avg_ranking?: number | string;
+  games?: number | string;
+  "tmsnap%"?: number | string;
+  "tmsnap%_ranking"?: number | string;
+}
+
 interface OLDisplayStatsProps {
-  playerData: any;
-  totalCount: number;
+  playerData: OLPlayerData;
 }
 
 // Helper to add an ordinal suffix to a number (e.g., 1 -> 1st, 2 -> 2nd, etc.)
 export function ordinalSuffixOf(i: number): string {
-  const j = i % 10, k = i % 100;
+  const j = i % 10,
+    k = i % 100;
   if (j === 1 && k !== 11) {
     return i + "st";
   }
@@ -23,11 +32,8 @@ export function ordinalSuffixOf(i: number): string {
   return i + "th";
 }
 
-export default function OLDisplayStats({ playerData, totalCount }: OLDisplayStatsProps) {
+export default function OLDisplayStats({ playerData }: OLDisplayStatsProps) {
   // Overall ranking: if provided by the endpoint; otherwise, show "N/A"
-  const overallRanking = playerData.overall_ranking
-    ? ordinalSuffixOf(Number(playerData.overall_ranking))
-    : "N/A";
 
   // Display final_rating as a percentage (multiplied by 100 and rounded to 1 decimal)
   const finalRatingPercent = (Number(playerData.final_rating) * 100).toFixed(1);
@@ -39,7 +45,6 @@ export default function OLDisplayStats({ playerData, totalCount }: OLDisplayStat
     : "N/A";
 
   // For team snaps, assume the cleaned key is "tmsnap%" and its ranking "tmsnap%_ranking"
-  // (i.e. original "TM SNAP %" and "TM SNAP %_ranking" become "tmsnap%" and "tmsnap%_ranking")
   const teamSnaps = playerData["tmsnap%"]
     ? (Number(playerData["tmsnap%"])).toFixed(1) + "%"
     : "N/A";
@@ -57,10 +62,10 @@ export default function OLDisplayStats({ playerData, totalCount }: OLDisplayStat
         <strong>Final Rating:</strong> {finalRatingPercent} / 100
       </p>
       <p>
-        <strong>Average Snaps per Game:</strong> {avg} 
+        <strong>Average Snaps per Game:</strong> {avg} ({avgRanking} rank)
       </p>
       <p>
-        <strong>Team Snaps: {teamSnaps} </strong> ({avgRanking} out of 366 linemen)
+        <strong>Team Snaps:</strong> {teamSnaps} ({teamSnapsRanking} rank)
       </p>
     </div>
   );

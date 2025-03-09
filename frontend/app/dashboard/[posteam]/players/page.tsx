@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Script from 'next/script';
 import CircularProgressBar from '@/app/components/CircularProgressBar';
@@ -15,6 +15,34 @@ interface Player {
   age: number;
   fit: number;
   headshot_url?: string;
+}
+
+interface PlayerData {
+  id?: string;
+  name?: string;
+  pos?: string;
+  age?: number;
+  aav?: number;
+  prevteam?: string;
+  final_rating?: number;
+  headshot_url?: string;
+}
+
+// New interface to replace "any" for non-oline endpoints.
+interface NonOlinePlayerData {
+  qb_id?: string;
+  qb_name?: string;
+  rb_id?: string;
+  rb_name?: string;
+  wr_id?: string;
+  wr_name?: string;
+  te_id?: string;
+  te_name?: string;
+  age: number;
+  aav: number;
+  final_fit: number;
+  headshot: string;
+  prev_team: string;
 }
 
 function formatAAV(aav: number): string {
@@ -32,7 +60,7 @@ function formatAAV(aav: number): string {
 export default function TablesPage() {
   const { posteam } = useParams(); // e.g., 'NYJ'
   const [players, setPlayers] = useState<Player[]>([]);
-  const [_, __] = useState('Filter by Position');
+  // const [_, __] = useState('Filter by Position');
   // const router = useRouter();
 
   useEffect(() => {
@@ -40,7 +68,7 @@ export default function TablesPage() {
       try {
         if (!posteam) return;
 
-        // Define endpoints for QB, RB, WR and oline free agent data.
+        // Define endpoints for QB, RB, WR and TE, and oline free agent data.
         const endpoints = [
           { pos: 'qb', endpoint: `http://localhost:5000/teams/${posteam}/qbfits` },
           { pos: 'rb', endpoint: `http://localhost:5000/teams/${posteam}/rbfits` },
@@ -55,13 +83,15 @@ export default function TablesPage() {
           const res = await fetch(item.endpoint);
           const data = await res.json();
 
-          let formattedPlayers;
+          // Declare formattedPlayers outside the if/else block
+          let formattedPlayers: Player[] = [];
+
           if (item.pos === 'oline') {
             // For oline, convert aav from string to number and use player.pos as the position.
-            formattedPlayers = data.map((player: any, index: number) => ({
+            formattedPlayers = data.map((player: PlayerData, index: number) => ({
               id: player.id || `oline-${index}`,
               name: player.name || "Unknown",
-              position: player.pos || "Unknown", // use the actual position
+              position: player.pos || "Unknown",
               age: player.age ? Math.ceil(player.age) : 0,
               projectedSalary: player.aav ? formatAAV(Number(player.aav)) : "",
               prev_team: player.prevteam || "",
@@ -69,17 +99,21 @@ export default function TablesPage() {
               headshot_url: player.headshot_url,
             }));
           } else {
-            // For QB, RB, WR, TE endpoints assume they return final_fit field.
-            formattedPlayers = data.map((player: any) => ({
-              id: player[`${item.pos}_id`] || "Unknown",
-              name: player[`${item.pos}_name`] || "Unknown",
-              position: item.pos.toUpperCase(),
-              age: Math.ceil(player.age),
-              projectedSalary: formatAAV(player.aav),
-              prev_team: player.prev_team,
-              fit: player.final_fit,
-              headshot_url: player.headshot, // Adjust if needed
-            }));
+            // For QB, RB, WR, TE endpoints, use NonOlinePlayerData instead of any.
+            formattedPlayers = data.map((player: NonOlinePlayerData) => {
+              const idKey = (item.pos + "_id") as keyof NonOlinePlayerData;
+              const nameKey = (item.pos + "_name") as keyof NonOlinePlayerData;
+              return {
+                id: player[idKey] || "Unknown",
+                name: player[nameKey] || "Unknown",
+                position: item.pos.toUpperCase(),
+                age: Math.ceil(player.age),
+                projectedSalary: formatAAV(player.aav),
+                prev_team: player.prev_team,
+                fit: player.final_fit,
+                headshot_url: player.headshot, // Adjust if needed
+              };
+            });
           }
           allPlayers = [...allPlayers, ...formattedPlayers];
         }

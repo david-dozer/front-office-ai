@@ -8,11 +8,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
-team_df = pd.read_csv('../backend/processed_data/team_seasonal_stats.csv')
+team_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
 # Free agent TEs for computing fits
-fa_te_df = pd.read_csv('../backend/processed_data/fa_tes.csv')
+fa_te_df = pd.read_csv('processed_data/fa_tes.csv')
 # Full TE dataset for ranking advanced metrics
-full_te_df = pd.read_csv('../backend/processed_data/te_data.csv')
+full_te_df = pd.read_csv('processed_data/te_data.csv')
 
 # === 2. Preprocess TE Data for Both Datasets ===
 def preprocess_te_data(df):

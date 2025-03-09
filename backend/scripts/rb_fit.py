@@ -8,8 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
-team_df = pd.read_csv('../backend/processed_data/team_seasonal_stats.csv')
-rb_df = pd.read_csv('../backend/processed_data/fa_rbs.csv')  # Free agent RB data
+team_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
+rb_df = pd.read_csv('processed_data/fa_rbs.csv')  # Free agent RB data
 
 # === 2. Preprocess RB Data ===
 def safe_ypc(row):
@@ -276,7 +276,7 @@ def compute_full_rb_rankings():
     computes an inverted NGS Avg Time to LOS, and returns a DataFrame with ranking columns
     for all the desired RB stats.
     """
-    full_rb_df = pd.read_csv('../backend/processed_data/rb_data.csv')
+    full_rb_df = pd.read_csv('processed_data/rb_data.csv')
     
     # Calculate yards per carry as before.
     full_rb_df['yards_per_carry'] = full_rb_df.apply(

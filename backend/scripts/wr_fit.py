@@ -8,8 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # === 1. Read the Data ===
-team_df = pd.read_csv('../backend/processed_data/team_seasonal_stats.csv')
-wr_df = pd.read_csv('../backend/processed_data/fa_wrs.csv')
+team_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
+wr_df = pd.read_csv('processed_data/fa_wrs.csv')
 
 # === 2. Preprocess WR Data ===
 # Replace 0 games with NaN to avoid division by zero
@@ -297,7 +297,7 @@ print("Mean Squared Error for WR model:", mse_wr)
 # === 7. Functionalized Full WR Ranking ===
 def compute_full_wr_rankings():
     # Load full WR dataset
-    full_wr_df = pd.read_csv('../backend/processed_data/wr_data.csv')
+    full_wr_df = pd.read_csv('processed_data/wr_data.csv')
     full_wr_df['games'] = full_wr_df['games'].replace(0, np.nan)
     full_wr_df['receiving_yards_per_game'] = full_wr_df['receiving_yards'] / full_wr_df['games']
     full_wr_df['receiving_tds_per_game'] = full_wr_df['receiving_tds'] / full_wr_df['games']

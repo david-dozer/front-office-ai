@@ -1,20 +1,21 @@
 @import '../styles/sb-admin-2.css';
-@import url('https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900');
+/* @import url('https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900'); */
 
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #666;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #666;
   }
 }
 
 html, body {
+  color: #666;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -24,7 +25,7 @@ html, body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

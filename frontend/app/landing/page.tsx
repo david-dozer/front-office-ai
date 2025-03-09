@@ -2,6 +2,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
+import Image from 'next/image';
 
 type Team = {
   posteam: string;
@@ -55,10 +56,11 @@ export default function LandingPage() {
         <div className="row">
           {/* AFC Column */}
           <div className="col-6 text-center">
-            <img
+            <Image
               src="/afc.png"
               alt="AFC Logo"
-              style={{ maxHeight: '70px' }}
+              width={70}
+              height={70}
               className="mb-4"
             />
             {afcDivisions.map((divisionTeams, idx) => (
@@ -68,11 +70,13 @@ export default function LandingPage() {
                     className="col-3 d-flex flex-column align-items-center"
                     key={team.posteam}
                   >
-                    <img
+                    <Image
                       src={team.team_logo_espn}
                       alt={team.team_name}
-                      style={{ maxHeight: '60px', cursor: 'pointer' }}
+                      width={60}
+                      height={60}
                       className="img-fluid mb-2"
+                      style={{ cursor: 'pointer' }}
                       onClick={() => handleLogoClick(team.posteam)}
                     />
                   </div>
@@ -83,10 +87,11 @@ export default function LandingPage() {
 
           {/* NFC Column */}
           <div className="col-6 text-center">
-            <img
+            <Image
               src="/nfc.png"
               alt="NFC Logo"
-              style={{ maxHeight: '70px' }}
+              width={70}
+              height={70}
               className="mb-4"
             />
             {nfcDivisions.map((divisionTeams, idx) => (
@@ -96,11 +101,13 @@ export default function LandingPage() {
                     className="col-3 d-flex flex-column align-items-center"
                     key={team.posteam}
                   >
-                    <img
+                    <Image
                       src={team.team_logo_espn}
                       alt={team.team_name}
-                      style={{ maxHeight: '60px', cursor: 'pointer' }}
+                      width={60}
+                      height={60}
                       className="img-fluid mb-2"
+                      style={{ cursor: 'pointer' }}
                       onClick={() => handleLogoClick(team.posteam)}
                     />
                   </div>

@@ -4,8 +4,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.impute import SimpleImputer
 
 # === 1. Read the Data ===
-team_df = pd.read_csv('../backend/processed_data/team_seasonal_stats.csv')
-qb_df = pd.read_csv('../backend/processed_data/fa_qbs.csv')
+team_df = pd.read_csv('processed_data/team_seasonal_stats.csv')
+qb_df = pd.read_csv('processed_data/fa_qbs.csv')
 
 # === 2. Preprocess QB Data ===
 # Replace 0 games with NaN to avoid division errors
@@ -347,7 +347,7 @@ print(fit_qb_df[['qb_name', 'final_fit']].head())
 # === 8. Functionalized Full QB Ranking ===
 def compute_full_qb_rankings():
     # Load the full QB dataset (assumed available)
-    full_qb_df = pd.read_csv('../backend/processed_data/qb_data.csv')
+    full_qb_df = pd.read_csv('processed_data/qb_data.csv')
     full_qb_df['games'] = full_qb_df['games'].replace(0, np.nan)
      # Create a new column: pass_yards_minus_yac = passing_yards - passing_yards_after_catch
     full_qb_df['pass_yards_minus_yac'] = full_qb_df['passing_yards'] - full_qb_df['passing_yards_after_catch']

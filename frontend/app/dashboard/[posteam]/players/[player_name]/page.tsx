@@ -2,55 +2,93 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import Script from 'next/script';
 import CircularProgressBar from '@/app/components/CircularProgressBar';
 import { renderQBAdvancedStats, renderQBNextGenStats, renderRushingStats } from '@/app/utils/QBDisplayStats';
 import { renderRBAdvancedStats, renderRBNextGenStats, renderRBStandardReceivingStats } from '@/app/utils/RBDisplayStats';
 import { renderWRAdvancedStats, renderWRNextGenStats } from '@/app/utils/WRDisplayStats';
-import { renderTEAdvancedStats, renderTENextGenStats} from '@/app/utils/TEDisplayStats';
-import OLDisplayStats from '@/app/utils/OLDisplayStats';
+import { renderTEAdvancedStats, renderTENextGenStats } from '@/app/utils/TEDisplayStats';
+import OLDisplayStats, { OLPlayerData } from '@/app/utils/OLDisplayStats';
 
-const advancedStatsRenderers: Record<string, (playerData: any, teamScheme: string) => React.ReactElement> = {
-  QB: renderQBAdvancedStats,
-  RB: renderRBAdvancedStats,
-  WR: renderWRAdvancedStats,
-  TE: renderTEAdvancedStats
+interface PlayerData {
+  player_name?: string;
+  name?: string;
+  age?: number | string;
+  height?: number;
+  weight?: number | string;
+  YOE?: number | string;
+  yoe?: number | string;
+  pos?: string;
+  Position?: string;
+  market_value?: number;
+  final_fit?: number;
+  final_rating?: number;
+  headshot_url?: string;
+  season?: string;
+  // QB Stats
+  passing_tds?: number;
+  passing_yards?: number;
+  interceptions?: number;
+  games?: number;
+  // RB Stats
+  rushing_tds?: number;
+  rushing_yards?: number;
+  rushing_fumbles?: number;
+  carries?: number;
+  // WR Stats
+  receiving_tds?: number;
+  receptions?: number;
+  receiving_yards?: number;
+  targets?: number;
+}
+
+// New interface for team data returned by the endpoint.
+interface TeamData {
+  posteam: string;
+  scheme?: string;
+}
+
+const advancedStatsRenderers: Record<string, (playerData: PlayerData, teamScheme: string) => React.ReactElement> = {
+  QB: renderQBAdvancedStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
+  RB: renderRBAdvancedStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
+  WR: renderWRAdvancedStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
+  TE: renderTEAdvancedStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
 };
 
-const nextGenStatsRenderers: Record<string, (playerData: any, teamScheme: string) => React.ReactElement> = {
-  QB: renderQBNextGenStats,
-  RB: renderRBNextGenStats,
-  WR: renderWRNextGenStats,
-  TE: renderTENextGenStats
+const nextGenStatsRenderers: Record<string, (playerData: PlayerData, teamScheme: string) => React.ReactElement> = {
+  QB: renderQBNextGenStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
+  RB: renderRBNextGenStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
+  WR: renderWRNextGenStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
+  TE: renderTENextGenStats as unknown as (playerData: PlayerData, teamScheme: string) => React.ReactElement,
 };
 
-// Helper to format whole number stats
-function formatStat(value: string | number, type: 'total'): string {
+
+// Helper to format whole number stats using a named parameter "statType"
+function formatStat(value: string | number, statType: 'total' | 'average'): string {
   const num = typeof value === 'string' ? parseFloat(value) : value;
   if (isNaN(num)) {
     return value.toString();
   }
-  return Number.isInteger(num) ? num.toString() : num.toFixed(0);
+  if (statType === 'total') {
+    return Number.isInteger(num) ? num.toString() : num.toFixed(0);
+  } else if (statType === 'average') {
+    return num.toFixed(2);
+  }
+  return num.toString();
 }
 
 export default function PlayerPage() {
   const params = useParams();
-  const [playerData, setPlayerData] = useState<any>(null);
+  const [playerData, setPlayerData] = useState<PlayerData | null>(null);
   const [teamScheme, setTeamScheme] = useState<string>('');
-  // Total count for offensive linemen rankings
-  const totalCount = 366;
-
-  // Array of offensive line positions (for these players, position is under "pos")
+  // const totalCount = 366;
   const offensiveLinePositions = ['OT', 'G', 'C', 'OL'];
 
-  // Fetch the player data from multiple endpoints (QB, RB, WR, and oline)
+  // Fetch the player data from multiple endpoints (QB, RB, WR, TE, and oline)
   useEffect(() => {
     if (!params?.posteam || !params?.player_name) return;
 
     async function fetchPlayer() {
       try {
-        // Try endpoints for QB, RB, WR, and then oline
         const positions = ['QB', 'RB', 'WR', 'TE', 'oline'];
         for (const pos of positions) {
           let url = '';
@@ -61,7 +99,7 @@ export default function PlayerPage() {
           }
           const res = await fetch(url, { cache: 'no-store' });
           if (res.ok) {
-            const data = await res.json();
+            const data: PlayerData = await res.json();
             setPlayerData(data);
             break;
           }
@@ -78,8 +116,8 @@ export default function PlayerPage() {
     if (!params?.posteam) return;
     fetch('http://localhost:5000/teams')
       .then(response => response.json())
-      .then(data => {
-        const teamData = data.find((t: any) => t.posteam === params.posteam);
+      .then((data: TeamData[]) => {
+        const teamData = data.find((t) => t.posteam === params.posteam);
         if (teamData && teamData.scheme) {
           setTeamScheme(teamData.scheme);
         }
@@ -97,7 +135,6 @@ export default function PlayerPage() {
     return <div className="container-fluid">Loading player data...</div>;
   }
 
-  // Determine player's position using the "pos" field if available, else "Position"
   const playerPos = (playerData.pos || playerData.Position || '').toUpperCase();
   const isOLine = offensiveLinePositions.includes(playerPos);
 
@@ -117,9 +154,9 @@ export default function PlayerPage() {
                   <h4 className="card-title mb-2">
                     <strong>{playerData.player_name || playerData.name}</strong>
                   </h4>
-                  <p><strong>Age:</strong> {parseInt(playerData.age, 10)}</p>
-                  <p><strong>Height:</strong> {convertHeightToFeetInches(playerData.height)}</p>
-                  <p><strong>Weight:</strong> {formatStat(playerData.weight, 'total')} lbs</p>
+                  <p><strong>Age:</strong> {parseInt(String(playerData.age), 10)}</p>
+                  <p><strong>Height:</strong> {convertHeightToFeetInches(playerData.height || 0)}</p>
+                  <p><strong>Weight:</strong> {formatStat(playerData.weight || 0, 'total')} lbs</p>
                   <p><strong>YOE:</strong> {playerData.YOE || playerData.yoe} years </p>
                   <p>
                     <strong>Position:</strong> {playerData.pos || playerData.Position}
@@ -139,7 +176,7 @@ export default function PlayerPage() {
                     headshotUrl={playerData.headshot_url} 
                   />
                   <small className="text-muted mt-2">
-                    Player Fit: {((playerData.final_fit || playerData.final_rating)*100).toFixed(1)}%
+                    Player Fit: {(((playerData.final_fit ?? playerData.final_rating) ?? 0) * 100).toFixed(1)}%
                   </small>
                 </div>
               </div>
@@ -147,7 +184,7 @@ export default function PlayerPage() {
           </div>
         </div>
 
-        {/* For non-OLine players, Standard Stats Card */}
+        {/* Standard Stats Card for non-offensive linemen */}
         {!isOLine && (
           <div className="col-md-4">
             <div className="card shadow mb-4">
@@ -157,37 +194,37 @@ export default function PlayerPage() {
               <div className="card-body">
                 {playerData.Position === 'QB' && (
                   <>
-                    <p><strong>Passing TDs:</strong> {formatStat(playerData.passing_tds, 'total')}</p>
-                    <p><strong>Passing Yards:</strong> {formatStat(playerData.passing_yards, 'total')}</p>
-                    <p><strong>Interceptions:</strong> {formatStat(playerData.interceptions, 'total')}</p>
-                    <p><strong>Games:</strong> {formatStat(playerData.games, 'total')}</p>
+                    <p><strong>Passing TDs:</strong> {formatStat(playerData.passing_tds || 0, 'total')}</p>
+                    <p><strong>Passing Yards:</strong> {formatStat(playerData.passing_yards || 0, 'total')}</p>
+                    <p><strong>Interceptions:</strong> {formatStat(playerData.interceptions || 0, 'total')}</p>
+                    <p><strong>Games:</strong> {formatStat(playerData.games || 0, 'total')}</p>
                   </>
                 )}
                 {playerData.Position === 'RB' && (
                   <>
-                    <p><strong>Rushing TDs:</strong> {formatStat(playerData.rushing_tds, 'total')}</p>
-                    <p><strong>Rushing Yards:</strong> {formatStat(playerData.rushing_yards, 'total')}</p>
-                    <p><strong>Fumbles:</strong> {formatStat(playerData.rushing_fumbles, 'total')}</p>
-                    <p><strong>Carries:</strong> {formatStat(playerData.carries, 'total')}</p>
-                    <p><strong>Games:</strong> {formatStat(playerData.games, 'total')}</p>
+                    <p><strong>Rushing TDs:</strong> {formatStat(playerData.rushing_tds || 0, 'total')}</p>
+                    <p><strong>Rushing Yards:</strong> {formatStat(playerData.rushing_yards || 0, 'total')}</p>
+                    <p><strong>Fumbles:</strong> {formatStat(playerData.rushing_fumbles || 0, 'total')}</p>
+                    <p><strong>Carries:</strong> {formatStat(playerData.carries || 0, 'total')}</p>
+                    <p><strong>Games:</strong> {formatStat(playerData.games || 0, 'total')}</p>
                   </>
                 )}
                 {playerData.Position === 'WR' && (
                   <>
-                    <p><strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')}</p>
-                    <p><strong>Catches:</strong> {formatStat(playerData.receptions, 'total')}</p>
-                    <p><strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards, 'total')}</p>
-                    <p><strong>Targets:</strong> {formatStat(playerData.targets, 'total')}</p>
-                    <p><strong>Games:</strong> {formatStat(playerData.games, 'total')}</p>
+                    <p><strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds || 0, 'total')}</p>
+                    <p><strong>Catches:</strong> {formatStat(playerData.receptions || 0, 'total')}</p>
+                    <p><strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards || 0, 'total')}</p>
+                    <p><strong>Targets:</strong> {formatStat(playerData.targets || 0, 'total')}</p>
+                    <p><strong>Games:</strong> {formatStat(playerData.games || 0, 'total')}</p>
                   </>
                 )}
                 {playerData.Position === 'TE' && (
                   <>
-                    <p><strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds, 'total')}</p>
-                    <p><strong>Catches:</strong> {formatStat(playerData.receptions, 'total')}</p>
-                    <p><strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards, 'total')}</p>
-                    <p><strong>Targets:</strong> {formatStat(playerData.targets, 'total')}</p>
-                    <p><strong>Games:</strong> {formatStat(playerData.games, 'total')}</p>
+                    <p><strong>Receiving TDs:</strong> {formatStat(playerData.receiving_tds || 0, 'total')}</p>
+                    <p><strong>Catches:</strong> {formatStat(playerData.receptions || 0, 'total')}</p>
+                    <p><strong>Receiving Yards:</strong> {formatStat(playerData.receiving_yards || 0, 'total')}</p>
+                    <p><strong>Targets:</strong> {formatStat(playerData.targets || 0, 'total')}</p>
+                    <p><strong>Games:</strong> {formatStat(playerData.games || 0, 'total')}</p>
                   </>
                 )}
               </div>
@@ -196,23 +233,23 @@ export default function PlayerPage() {
         )}
       </div>
 
-      {/* If the player is an offensive lineman or TE (using the "pos" field) render OL or TE advanced stats */}
+      {/* Render OL advanced stats if the player is an offensive lineman */}
       {isOLine && (
         <div className="row mb-4">
           <div className="col-md-12">
             <div className="card shadow mb-4">
               <div className="card-header py-3">
                 <h6 className="m-0 font-weight-bold text-primary">2024 Stats</h6>
-              </div>e
+              </div>
               <div className="card-body">
-                <OLDisplayStats playerData={playerData} totalCount={totalCount} />
+              <OLDisplayStats playerData={playerData as OLPlayerData} />
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Advanced and Next Gen Stats for non-OLine players */}
+      {/* Advanced and Next Gen Stats for non-offensive linemen */}
       {!isOLine && (
         <div className="row mb-4">
           <div className="col-md-6">
@@ -223,9 +260,10 @@ export default function PlayerPage() {
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-8">
-                    {advancedStatsRenderers[playerData.Position]
-                      ? advancedStatsRenderers[playerData.Position](playerData, teamScheme)
-                      : null}
+                    {playerData.Position &&
+                      advancedStatsRenderers[playerData.Position as keyof typeof advancedStatsRenderers]
+                        ? advancedStatsRenderers[playerData.Position as keyof typeof advancedStatsRenderers](playerData, teamScheme)
+                        : null}
                   </div>
                 </div>
               </div>
@@ -239,9 +277,10 @@ export default function PlayerPage() {
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-8">
-                    {nextGenStatsRenderers[playerData.Position]
-                      ? nextGenStatsRenderers[playerData.Position](playerData, teamScheme)
-                      : null}
+                    {playerData.Position &&
+                      nextGenStatsRenderers[playerData.Position as keyof typeof nextGenStatsRenderers]
+                        ? nextGenStatsRenderers[playerData.Position as keyof typeof nextGenStatsRenderers](playerData, teamScheme)
+                        : null}
                   </div>
                 </div>
               </div>
@@ -249,8 +288,10 @@ export default function PlayerPage() {
           </div>
         </div>
       )}
+
       {/* Conditional Rushing Stats for QBs */}
-      {!isOLine && playerPos === 'QB' &&
+      {!isOLine &&
+        playerPos === 'QB' &&
         ["PISTOL POWER SPREAD", "SPREAD OPTION", "SHANAHAN WIDE ZONE", "RUN POWER"].includes(teamScheme.toUpperCase()) && (
           <div className="row mb-4">
             <div className="col-md-6">
@@ -267,7 +308,8 @@ export default function PlayerPage() {
       )}
 
       {/* Conditional Standard Receiving Stats Card for RBs */}
-      {!isOLine && playerPos === 'RB' &&
+      {!isOLine &&
+        playerPos === 'RB' &&
         ["AIR RAID", "WEST COAST", "WEST COAST MCVAY", "MCVAY SYSTEM"].includes(teamScheme.toUpperCase()) && (
           <div className="row mb-4">
             <div className="col-md-6">

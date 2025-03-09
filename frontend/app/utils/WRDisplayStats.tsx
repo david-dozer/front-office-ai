@@ -1,6 +1,37 @@
 import React from 'react';
 import { ordinalSuffixOf } from './OLDisplayStats';
 
+export interface WRPlayerData {
+  // Advanced Stats
+  receiving_air_yards?: number | string;
+  receiving_air_yards_rank?: number;
+  receiving_yards_after_catch?: number | string;
+  receiving_yards_after_catch_rank?: number;
+  receiving_epa?: number | string;
+  receiving_epa_rank?: number;
+  target_share?: number;
+  target_share_rank?: number;
+  receiving_first_downs?: number | string;
+  receiving_first_downs_rank?: number;
+  racr?: number | string;
+  racr_rank?: number;
+  air_yards_share?: number | string;
+  air_yards_share_rank?: number;
+  // Next Gen Stats for WR
+  ngs_avg_separation?: number | string;
+  ngs_avg_separation_rank?: number;
+  ngs_avg_intended_air_yards?: number | string;
+  ngs_avg_intended_air_yards_rank?: number;
+  ngs_catch_percentage?: number | string;
+  ngs_catch_percentage_rank?: number;
+  ngs_avg_expected_yac?: number | string;
+  ngs_avg_expected_yac_rank?: number;
+  ngs_percent_share_of_intended_air_yards?: number | string;
+  ngs_percent_share_of_intended_air_yards_rank?: number;
+  ngs_avg_yac_above_expectation?: number | string;
+  ngs_avg_yac?: number | string;
+}
+
 // Helper to format stat values
 function formatStat(value: string | number, type: 'total' | 'average'): string {
   const num = typeof value === 'string' ? parseFloat(value) : value;
@@ -22,28 +53,29 @@ function formatRank(rank: number): React.ReactElement {
   );
 }
 
-export function renderWRAdvancedStats(playerData: any, teamScheme: string): React.ReactElement {
+export function renderWRAdvancedStats(playerData: WRPlayerData, teamScheme: string): React.ReactElement {
   switch (teamScheme) {
     case 'Air Raid':
       return (
         <>
           <p>
-            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards ?? 0, 'total')}{' '}
+            {playerData.receiving_air_yards_rank !== undefined && formatRank(playerData.receiving_air_yards_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.receiving_yards_after_catch_rank !== undefined && formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive a receiver is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive a receiver is.">
               Receiving EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.receiving_epa ?? 0, 'average')}{' '}
+            {playerData.receiving_epa_rank !== undefined && formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
-            <strong>Target Share:</strong> {formatStat(playerData.target_share * 100, 'average')}% {formatRank(playerData.target_share_rank)}
+            <strong>Target Share:</strong> {formatStat((playerData.target_share ?? 0) * 100, 'average')}%{' '}
+            {playerData.target_share_rank !== undefined && formatRank(playerData.target_share_rank)}
           </p>
         </>
       );
@@ -51,28 +83,26 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs ?? 0, 'total')}{' '}
+            {playerData.receiving_first_downs_rank !== undefined && formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.receiving_yards_after_catch_rank !== undefined && formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong
-              title="RACR is a measure of how well a receiver converts air yards to receiving yards."
-            >
+            <strong title="RACR is a measure of how well a receiver converts air yards to receiving yards.">
               RACR:
-            </strong>
-            {' '}
-            {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+            </strong>{' '}
+            {formatStat(playerData.racr ?? 0, 'average')}{' '}
+            {playerData.racr_rank !== undefined && formatRank(playerData.racr_rank)}
           </p>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive a receiver is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive a receiver is.">
               Receiving EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.receiving_epa ?? 0, 'average')}{' '}
+            {playerData.receiving_epa_rank !== undefined && formatRank(playerData.receiving_epa_rank)}
           </p>
         </>
       );
@@ -80,22 +110,23 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs ?? 0, 'total')}{' '}
+            {playerData.receiving_first_downs_rank !== undefined && formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.receiving_yards_after_catch_rank !== undefined && formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Air Yards Share:</strong> {formatStat(playerData.air_yards_share, 'average')} {formatRank(playerData.air_yards_share_rank)}
+            <strong>Air Yards Share:</strong> {formatStat(playerData.air_yards_share ?? 0, 'average')}{' '}
+            {playerData.air_yards_share_rank !== undefined && formatRank(playerData.air_yards_share_rank)}
           </p>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive a receiver is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive a receiver is.">
               Receiving EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.receiving_epa ?? 0, 'average')}{' '}
+            {playerData.receiving_epa_rank !== undefined && formatRank(playerData.receiving_epa_rank)}
           </p>
         </>
       );
@@ -103,22 +134,23 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards ?? 0, 'total')}{' '}
+            {playerData.receiving_air_yards_rank !== undefined && formatRank(playerData.receiving_air_yards_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.receiving_yards_after_catch_rank !== undefined && formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs ?? 0, 'total')}{' '}
+            {playerData.receiving_first_downs_rank !== undefined && formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive a receiver is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive a receiver is.">
               Receiving EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.receiving_epa ?? 0, 'average')}{' '}
+            {playerData.receiving_epa_rank !== undefined && formatRank(playerData.receiving_epa_rank)}
           </p>
         </>
       );
@@ -126,28 +158,26 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive a receiver is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive a receiver is.">
               Receiving EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.receiving_epa ?? 0, 'average')}{' '}
+            {playerData.receiving_epa_rank !== undefined && formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs ?? 0, 'total')}{' '}
+            {playerData.receiving_first_downs_rank !== undefined && formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.receiving_yards_after_catch_rank !== undefined && formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong
-              title="RACR is a measure of how well a receiver converts air yards to receiving yards."
-            >
+            <strong title="RACR is a measure of how well a receiver converts air yards to receiving yards.">
               RACR:
-            </strong>
-            {' '}
-            {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+            </strong>{' '}
+            {formatStat(playerData.racr ?? 0, 'average')}{' '}
+            {playerData.racr_rank !== undefined && formatRank(playerData.racr_rank)}
           </p>
         </>
       );
@@ -155,22 +185,19 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive a receiver is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive a receiver is.">
               Receiving EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.receiving_epa, 'average')} {formatRank(playerData.receiving_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.receiving_epa ?? 0, 'average')}{' '}
+            {playerData.receiving_epa_rank !== undefined && formatRank(playerData.receiving_epa_rank)}
           </p>
           <p>
-            <strong>Receiving Fumbles:</strong> {formatStat(playerData.receiving_fumbles, 'total')} {formatRank(playerData.receiving_fumbles_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs ?? 0, 'total')}{' '}
+            {playerData.receiving_first_downs_rank !== undefined && formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
-          </p>
-          <p>
-            <strong>Target Share:</strong> {formatStat(playerData.target_share * 100, 'average')}% {formatRank(playerData.target_share_rank)}
+            <strong>Target Share:</strong> {formatStat((playerData.target_share ?? 0) * 100, 'average')}%{' '}
+            {playerData.target_share_rank !== undefined && formatRank(playerData.target_share_rank)}
           </p>
         </>
       );
@@ -178,22 +205,23 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards, 'total')} {formatRank(playerData.receiving_air_yards_rank)}
+            <strong>Receiving Air Yards:</strong> {formatStat(playerData.receiving_air_yards ?? 0, 'total')}{' '}
+            {playerData.receiving_air_yards_rank !== undefined && formatRank(playerData.receiving_air_yards_rank)}
           </p>
           <p>
-            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch, 'total')} {formatRank(playerData.receiving_yards_after_catch_rank)}
+            <strong>Receiving Yards After Catch:</strong> {formatStat(playerData.receiving_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.receiving_yards_after_catch_rank !== undefined && formatRank(playerData.receiving_yards_after_catch_rank)}
           </p>
           <p>
-            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs, 'total')} {formatRank(playerData.receiving_first_downs_rank)}
+            <strong>Receiving First Downs:</strong> {formatStat(playerData.receiving_first_downs ?? 0, 'total')}{' '}
+            {playerData.receiving_first_downs_rank !== undefined && formatRank(playerData.receiving_first_downs_rank)}
           </p>
           <p>
-            <strong
-              title="RACR is a measure of how well a receiver converts air yards to receiving yards."
-            >
+            <strong title="RACR is a measure of how well a receiver converts air yards to receiving yards.">
               RACR:
-            </strong>
-            {' '}
-            {formatStat(playerData.racr, 'average')} {formatRank(playerData.racr_rank)}
+            </strong>{' '}
+            {formatStat(playerData.racr ?? 0, 'average')}{' '}
+            {playerData.racr_rank !== undefined && formatRank(playerData.racr_rank)}
           </p>
         </>
       );
@@ -202,8 +230,7 @@ export function renderWRAdvancedStats(playerData: any, teamScheme: string): Reac
   }
 }
 
-export function renderWRNextGenStats(playerData: any, teamScheme: string): React.ReactElement {
-  // Check if any Next Gen Stats are empty
+export function renderWRNextGenStats(playerData: WRPlayerData, teamScheme: string): React.ReactElement {
   if (
     playerData.ngs_avg_separation === "" ||
     playerData.ngs_avg_intended_air_yards === "" ||
@@ -221,16 +248,20 @@ export function renderWRNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')} {formatRank(playerData.ngs_avg_separation_rank)}
+            <strong>Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_separation_rank !== undefined && formatRank(playerData.ngs_avg_separation_rank)}
           </p>
           <p>
-            <strong>Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+            <strong>Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_intended_air_yards_rank !== undefined && formatRank(playerData.ngs_avg_intended_air_yards_rank)}
           </p>
           <p>
-            <strong>Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}% {formatRank(playerData.ngs_catch_percentage_rank)}
+            <strong>Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage ?? 0, 'average')}%{' '}
+            {playerData.ngs_catch_percentage_rank !== undefined && formatRank(playerData.ngs_catch_percentage_rank)}
           </p>
           <p>
-            <strong>Avg Expected YAC:</strong> {formatStat(playerData.ngs_avg_expected_yac, 'average')} {formatRank(playerData.ngs_avg_expected_yac_rank)}
+            <strong>Avg Expected YAC:</strong> {formatStat(playerData.ngs_avg_expected_yac ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_expected_yac_rank !== undefined && formatRank(playerData.ngs_avg_expected_yac_rank)}
           </p>
         </>
       );
@@ -243,16 +274,20 @@ export function renderWRNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation, 'average')} {formatRank(playerData.ngs_avg_separation_rank)}
+            <strong>Avg Separation:</strong> {formatStat(playerData.ngs_avg_separation ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_separation_rank !== undefined && formatRank(playerData.ngs_avg_separation_rank)}
           </p>
           <p>
-            <strong>Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+            <strong>Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_intended_air_yards_rank !== undefined && formatRank(playerData.ngs_avg_intended_air_yards_rank)}
           </p>
           <p>
-            <strong>Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage, 'average')}% {formatRank(playerData.ngs_catch_percentage_rank)}
+            <strong>Catch Percentage:</strong> {formatStat(playerData.ngs_catch_percentage ?? 0, 'average')}%{' '}
+            {playerData.ngs_catch_percentage_rank !== undefined && formatRank(playerData.ngs_catch_percentage_rank)}
           </p>
           <p>
-            <strong>Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards, 'average')}% {formatRank(playerData.ngs_percent_share_of_intended_air_yards_rank)}
+            <strong>Share of Intended Air Yards:</strong> {formatStat(playerData.ngs_percent_share_of_intended_air_yards ?? 0, 'average')}%{' '}
+            {playerData.ngs_percent_share_of_intended_air_yards_rank !== undefined && formatRank(playerData.ngs_percent_share_of_intended_air_yards_rank)}
           </p>
         </>
       );

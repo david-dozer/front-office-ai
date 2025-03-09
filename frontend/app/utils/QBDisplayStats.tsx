@@ -1,18 +1,50 @@
 import React from 'react';
 import { ordinalSuffixOf } from './OLDisplayStats';
 
-// TODO: rankings out of 97 (adjust total count as needed) QBs
+interface QBPlayerData {
+  // Advanced stats keys
+  passing_epa?: number | string;
+  passing_epa_rank?: number;
+  passing_yards?: number | string;
+  passing_yards_after_catch?: number | string;
+  pass_yards_minus_yac_rank?: number;
+  sacks?: number | string;
+  sacks_rank?: number;
+  sack_fumbles?: number | string;
+  sack_fumbles_rank?: number;
+  passing_first_downs?: number | string;
+  passing_first_downs_rank?: number;
+  // Next Gen stats keys
+  ngs_avg_time_to_throw?: number | string;
+  ngs_avg_time_to_throw_rank?: number;
+  ngs_avg_intended_air_yards?: number | string;
+  ngs_avg_intended_air_yards_rank?: number;
+  ngs_completion_percentage?: number | string;
+  ngs_completion_percentage_rank?: number;
+  ngs_passer_rating?: number | string;
+  ngs_passer_rating_rank?: number;
+  ngs_expected_completion_percentage?: number | string;
+  ngs_expected_completion_percentage_rank?: number;
+  ngs_avg_air_yards_differential?: number | string;
+  ngs_avg_air_yards_differential_rank?: number;
+  ngs_completion_percentage_above_expectation?: number | string;
+  ngs_completion_percentage_above_expectation_rank?: number;
+  // Rushing stats keys
+  rushing_yards?: number | string;
+  carries?: number | string;
+  carries_rank?: number;
+  rushing_tds?: number | string;
+  rushing_tds_rank?: number;
+}
+
 function formatStat(value: string | number, type: 'total' | 'average'): string {
-  // Convert string values to a number.
   const num = typeof value === 'string' ? parseFloat(value) : value;
   if (isNaN(num)) {
     return value.toString();
   }
   if (type === 'total') {
-    // For total stats: if the value is an integer, show it without decimals.
     return Number.isInteger(num) ? num.toString() : num.toFixed(0);
   } else if (type === 'average') {
-    // For averages, percentages, and EPA: round to two decimals.
     return num.toFixed(2);
   }
   return value.toString();
@@ -26,28 +58,35 @@ function formatRank(rank: number): React.ReactElement {
   );
 }
 
-export function renderQBAdvancedStats(playerData: any, teamScheme: string): React.ReactElement {
+export function renderQBAdvancedStats(playerData: QBPlayerData, teamScheme: string): React.ReactElement {
   switch (teamScheme) {
     case 'Air Raid':
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive this QB is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive this QB is.">
               Passing EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.passing_epa ?? 0, 'average')}{' '}
+            {playerData.passing_epa_rank !== undefined && formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
-            <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}
+            <strong>Completed Air Yards:</strong>{' '}
+            {formatStat(
+              (Number(playerData.passing_yards) - Number(playerData.passing_yards_after_catch)) || 0,
+              'total'
+            )}{' '}
+            {playerData.pass_yards_minus_yac_rank !== undefined && formatRank(playerData.pass_yards_minus_yac_rank)}
           </p>
           <p>
-            <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
+            <strong>Sacks:</strong>{' '}
+            {formatStat(playerData.sacks ?? 0, 'total')}{' '}
+            {playerData.sacks_rank !== undefined && formatRank(playerData.sacks_rank)}
           </p>
           <p>
-            <strong>Sack Fumbles:</strong> {formatStat(playerData.sack_fumbles, 'total')} {formatRank(playerData.sack_fumbles_rank)}
+            <strong>Sack Fumbles:</strong>{' '}
+            {formatStat(playerData.sack_fumbles ?? 0, 'total')}{' '}
+            {playerData.sack_fumbles_rank !== undefined && formatRank(playerData.sack_fumbles_rank)}
           </p>
         </>
       );
@@ -55,22 +94,29 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive this QB is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive this QB is.">
               Passing EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.passing_epa ?? 0, 'average')}{' '}
+            {playerData.passing_epa_rank !== undefined && formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
-            <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}
+            <strong>Completed Air Yards:</strong>{' '}
+            {formatStat(
+              (Number(playerData.passing_yards) - Number(playerData.passing_yards_after_catch)) || 0,
+              'total'
+            )}{' '}
+            {playerData.pass_yards_minus_yac_rank !== undefined && formatRank(playerData.pass_yards_minus_yac_rank)}
           </p>
           <p>
-            <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
+            <strong>Sacks:</strong>{' '}
+            {formatStat(playerData.sacks ?? 0, 'total')}{' '}
+            {playerData.sacks_rank !== undefined && formatRank(playerData.sacks_rank)}
           </p>
           <p>
-            <strong>Sack Fumbles:</strong> {formatStat(playerData.sack_fumbles, 'total')} {formatRank(playerData.sack_fumbles_rank)}
+            <strong>Sack Fumbles:</strong>{' '}
+            {formatStat(playerData.sack_fumbles ?? 0, 'total')}{' '}
+            {playerData.sack_fumbles_rank !== undefined && formatRank(playerData.sack_fumbles_rank)}
           </p>
         </>
       );
@@ -78,22 +124,28 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive this QB is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive this QB is.">
               Passing EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.passing_epa ?? 0, 'average')}{' '}
+            {playerData.passing_epa_rank !== undefined && formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
-            <strong>Passing Yards After Catch:</strong> {formatStat(playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.passing_yards_after_catch_rank)}
+            <strong>Passing Yards After Catch:</strong>{' '}
+            {formatStat(playerData.passing_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.passing_yards_after_catch !== undefined &&
+              playerData.pass_yards_minus_yac_rank !== undefined &&
+              formatRank(playerData.pass_yards_minus_yac_rank)}
           </p>
           <p>
-            <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
+            <strong>Sacks:</strong>{' '}
+            {formatStat(playerData.sacks ?? 0, 'total')}{' '}
+            {playerData.sacks_rank !== undefined && formatRank(playerData.sacks_rank)}
           </p>
           <p>
-            <strong>Sack Fumbles:</strong> {formatStat(playerData.sack_fumbles, 'total')} {formatRank(playerData.sack_fumbles_rank)}
+            <strong>Sack Fumbles:</strong>{' '}
+            {formatStat(playerData.sack_fumbles ?? 0, 'total')}{' '}
+            {playerData.sack_fumbles_rank !== undefined && formatRank(playerData.sack_fumbles_rank)}
           </p>
         </>
       );
@@ -101,25 +153,33 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive this QB is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive this QB is.">
               Passing EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.passing_epa ?? 0, 'average')}{' '}
+            {playerData.passing_epa_rank !== undefined && formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
-            <strong>Passing First Downs:</strong> {formatStat(playerData.passing_first_downs, 'total')} {formatRank(playerData.passing_first_downs_rank)}
+            <strong>Passing First Downs:</strong>{' '}
+            {formatStat(playerData.passing_first_downs ?? 0, 'total')}{' '}
+            {playerData.passing_first_downs_rank !== undefined && formatRank(playerData.passing_first_downs_rank)}
           </p>
           <p>
-            <strong>Passing Yards After Catch:</strong> {formatStat(playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.passing_yards_after_catch_rank)}
+            <strong>Passing Yards After Catch:</strong>{' '}
+            {formatStat(playerData.passing_yards_after_catch ?? 0, 'total')}{' '}
+            {playerData.passing_yards_after_catch !== undefined &&
+              playerData.pass_yards_minus_yac_rank !== undefined &&
+              formatRank(playerData.pass_yards_minus_yac_rank)}
           </p>
           <p>
-            <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
+            <strong>Sacks:</strong>{' '}
+            {formatStat(playerData.sacks ?? 0, 'total')}{' '}
+            {playerData.sacks_rank !== undefined && formatRank(playerData.sacks_rank)}
           </p>
           <p>
-            <strong>Sack Fumbles:</strong> {formatStat(playerData.sack_fumbles, 'total')} {formatRank(playerData.sack_fumbles_rank)}
+            <strong>Sack Fumbles:</strong>{' '}
+            {formatStat(playerData.sack_fumbles ?? 0, 'total')}{' '}
+            {playerData.sack_fumbles_rank !== undefined && formatRank(playerData.sack_fumbles_rank)}
           </p>
         </>
       );
@@ -127,22 +187,29 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive this QB is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive this QB is.">
               Passing EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.passing_epa ?? 0, 'average')}{' '}
+            {playerData.passing_epa_rank !== undefined && formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
-            <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}
+            <strong>Completed Air Yards:</strong>{' '}
+            {formatStat(
+              (Number(playerData.passing_yards) - Number(playerData.passing_yards_after_catch)) || 0,
+              'total'
+            )}{' '}
+            {playerData.pass_yards_minus_yac_rank !== undefined && formatRank(playerData.pass_yards_minus_yac_rank)}
           </p>
           <p>
-            <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
+            <strong>Sacks:</strong>{' '}
+            {formatStat(playerData.sacks ?? 0, 'total')}{' '}
+            {playerData.sacks_rank !== undefined && formatRank(playerData.sacks_rank)}
           </p>
           <p>
-            <strong>Sack Fumbles:</strong> {formatStat(playerData.sack_fumbles, 'total')} {formatRank(playerData.sack_fumbles_rank)}
+            <strong>Sack Fumbles:</strong>{' '}
+            {formatStat(playerData.sack_fumbles ?? 0, 'total')}{' '}
+            {playerData.sack_fumbles_rank !== undefined && formatRank(playerData.sack_fumbles_rank)}
           </p>
         </>
       );
@@ -150,22 +217,26 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive this QB is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive this QB is.">
               Passing EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.passing_epa ?? 0, 'average')}{' '}
+            {playerData.passing_epa_rank !== undefined && formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
-            <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
+            <strong>Sacks:</strong>{' '}
+            {formatStat(playerData.sacks ?? 0, 'total')}{' '}
+            {playerData.sacks_rank !== undefined && formatRank(playerData.sacks_rank)}
           </p>
           <p>
-            <strong>Sack Fumbles:</strong> {formatStat(playerData.sack_fumbles, 'total')} {formatRank(playerData.sack_fumbles_rank)}
+            <strong>Sack Fumbles:</strong>{' '}
+            {formatStat(playerData.sack_fumbles ?? 0, 'total')}{' '}
+            {playerData.sack_fumbles_rank !== undefined && formatRank(playerData.sack_fumbles_rank)}
           </p>
           <p>
-            <strong>Passing First Downs:</strong> {formatStat(playerData.passing_first_downs, 'total')} {formatRank(playerData.passing_first_downs_rank)}
+            <strong>Passing First Downs:</strong>{' '}
+            {formatStat(playerData.passing_first_downs ?? 0, 'total')}{' '}
+            {playerData.passing_first_downs_rank !== undefined && formatRank(playerData.passing_first_downs_rank)}
           </p>
         </>
       );
@@ -173,22 +244,29 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
       return (
         <>
           <p>
-            <strong
-              title="Expected Points Added (EPA) measures how explosive this QB is."
-            >
+            <strong title="Expected Points Added (EPA) measures how explosive this QB is.">
               Passing EPA:
-            </strong>
-            {' '}
-            {formatStat(playerData.passing_epa, 'average')} {formatRank(playerData.passing_epa_rank)}
+            </strong>{' '}
+            {formatStat(playerData.passing_epa ?? 0, 'average')}{' '}
+            {playerData.passing_epa_rank !== undefined && formatRank(playerData.passing_epa_rank)}
           </p>
           <p>
-            <strong>Completed Air Yards:</strong> {formatStat(playerData.passing_yards - playerData.passing_yards_after_catch, 'total')} {formatRank(playerData.pass_yards_minus_yac_rank)}
+            <strong>Completed Air Yards:</strong>{' '}
+            {formatStat(
+              (Number(playerData.passing_yards) - Number(playerData.passing_yards_after_catch)) || 0,
+              'total'
+            )}{' '}
+            {playerData.pass_yards_minus_yac_rank !== undefined && formatRank(playerData.pass_yards_minus_yac_rank)}
           </p>
           <p>
-            <strong>Sacks:</strong> {formatStat(playerData.sacks, 'total')} {formatRank(playerData.sacks_rank)}
+            <strong>Sacks:</strong>{' '}
+            {formatStat(playerData.sacks ?? 0, 'total')}{' '}
+            {playerData.sacks_rank !== undefined && formatRank(playerData.sacks_rank)}
           </p>
           <p>
-            <strong>Sack Fumbles:</strong> {formatStat(playerData.sack_fumbles, 'total')} {formatRank(playerData.sack_fumbles_rank)}
+            <strong>Sack Fumbles:</strong>{' '}
+            {formatStat(playerData.sack_fumbles ?? 0, 'total')}{' '}
+            {playerData.sack_fumbles_rank !== undefined && formatRank(playerData.sack_fumbles_rank)}
           </p>
         </>
       );
@@ -197,22 +275,30 @@ export function renderQBAdvancedStats(playerData: any, teamScheme: string): Reac
   }
 }
 
-export function renderQBNextGenStats(playerData: any, teamScheme: string): React.ReactElement {
+export function renderQBNextGenStats(playerData: QBPlayerData, teamScheme: string): React.ReactElement {
   switch (teamScheme) {
     case 'Air Raid':
       return (
         <>
           <p>
-            <strong>NGS Avg Time to Throw:</strong> {formatStat(playerData.ngs_avg_time_to_throw, 'average')} {formatRank(playerData.ngs_avg_time_to_throw_rank)}
+            <strong>NGS Avg Time to Throw:</strong>{' '}
+            {formatStat(playerData.ngs_avg_time_to_throw ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_time_to_throw_rank !== undefined && formatRank(playerData.ngs_avg_time_to_throw_rank)}
           </p>
           <p>
-            <strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+            <strong>NGS Avg Intended Air Yards:</strong>{' '}
+            {formatStat(playerData.ngs_avg_intended_air_yards ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_intended_air_yards_rank !== undefined && formatRank(playerData.ngs_avg_intended_air_yards_rank)}
           </p>
           <p>
-            <strong>NGS Completion %:</strong> {formatStat(playerData.ngs_completion_percentage, 'average')} {formatRank(playerData.ngs_completion_percentage_rank)}
+            <strong>NGS Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_rank !== undefined && formatRank(playerData.ngs_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Passer Rating:</strong> {formatStat(playerData.ngs_passer_rating, 'average')} {formatRank(playerData.ngs_passer_rating_rank)}
+            <strong>NGS Passer Rating:</strong>{' '}
+            {formatStat(playerData.ngs_passer_rating ?? 0, 'average')}{' '}
+            {playerData.ngs_passer_rating_rank !== undefined && formatRank(playerData.ngs_passer_rating_rank)}
           </p>
         </>
       );
@@ -220,16 +306,24 @@ export function renderQBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Avg Time to Throw:</strong> {formatStat(playerData.ngs_avg_time_to_throw, 'average')} {formatRank(playerData.ngs_avg_time_to_throw_rank)}
+            <strong>NGS Avg Time to Throw:</strong>{' '}
+            {formatStat(playerData.ngs_avg_time_to_throw ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_time_to_throw_rank !== undefined && formatRank(playerData.ngs_avg_time_to_throw_rank)}
           </p>
           <p>
-            <strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+            <strong>NGS Avg Intended Air Yards:</strong>{' '}
+            {formatStat(playerData.ngs_avg_intended_air_yards ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_intended_air_yards_rank !== undefined && formatRank(playerData.ngs_avg_intended_air_yards_rank)}
           </p>
           <p>
-            <strong>NGS Completion %:</strong> {formatStat(playerData.ngs_completion_percentage, 'average')} {formatRank(playerData.ngs_completion_percentage_rank)}
+            <strong>NGS Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_rank !== undefined && formatRank(playerData.ngs_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Passer Rating:</strong> {formatStat(playerData.ngs_passer_rating, 'average')} {formatRank(playerData.ngs_passer_rating_rank)}
+            <strong>NGS Passer Rating:</strong>{' '}
+            {formatStat(playerData.ngs_passer_rating ?? 0, 'average')}{' '}
+            {playerData.ngs_passer_rating_rank !== undefined && formatRank(playerData.ngs_passer_rating_rank)}
           </p>
         </>
       );
@@ -237,16 +331,24 @@ export function renderQBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Completion %:</strong> {formatStat(playerData.ngs_completion_percentage, 'average')} {formatRank(playerData.ngs_completion_percentage_rank)}
+            <strong>NGS Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_rank !== undefined && formatRank(playerData.ngs_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Expected Completion %:</strong> {formatStat(playerData.ngs_expected_completion_percentage, 'average')} {formatRank(playerData.ngs_expected_completion_percentage_rank)}
+            <strong>NGS Expected Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_expected_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_expected_completion_percentage_rank !== undefined && formatRank(playerData.ngs_expected_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Avg Air Yards Differential:</strong> {formatStat(playerData.ngs_avg_air_yards_differential, 'average')} {formatRank(playerData.ngs_avg_air_yards_differential_rank)}
+            <strong>NGS Avg Air Yards Differential:</strong>{' '}
+            {formatStat(playerData.ngs_avg_air_yards_differential ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_air_yards_differential_rank !== undefined && formatRank(playerData.ngs_avg_air_yards_differential_rank)}
           </p>
           <p>
-            <strong>NGS Passer Rating:</strong> {formatStat(playerData.ngs_passer_rating, 'average')} {formatRank(playerData.ngs_passer_rating_rank)}
+            <strong>NGS Passer Rating:</strong>{' '}
+            {formatStat(playerData.ngs_passer_rating ?? 0, 'average')}{' '}
+            {playerData.ngs_passer_rating_rank !== undefined && formatRank(playerData.ngs_passer_rating_rank)}
           </p>
         </>
       );
@@ -254,16 +356,24 @@ export function renderQBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Avg Time to Throw:</strong> {formatStat(playerData.ngs_avg_time_to_throw, 'average')} {formatRank(playerData.ngs_avg_time_to_throw_rank)}
+            <strong>NGS Avg Time to Throw:</strong>{' '}
+            {formatStat(playerData.ngs_avg_time_to_throw ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_time_to_throw_rank !== undefined && formatRank(playerData.ngs_avg_time_to_throw_rank)}
           </p>
           <p>
-            <strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+            <strong>NGS Avg Intended Air Yards:</strong>{' '}
+            {formatStat(playerData.ngs_avg_intended_air_yards ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_intended_air_yards_rank !== undefined && formatRank(playerData.ngs_avg_intended_air_yards_rank)}
           </p>
           <p>
-            <strong>NGS Completion %:</strong> {formatStat(playerData.ngs_completion_percentage, 'average')} {formatRank(playerData.ngs_completion_percentage_rank)}
+            <strong>NGS Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_rank !== undefined && formatRank(playerData.ngs_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Passer Rating:</strong> {formatStat(playerData.ngs_passer_rating, 'average')} {formatRank(playerData.ngs_passer_rating_rank)}
+            <strong>NGS Passer Rating:</strong>{' '}
+            {formatStat(playerData.ngs_passer_rating ?? 0, 'average')}{' '}
+            {playerData.ngs_passer_rating_rank !== undefined && formatRank(playerData.ngs_passer_rating_rank)}
           </p>
         </>
       );
@@ -271,16 +381,24 @@ export function renderQBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Completion %:</strong> {formatStat(playerData.ngs_completion_percentage, 'average')} {formatRank(playerData.ngs_completion_percentage_rank)}
+            <strong>NGS Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_rank !== undefined && formatRank(playerData.ngs_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Passer Rating:</strong> {formatStat(playerData.ngs_passer_rating, 'average')} {formatRank(playerData.ngs_passer_rating_rank)}
+            <strong>NGS Passer Rating:</strong>{' '}
+            {formatStat(playerData.ngs_passer_rating ?? 0, 'average')}{' '}
+            {playerData.ngs_passer_rating_rank !== undefined && formatRank(playerData.ngs_passer_rating_rank)}
           </p>
           <p>
-            <strong>NGS Avg Time to Throw:</strong> {formatStat(playerData.ngs_avg_time_to_throw, 'average')} {formatRank(playerData.ngs_avg_time_to_throw_rank)}
+            <strong>NGS Avg Time to Throw:</strong>{' '}
+            {formatStat(playerData.ngs_avg_time_to_throw ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_time_to_throw_rank !== undefined && formatRank(playerData.ngs_avg_time_to_throw_rank)}
           </p>
           <p>
-            <strong>NGS Completion % Above Expectation:</strong> {formatStat(playerData.ngs_completion_percentage_above_expectation, 'average')} {formatRank(playerData.ngs_completion_percentage_above_expectation_rank)}
+            <strong>NGS Completion % Above Expectation:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage_above_expectation ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_above_expectation_rank !== undefined && formatRank(playerData.ngs_completion_percentage_above_expectation_rank)}
           </p>
         </>
       );
@@ -288,16 +406,24 @@ export function renderQBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Avg Time to Throw:</strong> {formatStat(playerData.ngs_avg_time_to_throw, 'average')} {formatRank(playerData.ngs_avg_time_to_throw_rank)}
+            <strong>NGS Avg Time to Throw:</strong>{' '}
+            {formatStat(playerData.ngs_avg_time_to_throw ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_time_to_throw_rank !== undefined && formatRank(playerData.ngs_avg_time_to_throw_rank)}
           </p>
           <p>
-            <strong>NGS Completion %:</strong> {formatStat(playerData.ngs_completion_percentage, 'average')} {formatRank(playerData.ngs_completion_percentage_rank)}
+            <strong>NGS Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_rank !== undefined && formatRank(playerData.ngs_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Passer Rating:</strong> {formatStat(playerData.ngs_passer_rating, 'average')} {formatRank(playerData.ngs_passer_rating_rank)}
+            <strong>NGS Passer Rating:</strong>{' '}
+            {formatStat(playerData.ngs_passer_rating ?? 0, 'average')}{' '}
+            {playerData.ngs_passer_rating_rank !== undefined && formatRank(playerData.ngs_passer_rating_rank)}
           </p>
           <p>
-            <strong>NGS Expected Completion %:</strong> {formatStat(playerData.ngs_expected_completion_percentage, 'average')} {formatRank(playerData.ngs_expected_completion_percentage_rank)}
+            <strong>NGS Expected Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_expected_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_expected_completion_percentage_rank !== undefined && formatRank(playerData.ngs_expected_completion_percentage_rank)}
           </p>
         </>
       );
@@ -305,16 +431,24 @@ export function renderQBNextGenStats(playerData: any, teamScheme: string): React
       return (
         <>
           <p>
-            <strong>NGS Avg Time to Throw:</strong> {formatStat(playerData.ngs_avg_time_to_throw, 'average')} {formatRank(playerData.ngs_avg_time_to_throw_rank)}
+            <strong>NGS Avg Time to Throw:</strong>{' '}
+            {formatStat(playerData.ngs_avg_time_to_throw ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_time_to_throw_rank !== undefined && formatRank(playerData.ngs_avg_time_to_throw_rank)}
           </p>
           <p>
-            <strong>NGS Avg Intended Air Yards:</strong> {formatStat(playerData.ngs_avg_intended_air_yards, 'average')} {formatRank(playerData.ngs_avg_intended_air_yards_rank)}
+            <strong>NGS Avg Intended Air Yards:</strong>{' '}
+            {formatStat(playerData.ngs_avg_intended_air_yards ?? 0, 'average')}{' '}
+            {playerData.ngs_avg_intended_air_yards_rank !== undefined && formatRank(playerData.ngs_avg_intended_air_yards_rank)}
           </p>
           <p>
-            <strong>NGS Completion %:</strong> {formatStat(playerData.ngs_completion_percentage, 'average')} {formatRank(playerData.ngs_completion_percentage_rank)}
+            <strong>NGS Completion %:</strong>{' '}
+            {formatStat(playerData.ngs_completion_percentage ?? 0, 'average')}{' '}
+            {playerData.ngs_completion_percentage_rank !== undefined && formatRank(playerData.ngs_completion_percentage_rank)}
           </p>
           <p>
-            <strong>NGS Passer Rating:</strong> {formatStat(playerData.ngs_passer_rating, 'average')} {formatRank(playerData.ngs_passer_rating_rank)}
+            <strong>NGS Passer Rating:</strong>{' '}
+            {formatStat(playerData.ngs_passer_rating ?? 0, 'average')}{' '}
+            {playerData.ngs_passer_rating_rank !== undefined && formatRank(playerData.ngs_passer_rating_rank)}
           </p>
         </>
       );
@@ -323,26 +457,29 @@ export function renderQBNextGenStats(playerData: any, teamScheme: string): React
   }
 }
 
-export function renderRushingStats(playerData: any): React.ReactElement {
-  // Convert values to numbers (defaulting to 0 if missing) to avoid division errors.
+export function renderRushingStats(playerData: QBPlayerData): React.ReactElement {
   const rushingYards = Number(playerData.rushing_yards) || 0;
   const carries = Number(playerData.carries) || 0;
-  // Calculate yards per carry; if carries is 0, display as 0.
   const yardsPerCarry = carries !== 0 ? rushingYards / carries : 0;
 
   return (
     <>
       <p>
-        <strong>Rushing Yards:</strong> {formatStat(playerData.rushing_yards, 'total')} 
+        <strong>Rushing Yards:</strong>{' '}
+        {formatStat(playerData.rushing_yards ?? 0, 'total')}
         <span style={{ fontSize: "0.70em", color: "#666" }}>
           {` (${formatStat(yardsPerCarry, 'average')} yards per rush)`}
         </span>
       </p>
       <p>
-        <strong>Carries:</strong> {formatStat(playerData.carries, 'total')} {formatRank(playerData.carries_rank)}
+        <strong>Carries:</strong>{' '}
+        {formatStat(playerData.carries ?? 0, 'total')}{' '}
+        {playerData.carries_rank !== undefined && formatRank(playerData.carries_rank)}
       </p>
       <p>
-        <strong>Rushing TDs:</strong> {formatStat(playerData.rushing_tds, 'total')} {formatRank(playerData.rushing_tds_rank)}
+        <strong>Rushing TDs:</strong>{' '}
+        {formatStat(playerData.rushing_tds ?? 0, 'total')}{' '}
+        {playerData.rushing_tds_rank !== undefined && formatRank(playerData.rushing_tds_rank)}
       </p>
     </>
   );

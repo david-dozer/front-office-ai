@@ -70,7 +70,10 @@ const Header: React.FC = () => {
       <div className="ml-auto text-right">
         {capSpace !== null && (
           <span>
-            <strong>Cap Space:</strong> <strong>{formatCurrency(capSpace)}</strong>
+            <strong style={{ color: 'black' }}>Cap Space: </strong>
+            <strong style={{ color: capSpace > 20000000 ? 'green' : capSpace > 0 ? 'darkgoldenrod' : 'red' }}>
+              {formatCurrency(capSpace)}
+            </strong>
           </span>
         )}
       </div>
@@ -88,7 +91,7 @@ const Header: React.FC = () => {
             aria-haspopup="true" 
             aria-expanded="false"
           >
-            <Image src={teamLogo || '/next.svg'} width={50} height={50} alt="Profile" />;
+            <Image src={teamLogo || '/next.svg'} width={50} height={50} alt="Profile" />
           </a>
           <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
           <a 
