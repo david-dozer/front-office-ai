@@ -1,0 +1,35 @@
+name: Build and Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main  # Adjust if you want to trigger on a different branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: nfl-free-agency
+
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/nfl-free-agency/front-office-ai-pre-rankings:latest .
+
+      - name: Push Docker image to GCR
+        run: |
+          docker push gcr.io/nfl-free-agency/front-office-ai-pre-rankings:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy nfl-free-agency \
+            --image gcr.io/nfl-free-agency/front-office-ai-pre-rankings:latest \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated
