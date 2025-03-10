@@ -45,6 +45,18 @@ interface Team {
   [key: string]: number | string | undefined;  // Catch-all for unknown keys
 }
 
+// Define scheme descriptions outside the return block (if not already defined)
+const schemeDescriptions: { [key: string]: string } = {
+  "Air Raid": "High passing volume, quick throws, 10/11 personnel, shotgun formations, tempo-based.",
+  "Spread Option": "Run-Pass Option (RPO), mobile QB, quick decision-making, misdirection.",
+  "West Coast": "Short, high-percentage passes, YAC-focused, rhythm-based passing.",
+  "McVay System": "Outside zone running, play-action heavy, pre-snap motion, condensed formations.",
+  "Shanahan Wide Zone": "Heavy outside zone, play-action, motion, designed runs.",
+  "Run Power": "Pulling guards, downhill running, gap scheme, smash-mouth football.",
+  "Pistol Power Spread": "Hybrid of power concepts with spread formations, QB run involvement.",
+  "Versatile/Hybrid": "Whatever, however, whoever, this team does whatever it needs, and is great at adapting to their situation. Andy Reid and Detroit are known for this."
+};
+
 export default function DashboardPage() {
   const { posteam } = useParams();
   const [team, setTeam] = useState<Team | null>(null);
@@ -105,15 +117,20 @@ export default function DashboardPage() {
     },
   ];  
 
+  const schemeName =
+  team.posteam === "DET" || team.posteam === "KC"
+    ? "Versatile/Hybrid"
+    : team.scheme || "Unknown";
+
   return (
     <div className="container-fluid">
       {/* Header Section */}
       <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">
           Offensive Scheme:{" "}
-          {team.posteam === "DET" || team.posteam === "KC"
-            ? "Versatile/Hybrid"
-            : team.scheme || "Unknown"}
+          <span title={schemeDescriptions[schemeName] || "No description available."}>
+            {schemeName}
+          </span>
         </h1>
       </div>
   
