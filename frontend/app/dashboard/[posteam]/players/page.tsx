@@ -130,71 +130,61 @@ export default function TablesPage() {
 
   useEffect(() => {
     if (typeof window === 'undefined' || players.length === 0) return;
-  
-    let isInitialized = false;
-    const checkDataTables = setInterval(() => {
-      if (isInitialized) {
-        clearInterval(checkDataTables);
-        return;
-      }
+    
+    // Give time for the DOM to fully render
+    const timer = setTimeout(() => {
       try {
-        if (
-          window.jQuery && 
-          typeof window.jQuery.fn === 'object' && 
-          typeof window.jQuery.fn.DataTable === 'function' &&
-          typeof window.jQuery.fn.DataTable.isDataTable === 'function'
-        ) {
-          console.log("Libraries loaded, initializing table...");
-          isInitialized = true;
-          clearInterval(checkDataTables);
-          
-          // Destroy the existing DataTable if it exists
-          if (window.jQuery.fn.DataTable.isDataTable('#dataTable')) {
-            window.jQuery('#dataTable').DataTable().destroy();
-          }
-          
-          const dt = window.jQuery('#dataTable').DataTable({
-            "columnDefs": [
-              { "orderable": false, "targets": [0, 1, 4] },
-              { "orderable": true, "targets": [2, 3, 5] }
-            ],
-            "order": [[5, "desc"]]
-          });
-  
-          window.jQuery('#dataTable thead th:eq(5)').on('click', function() {
-            dt.order([5, "desc"]).draw();
-          });
-          
-          // Updated dropdown click handler.
-          window.jQuery('.dropdown-menu a').on('click', (e: JQuery.ClickEvent) => {
-            e.preventDefault();
-            const anchor = e.currentTarget;
-            const value = window.jQuery(anchor).data('value');
-            const text = window.jQuery(anchor).text();
-            window.jQuery('#positionDropdown').text('Position: ' + text);
-            localStorage.setItem('selectedPosition', value);
-            
-            // Push a new URL with the query parameter.
-            window.history.replaceState(null, '', window.location.pathname + '?positionSelected=' + value);
-            
-            if (value === '') {
-              dt.column(1).search('').draw();
-            } else if (value === 'Skilled Offense') {
-              dt.column(1).search('QB|RB|WR|TE', true, false).draw();
-            } else if (value === 'OLINE') {
-              // Filter positions that match any of the offensive line positions.
-              dt.column(1).search('^(OT|OL|G|C)$', true, false).draw();
-            } else {
-              dt.column(1).search(`^${value}$`, true, false).draw();
+        if (window.jQuery && typeof window.jQuery.fn.DataTable === 'function') {
+          // Make sure the table element exists first
+          if (document.getElementById('dataTable')) {
+            // Properly destroy existing instance if it exists
+            if (window.jQuery.fn.DataTable.isDataTable('#dataTable')) {
+              window.jQuery('#dataTable').DataTable().destroy();
             }
-          });
+            
+            // Initialize with simpler options first to debug
+            const dt = window.jQuery('#dataTable').DataTable({
+              responsive: true,
+              // Start with minimal configuration to ensure it works
+              "columnDefs": [
+                { "orderable": true, "targets": "_all" }
+              ],
+              "order": [[5, "desc"]]
+            });
+            
+            console.log("DataTable initialized successfully");
+            
+            // Set up your filter logic after confirming basic initialization works
+            window.jQuery('.dropdown-menu a').on('click', (e: JQuery.ClickEvent) => {
+              e.preventDefault();
+              const $anchor = window.jQuery(e.currentTarget); // Use e.currentTarget instead of this
+              const value = $anchor.data('value');
+              const text = $anchor.text();
+              window.jQuery('#positionDropdown').text('Position: ' + text);
+              
+              if (value === '') {
+                dt.column(1).search('').draw();
+              } else if (value === 'Skilled Offense') {
+                dt.column(1).search('QB|RB|WR|TE', true, false).draw();
+              } else if (value === 'OLINE') {
+                dt.column(1).search('^(OT|OL|G|C)$', true, false).draw();
+              } else {
+                dt.column(1).search(`^${value}$`, true, false).draw();
+              }
+            });
+
+          } else {
+            console.error("DataTable element not found in DOM");
+          }
+        } else {
+          console.error("jQuery or DataTables not loaded properly");
         }
       } catch (error) {
         console.error('DataTable initialization error:', error);
       }
-    }, 250);
+    }, 500); // Longer delay to ensure DOM is ready
     
-    return () => clearInterval(checkDataTables);
+    return () => clearTimeout(timer);
   }, [players]);
 
   const topFits = [0, 4, 9].map(idx => players[idx]).filter(player => player);

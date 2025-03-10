@@ -1,29 +1,10 @@
-
 services:
-  backend:
+  app:
+    image: daviddozer/front-office-ai-pre-rankings:latest
     build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./backend:/app
-    # Remove Flask environment variable and update the command for FastAPI
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  frontend:
-    build:
-      context: ./frontend
+      context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    networks:
-      - app-network
+      - "5000:5000"
     restart: unless-stopped
-
-networks:
-  app-network:
-    driver: bridge
