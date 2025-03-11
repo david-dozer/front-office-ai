@@ -3,7 +3,7 @@ name: Build and Deploy to Cloud Run
 on:
   push:
     branches:
-      - main  # Adjust if you want to trigger on a different branch
+      - main  # Adjust if needed
 
 jobs:
   deploy:
@@ -17,6 +17,10 @@ jobs:
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: nfl-free-agency
+
+      - name: Configure Docker for gcloud
+        run: |
+          gcloud auth configure-docker
 
       - name: Build Docker image
         run: |
