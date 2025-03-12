@@ -20,20 +20,20 @@ jobs:
 
       - name: Configure Docker for gcloud
         run: |
-          gcloud auth configure-docker
+          gcloud auth configure-docker us-central1-docker.pkg.dev
 
       - name: Build Docker image
         run: |
-          docker build -t gcr.io/nfl-free-agency/front-office-ai-pre-rankings:latest .
+          docker build -t us-central1-docker.pkg.dev/nfl-free-agency/front-office-ai-pre-rankings/app:latest .
 
-      - name: Push Docker image to GCR
+      - name: Push Docker image to Artifact Registry
         run: |
-          docker push gcr.io/nfl-free-agency/front-office-ai-pre-rankings:latest
+          docker push us-central1-docker.pkg.dev/nfl-free-agency/front-office-ai-pre-rankings/app:latest
 
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy nfl-free-agency \
-            --image gcr.io/nfl-free-agency/front-office-ai-pre-rankings:latest \
+            --image us-central1-docker.pkg.dev/nfl-free-agency/front-office-ai-pre-rankings/app:latest \
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated
