@@ -8,3 +8,4 @@ season.txt
 qb_players.csv
 backend/processed_data/other_files
 experiment.py
+.github/workflows/deploy.yml
