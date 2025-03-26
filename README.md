@@ -1,4 +1,4 @@
-# freeagencyai.com - soon to be published...
+# freeagencyai.com - soon to be published on GCP
 
 ## Overview
 This tool is designed to evaluate free-agent fits for NFL teams based on **standard, advanced, and Next Gen Stats**. The project currently focuses on **offensive players**, with plans to expand to **defensive positions**.
@@ -20,7 +20,28 @@ This tool is designed to evaluate free-agent fits for NFL teams based on **stand
 - Integration of **contract projections** and **salary cap impact**.
 
 ## UI Flow
-![NFL Free Agency Scheme Fitter](nfl_free_agency_diagram.png)
+
+Here’s a walkthrough of the core app experience:
+
+### 1. Team Stats & Scheme Overview
+Displays the selected team's offensive scheme, overall stats, and cap space.  
+![Team Stats Info](ui_diagrams/team_stats_info.png)
+
+### 2. Free Agent Fit Synopsis
+Top 3 free agent fits for the selected team, visualized with fit rings.  
+![Fit Synopsis Screen](ui_diagrams/fit_synopsis_screen.png)
+
+### 3. Player Table
+Sortable table view of available free agents by position, AAV, and fit.  
+![Player Table](ui_diagrams/player_table.png)
+
+### 4. Player Info - Stats & Fit
+Shows standard stats, player fit %, contract projection, and player bio.  
+![Player Info Screen 1](ui_diagrams/player_info_screen1.png)
+
+### 5. Player Info - Advanced & Next Gen Stats
+Highlights advanced metrics like EPA, RACR, separation, air yards, etc.  
+![Player Info Screen 2](ui_diagrams/player_info_screen2.png)
 
 ## Tech Stack
 
